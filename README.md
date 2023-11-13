@@ -35,4 +35,5 @@
    6) SharedView를 해결해야함(중요한 문제)
     
  
-    
+    ![구조](https://github.com/justkjy/lolSearchUser/assets/150637462/733ea4c9-bbf5-499c-8fcd-8635f991e503)
+
