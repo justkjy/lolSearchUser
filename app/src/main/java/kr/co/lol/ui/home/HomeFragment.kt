@@ -149,7 +149,7 @@ class HomeFragment : Fragment() {
                                 userid = "dongk"
                             }
                             if (apikey.isEmpty()) {
-                                apikey = "RGAPI-045921f3-f5b8-4634-a504-1279cdf1952e"
+                                apikey = "RGAPI-c01d849c-c596-4c73-b46f-dfacfb640f42"
                             }
                             sharedViewModel.inputApiKey(apikey)
                             sharedViewModel.inputUserId(userid)
@@ -162,7 +162,7 @@ class HomeFragment : Fragment() {
                         is navSuccessState -> {
                             var apikey = viewHomeModel.apiKey.value!!
                             if (apikey.isEmpty()) {
-                                apikey = "RGAPI-045921f3-f5b8-4634-a504-1279cdf1952e"
+                                apikey = "RGAPI-c01d849c-c596-4c73-b46f-dfacfb640f42"
                             }
 
                             rotationChamp(apikey)
