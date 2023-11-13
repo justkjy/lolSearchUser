@@ -7,8 +7,9 @@
       
 4. 페이지
    1) 시작 페이지 
-![homepage](https://github.com/justkjy/lolSearchUser/assets/150637462/eb145c0e-6754-471c-81b4-88878ae79631)
-  
+
+  ![home](https://github.com/justkjy/lolSearchUser/assets/150637462/3509da43-1a45-4eb1-a538-b543a3fb8b78)
+
    2) 시작페이지에 입력한 로그인 정보
       ![userInfo](https://github.com/justkjy/lolSearchUser/assets/150637462/00ed90e8-4d4f-4b7c-b228-5978905a393d)
 
