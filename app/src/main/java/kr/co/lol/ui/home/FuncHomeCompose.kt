@@ -89,14 +89,14 @@ fun LevelTop(
                 .padding(Paddings.large)
                 .background(Color.White)
         ) {
-            AsyncImage(
-                model = R.drawable.lollogo,
-                contentDescription = "",
-                contentScale = ContentScale.FillHeight,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(50.dp)
-            )
+//            AsyncImage(
+//                model = R.drawable.lollogo,
+//                contentDescription = "",
+//                contentScale = ContentScale.FillHeight,
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .height(50.dp)
+//            )
 
             Spacer(modifier = Modifier.padding(Paddings.extra))
             Row(
