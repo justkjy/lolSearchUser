@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="Theme.LolInfoViewer" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <style name="Theme.LolInfoViewer.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.LolInfoViewer.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.LolInfoViewer.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="BottomAppBarOverlay">
+        <item name="colorControlNormal">@color/darkGrey40</item>
+    </style>
+</resources>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_home">
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="kr.co.lol.ui.home.HomeFragment"
+        android:label="@string/lolmenu_label_userIput"
+        tools:layout="@layout/fragment_home" >
+
+        <action
+            android:id="@+id/action_navigation_home_to_navigation_user"
+            app:destination="@id/navigation_user" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_user"
+        android:name="kr.co.lol.ui.user.UserFragment"
+        android:label="@string/lolmenu_label_userInfo"
+        tools:layout="@layout/fragment_user" >
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_champion"
+        android:name="kr.co.lol.ui.champion.ChampionFragment"
+        android:label="@string/lolmenu_label_champInfo"
+        tools:layout="@layout/fragment_champion" >
+    </fragment>
+
+</navigation>
