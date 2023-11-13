@@ -161,6 +161,8 @@ class HomeFragment : Fragment() {
                         }
                         is navSuccessState -> {
                             var apikey = viewHomeModel.apiKey.value!!
+
+
                             if (apikey.isEmpty()) {
                                 apikey = "RGAPI-c01d849c-c596-4c73-b46f-dfacfb640f42"
                             }
