@@ -1,6 +1,7 @@
 package kr.co.lol.internet
 
 import android.util.Log
+import androidx.room.ColumnInfo
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -194,19 +195,19 @@ fun championUnitInfo(db: RoomHelper, champInfo: MutableMap<String, String>) : Bo
         var jsonSubBody = championJsonString
 
 
-        val removeItemMap = mapOf<String, String>("\"stats\":{" to "}],"
-            //"\"spells\":[{" to "}],"
-        )
-
-        removeItemMap.forEach { removeData, endData ->
-            val startPoint = jsonSubBody.indexOf(removeData, 0, false)
-            val endPoint = jsonSubBody.indexOf(endData, startPoint + removeData.length, false)
-            if(startPoint > -1 && startPoint < endPoint) {
-                jsonSubBody = jsonSubBody.removeRange(startPoint, endPoint + endData.length)
-            } else {
-                println("error")
-            }
-        }
+//        val removeItemMap = mapOf<String, String>("\"stats\":{" to "}],"
+//            //"\"spells\":[{" to "}],"
+//        )
+//
+//        removeItemMap.forEach { removeData, endData ->
+//            val startPoint = jsonSubBody.indexOf(removeData, 0, false)
+//            val endPoint = jsonSubBody.indexOf(endData, startPoint + removeData.length, false)
+//            if(startPoint > -1 && startPoint < endPoint) {
+//                jsonSubBody = jsonSubBody.removeRange(startPoint, endPoint + endData.length)
+//            } else {
+//                println("error")
+//            }
+//        }
 
         jsonSubBody = jsonSubBody.replace("{\"" + targetChampName,
             "{\"" + "Main"
@@ -222,6 +223,38 @@ fun championUnitInfo(db: RoomHelper, champInfo: MutableMap<String, String>) : Bo
         val championStory = championData.Main.lore
         val championSkinData = championData.Main.skins
         val championSkinList = mutableMapOf<Int, String>()
+
+        val passiveName = championData.Main.passive.name
+        val passiveDescription = championData.Main.passive.description
+        val passiveImage = championData.Main.passive.image.full
+
+        val spellsQ_id = championData.Main.spells[0].id
+        val spellsQ_Description = championData.Main.spells[0].description
+        val spellsQ_Name = championData.Main.spells[0].name
+        val spellsQ_Image = championData.Main.spells[0].image.full
+        val spellsQ_tooltip = championData.Main.spells[0].tooltip
+
+        val spellsW_id = championData.Main.spells[1].id
+        val spellsW_Description = championData.Main.spells[1].description
+        val spellsW_Name = championData.Main.spells[1].name
+        val spellsW_Image = championData.Main.spells[1].image.full
+        val spellsW_tooltip = championData.Main.spells[1].tooltip
+
+        val spellsE_id = championData.Main.spells[2].id
+        val spellsE_Description = championData.Main.spells[2].description
+        val spellsE_Name = championData.Main.spells[2].name
+        val spellsE_Image = championData.Main.spells[2].image.full
+        val spellsE_tooltip = championData.Main.spells[2].tooltip
+
+        val spellsR_id = championData.Main.spells[2].id
+        val spellsR_Description = championData.Main.spells[2].description
+        val spellsR_Name = championData.Main.spells[2].name
+        val spellsR_Image = championData.Main.spells[2].image.full
+        val spellsR_tooltip = championData.Main.spells[2].tooltip
+
+
+
+
 
         var strTags = ""
         for(item in championData.Main.tags) {
@@ -251,7 +284,35 @@ fun championUnitInfo(db: RoomHelper, champInfo: MutableMap<String, String>) : Bo
             title = championTitle,
             story = championStory,
             tagList = strTags,
-            skinList = skinData
+            skinList = skinData,
+
+            passiveName = passiveName,
+            passiveDescription = passiveDescription,
+            passiveImage = passiveImage,
+
+            spellsQid = spellsQ_id,
+            spellsQDescription = spellsQ_Description,
+            spellsQName = spellsQ_Name,
+            spellsQImage = spellsQ_Image,
+            spellsQtooltip = spellsQ_tooltip,
+
+            spellsWid = spellsW_id,
+            spellsWDescription = spellsW_Description,
+            spellsWName = spellsW_Name,
+            spellsWImage = spellsW_Image,
+            spellsWtooltip = spellsW_tooltip,
+
+            spellsEid = spellsE_id,
+            spellsEDescription = spellsE_Description,
+            spellsEName = spellsE_Name,
+            spellsEImage = spellsE_Image,
+            spellsEtooltip = spellsE_tooltip,
+
+            spellsRid = spellsR_id,
+            spellsRDescription = spellsR_Description,
+            spellsRName = spellsR_Name,
+            spellsRImage = spellsR_Image,
+            spellsRtooltip = spellsR_tooltip
         )
 
         champInfoData.add(championDetail)

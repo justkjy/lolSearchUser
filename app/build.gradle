@@ -75,6 +75,7 @@ dependencies {
     def retrofit_version = "2.9.0"
     def nav_version = "2.7.5"
     def navcompose_version ="2.4.7"
+    def tab_version = "0.27.1"
 
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
@@ -154,4 +155,8 @@ dependencies {
 
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
+
+    // tab page
+    implementation("com.google.accompanist:accompanist-pager:$tab_version")
+    implementation ("com.google.accompanist:accompanist-pager-indicators:$tab_version")
 }

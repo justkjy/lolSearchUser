@@ -1,5 +1,6 @@
 package kr.co.lol.ui.component.championInfo
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import com.google.accompanist.pager.HorizontalPager
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.LocalTextStyle
@@ -28,11 +30,13 @@ import androidx.compose.ui.unit.em
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import coil.compose.AsyncImage
+import com.google.accompanist.pager.ExperimentalPagerApi
 import kr.co.lol.R
 import kr.co.lol.internet.champSkinUrl
 import kr.co.lol.ui.theme.LolInfoViewerTheme
 import kr.co.lol.ui.theme.Paddings
 
+@OptIn(ExperimentalFoundationApi::class, ExperimentalPagerApi::class)
 @Composable
 fun championDetail(
     onDismissRequest: () -> Unit = {},
@@ -55,20 +59,30 @@ fun championDetail(
                     .fillMaxWidth()
                     .fillMaxHeight(0.4f)
             ){
-                LazyRow(
-                    modifier = Modifier
-                        .fillMaxSize()
-                ) {
-                    items(skinList) {item->
-                        AsyncImage(
-                            model = champSkinUrl(champEngName, item),
+//                LazyRow(
+//                    modifier = Modifier
+//                        .fillMaxSize()
+//                ) {
+//                    items(skinList) {item->
+//                        AsyncImage(
+//                            model = champSkinUrl(champEngName, item),
+//                            contentScale = ContentScale.FillHeight,
+//                            placeholder = painterResource(R.drawable.warrior_helmet),
+//                            contentDescription = "유저 레벨",
+//                        )
+//                    }
+//                }
+                HorizontalPager(count = skinList.size) { page ->
+                    AsyncImage(
+                            model = champSkinUrl(champEngName, skinList[page]),
                             contentScale = ContentScale.FillHeight,
                             placeholder = painterResource(R.drawable.warrior_helmet),
                             contentDescription = "유저 레벨",
                         )
-                    }
                 }
+
             }
+            
             Column(
                 modifier = Modifier
                     .fillMaxHeight(0.8f)
