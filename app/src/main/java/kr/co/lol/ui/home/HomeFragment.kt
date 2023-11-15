@@ -171,6 +171,7 @@ class HomeFragment : Fragment() {
                             view?.let { viewNav ->
                                 viewNav.findNavController()
                                     .navigate(R.id.action_navigation_home_to_navigation_user)
+                                
                             }
                         }
                     }

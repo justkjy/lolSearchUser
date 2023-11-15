@@ -74,10 +74,8 @@ fun ChampLolInfo(
             style = MaterialTheme.typography.titleSmall,
             modifier = Modifier
                 .padding(Paddings.large)
-
         )
         Spacer(modifier = Modifier.padding(Paddings.medium))
-
 
         LazyColumn {
             itemsIndexed(champAllList) {index, item->

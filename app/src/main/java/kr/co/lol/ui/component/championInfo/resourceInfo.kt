@@ -64,7 +64,7 @@ sealed class ResourceInfo {
 
             "IRON" -> R.drawable.rank_iron
 
-            else -> R.drawable.user_cowboy
+            else -> R.drawable.rank_iron
         }
 
         private fun eogBoderIn(eog: Int) = when (eog) {

@@ -11,7 +11,7 @@ val userInfoLevelCenter1Height = 80.dp     // level2
 val userInfoLevelCenter2Height = 90.dp     // level3
 val userInfoLevelBottomHeight = 80.dp      // level4
 
-val championInfoHeight = 150.dp            // 로테이션 챔피언 정보
+val championInfoHeight = 100.dp            // 로테이션 챔피언 정보
 val championInfoWith = 90.dp
 
 val championAllItemHeight = 60.dp         // 모든 챔피언 card 높이

@@ -8,6 +8,7 @@ sealed class ImageUrl   {
     class ProfileImage(val userProfile: Int, val version: String): ImageUrl()
     class ChampionImage(val championImage: String, val version: String) : ImageUrl()
     class ChampionLoadingImage(val championImage: String) : ImageUrl()
+    class ChampionTilesImg(val championImage: String) : ImageUrl()
     class ChampionLargeImage(val chapionImage: String, val championSkinNum: Int) : ImageUrl()
     class ChampionPassiveImage(val passiveImage: String, val version: String) : ImageUrl()
     class ChampionSpellsImage(val spells: String, val version: String) : ImageUrl()
@@ -36,6 +37,12 @@ sealed class ImageUrl   {
                 )
             }
 
+            is ImageUrl.ChampionTilesImg-> {
+                "https://ddragon.leagueoflegends.com/cdn/img/champion/tiles/##_0.jpg".replace(
+                    "##", imageUrl.championImage
+                )
+            }
+
             is ImageUrl.ChampionLargeImage -> {
                 "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/#1_#2.jpg".replace(
                     "#1", imageUrl.chapionImage, true
@@ -60,6 +67,7 @@ sealed class ImageUrl   {
 typealias  fullProfileUrl = ImageUrl.ProfileImage
 typealias  fullChampUrl = ImageUrl.ChampionImage
 typealias  fullChampLoadingUrl = ImageUrl.ChampionLoadingImage
+typealias  fullChampTilesUrl = ImageUrl.ChampionTilesImg
 typealias  fullChampSkinUrl = ImageUrl.ChampionLargeImage
 typealias  fullChampPassiveUrl = ImageUrl.ChampionPassiveImage
 typealias  fullChampSpellsUrl = ImageUrl.ChampionSpellsImage
@@ -77,6 +85,10 @@ fun champUrl(championImage: String): String {
 
 fun champLoadingUrl(championImage: String): String {
     val result = fullChampLoadingUrl(championImage)
+    return fullUrl(result)
+}
+fun champTilesUrl(championImage: String): String {
+    val result = fullChampTilesUrl(championImage)
     return fullUrl(result)
 }
 

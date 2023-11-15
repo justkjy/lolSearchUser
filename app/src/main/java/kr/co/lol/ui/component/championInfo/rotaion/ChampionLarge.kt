@@ -26,10 +26,12 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import coil.compose.AsyncImage
 import kr.co.lol.R
 import kr.co.lol.internet.champLoadingUrl
+import kr.co.lol.internet.champTilesUrl
 import kr.co.lol.ui.component.championInfoHeight
 import kr.co.lol.ui.component.championInfoWith
 import kr.co.lol.ui.theme.LolInfoViewerTheme
@@ -78,7 +80,7 @@ fun ChampionImgCard(
 //        Red -> Color.LightGray
 //        else-> MaterialTheme.colorScheme.primary
 //    }
-    val converColor = Color.Red
+    val converColor = Color.LightGray
 
     val scale by remember {
         derivedStateOf {
@@ -93,10 +95,19 @@ fun ChampionImgCard(
         modifier = Modifier
             .padding(Paddings.large)
             .width(championInfoWith)
-            .height(championInfoHeight)
+            .height(championInfoHeight + 50.dp)
             .scale(scale)
             .zIndex(scale * 10),
     ){
+        AsyncImage(
+            model = champTilesUrl(champinEngName),
+            contentScale = ContentScale.FillWidth,
+            placeholder = painterResource(R.drawable.user_cowboy),
+            contentDescription = "champinKorName",
+            modifier = Modifier
+                .size(championInfoWith, championInfoHeight)
+        )
+        Spacer(modifier = Modifier.padding(Paddings.small))
         Text(
             text = champinKorName,
             style = MaterialTheme.typography.bodyMedium,
@@ -106,16 +117,6 @@ fun ChampionImgCard(
             modifier = Modifier
                 .padding(Paddings.small)
                 .fillMaxWidth()
-        )
-        Spacer(modifier = Modifier.padding(Paddings.small))
-
-        AsyncImage(
-            model = champLoadingUrl(champinEngName),
-            contentScale = ContentScale.FillHeight,
-            placeholder = painterResource(R.drawable.user_cowboy),
-            contentDescription = "champinKorName",
-            modifier = Modifier
-                .size(championInfoWith, championInfoHeight)
         )
     }
 }
