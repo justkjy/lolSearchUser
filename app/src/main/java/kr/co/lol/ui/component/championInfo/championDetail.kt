@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import com.google.accompanist.pager.HorizontalPager
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -146,7 +147,7 @@ fun championDetail(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .fillMaxHeight(0.4f)
+                    .fillMaxHeight(0.3f)
             ){
                 HorizontalPager(count = skinList.size) { page ->
                     AsyncImage(
@@ -210,25 +211,28 @@ fun championDetail(
 
 @Composable
 fun champStory(storyText: String) {
-    Text(
-        text = storyText,
-        //color = MaterialTheme.colorScheme.primary,
-        //style = MaterialTheme.typography.titleSmall,
-        style = LocalTextStyle.current.merge(
-            TextStyle(
-                lineHeight = 2.0.em,
-                platformStyle = PlatformTextStyle(
-                    includeFontPadding = false
+    LazyColumn {
+        item{
+            Text(
+                text = storyText,
+                style = LocalTextStyle.current.merge(
+                    TextStyle(
+                        lineHeight = 2.0.em,
+                        platformStyle = PlatformTextStyle(
+                            includeFontPadding = false
+                        ),
+                        lineHeightStyle = LineHeightStyle(
+                            alignment = LineHeightStyle.Alignment.Center,
+                            trim = LineHeightStyle.Trim.None
+                        )
+                    )
                 ),
-                lineHeightStyle = LineHeightStyle(
-                    alignment = LineHeightStyle.Alignment.Center,
-                    trim = LineHeightStyle.Trim.None
-                )
+                modifier = Modifier
+                    .padding(Paddings.large)
             )
-        ),
-        modifier = Modifier
-            .padding(Paddings.large)
-    )
+        }
+    }
+
 }
 
 //passiveOrSpells = true이면 패시브
@@ -326,39 +330,41 @@ fun champSkill(skillList: List<SpellsData>) {
 
                     Spacer(modifier = Modifier.padding(Paddings.large))
 
-                    Text(
-                        text =
+                    LazyColumn {
+                        item {
+                            Text(
+                                text = String.let{
+                                    var text = tabItems[index].description
+                                    var findWord = 0
+                                    var startPoint : Int = 0
+                                    var endPoint : Int = 0
+                                    while(findWord != -1) {
+                                        startPoint = text.indexOf("<")
+                                        endPoint = text.indexOf(">")
+                                        if((endPoint == -1) or (startPoint == -1)) {
+                                            findWord = -1
+                                        } else {
+                                            text = text.removeRange(startPoint, endPoint+1)
+                                        }
+                                    }
 
-                         String.let{
-                             var text = tabItems[index].description
-                             var findWord = 0
-                             var startPoint : Int = 0
-                             var endPoint : Int = 0
-                             while(findWord != -1) {
-                                 startPoint = text.indexOf("<")
-                                 endPoint = text.indexOf(">")
-                                 if((endPoint == -1) or (startPoint == -1)) {
-                                     findWord = -1
-                                 } else {
-                                     text = text.removeRange(startPoint, endPoint+1)
-                                 }
-                             }
-
-                             text
-                         },
-                        style = LocalTextStyle.current.merge(
-                                TextStyle(
-                                    lineHeight = 2.0.em,
-                                    platformStyle = PlatformTextStyle(
-                                        includeFontPadding = false
-                                    ),
-                                    lineHeightStyle = LineHeightStyle(
-                                        alignment = LineHeightStyle.Alignment.Center,
-                                        trim = LineHeightStyle.Trim.None
+                                    text
+                                },
+                                style = LocalTextStyle.current.merge(
+                                    TextStyle(
+                                        lineHeight = 2.0.em,
+                                        platformStyle = PlatformTextStyle(
+                                            includeFontPadding = false
+                                        ),
+                                        lineHeightStyle = LineHeightStyle(
+                                            alignment = LineHeightStyle.Alignment.Center,
+                                            trim = LineHeightStyle.Trim.None
+                                        )
                                     )
                                 )
-                        )
-                    )
+                            )
+                        }
+                    }
                 }
             }
 
