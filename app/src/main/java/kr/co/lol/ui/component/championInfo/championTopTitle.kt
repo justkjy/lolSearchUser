@@ -44,7 +44,7 @@ fun ChampionTopImg(
     profileId : Int = 5986,
     userName : String = "Just Kim",
     userTier : String = "GOLD",
-    skillNum : Int = 150
+    skillNum : Int = 150,
 ) {
     Column(
         verticalArrangement = Arrangement.Center,

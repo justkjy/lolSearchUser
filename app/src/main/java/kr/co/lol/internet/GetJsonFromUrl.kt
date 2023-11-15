@@ -19,7 +19,7 @@ import javax.net.ssl.HttpsURLConnection
 
 
 val TAG = "GETURL"
-var lolVersion = "1.1.1"
+var lolVersion = "13.18.1"
 
 enum class GetChampType { VERSION, ALLCHAPINFO, DETAILCHAMPINFO }
 
@@ -50,8 +50,10 @@ fun getConnectUrl(db: RoomHelper,
             state(getJsonFailed("버전 정보 획득 실패"))
             return@launch
         }
+
         patchDetailState("버전 정보 체크")
         val newVersion = dbProcess(db, getVersionJson)
+        lolVersion = newVersion.version
         patchDetailState("현재 버전 : ${newVersion.version}")
         if(newVersion.runPatch) {
             patchDetailState("패치 진행 : $newVersion")
@@ -246,11 +248,11 @@ fun championUnitInfo(db: RoomHelper, champInfo: MutableMap<String, String>) : Bo
         val spellsE_Image = championData.Main.spells[2].image.full
         val spellsE_tooltip = championData.Main.spells[2].tooltip
 
-        val spellsR_id = championData.Main.spells[2].id
-        val spellsR_Description = championData.Main.spells[2].description
-        val spellsR_Name = championData.Main.spells[2].name
-        val spellsR_Image = championData.Main.spells[2].image.full
-        val spellsR_tooltip = championData.Main.spells[2].tooltip
+        val spellsR_id = championData.Main.spells[3].id
+        val spellsR_Description = championData.Main.spells[3].description
+        val spellsR_Name = championData.Main.spells[3].name
+        val spellsR_Image = championData.Main.spells[3].image.full
+        val spellsR_tooltip = championData.Main.spells[3].tooltip
 
 
 

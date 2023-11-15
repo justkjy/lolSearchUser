@@ -112,6 +112,7 @@ class ChampionFragment : Fragment() {
                     championRotationData.add(ChampionList(engName, korName))
                 }
             }
+
             this
         }
 

@@ -49,7 +49,7 @@ fun UserItem(gameType: GameType = GameType.LOL,
                  level1Title : String  = "일반",
                  level2Title : String  = "",
                  level3Title : String  = "",
-                 rankInfo : RankInfo = RankInfo("GOLD", "IV", 394, 5986, mutableListOf<String>())
+                 rankInfo : RankInfo = RankInfo("GOLD", "IV", 394, 5986, mutableListOf<String>()),
 ) {
 
     ConstraintLayout (
@@ -187,7 +187,9 @@ fun UserLevel2(title: String = "더블 업", RankInfo : RankInfo) {
 }
 
 @Composable
-fun UserLevel3(title: String = "최고의 챔피언", RankInfo : RankInfo, gameType:GameType) {
+fun UserLevel3(title: String = "최고의 챔피언",
+               RankInfo : RankInfo,
+               gameType:GameType) {
     Box (
         modifier = BoxModifier(90.dp, "level3Box")
     ){

@@ -41,8 +41,7 @@ fun ChampionItem(
     champKorName: String = "아트룩스",
     champTitle: String = "다르킨의 검",
     onClick: (Boolean, Int) -> (Unit) = {_,_->},
-    positionList : MutableList<String> = mutableListOf<String>("Support", "Tank")
-
+    positionList : MutableList<String> = mutableListOf<String>("Support", "Tank"),
 ) {
     OutlinedCard(
         shape = MaterialTheme.shapes.extraLarge,

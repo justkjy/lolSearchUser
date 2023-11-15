@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import kr.co.lol.dataclass.ChampAllListData
+import kr.co.lol.dataclass.SpellsData
 import kr.co.lol.room.data.RoomHelper
 import kr.co.lol.room.data.roomHelperValue
 import kr.co.lol.ui.component.button.ChampionList
@@ -63,7 +64,7 @@ fun ChampLolInfo(
             profileId = profileId,
             userName = userName,
             userTier = userRank,
-            skillNum = skillNum
+            skillNum = skillNum,
         )
         championRotationList(rotationInfo)
 
@@ -86,7 +87,7 @@ fun ChampLolInfo(
                     champKorName = item.nameKor,
                     champTitle = item.title,
                     positionList = ArrayList<String>(item.tag),
-                    onClick = onClicked
+                    onClick = onClicked,
                 )
                 Spacer(modifier = Modifier.padding(Paddings.small))
             }
@@ -117,11 +118,50 @@ fun ChampLolInfo(
             }
         }
 
+        val skillList : List<SpellsData> = listOf(
+            SpellsData(
+                passiveOrSpells = true,
+                id = "P",
+                image = list.get(0).passiveImage,
+                name = list.get(0).passiveName,
+                description = list.get(0).passiveDescription
+            ),
+            SpellsData(
+                passiveOrSpells = false,
+                id = "Q",
+                image = list.get(0).spellsQImage,
+                name = list.get(0).spellsQName,
+                description = list.get(0).spellsQDescription
+            ),
+            SpellsData(
+                passiveOrSpells = false,
+                id = "W",
+                image = list.get(0).spellsWImage,
+                name = list.get(0).spellsWName,
+                description = list.get(0).spellsWDescription
+            ),
+            SpellsData(
+                passiveOrSpells = false,
+                id = "E",
+                image = list.get(0).spellsEImage,
+                name = list.get(0).spellsEName,
+                description = list.get(0).spellsEDescription
+            ),
+            SpellsData(
+                passiveOrSpells = false,
+                id = "R",
+                image = list.get(0).spellsRImage,
+                name = list.get(0).spellsRName,
+                description = list.get(0).spellsRDescription
+            )
+        )
+
         championDetail(
             skinList = skinList,
             champEngName= champAllList[clickIndex].nameEng,
             champStory = story,
-            onConfirmation = onConfirmation
+            onConfirmation = onConfirmation,
+            skillList = skillList
         )
     }
 }
@@ -142,7 +182,7 @@ fun PreviewChampLolInfo() {
 
         ChampLolInfo(
             helper,
-            champAllList = testExamList
+            champAllList = testExamList,
         )
     }
 }

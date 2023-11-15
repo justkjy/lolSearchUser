@@ -92,7 +92,8 @@ fun UserLolCard(viewModel:SharedViewModel = viewModel()) {
                 gameType = GameType.LOL,
                 constraintSet = funcConstraintLOLSet(),
                 level1Title = "일반",
-                level3Title = "최고의 챔피언")
+                level3Title = "최고의 챔피언",
+            )
         }
     }
 }
