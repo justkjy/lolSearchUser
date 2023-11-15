@@ -6,7 +6,7 @@ const val DOSEARCH = "SEARCHSTEP"
 sealed class UserInfoStep {
     object loading : UserInfoStep()
     class SearchMsg(val userId: String): UserInfoStep()
-    class Success: UserInfoStep()
+    class Success(val userId : String): UserInfoStep()
     class Fail(val code:Int) : UserInfoStep()
 }
 typealias userInfoGetloading = UserInfoStep.loading

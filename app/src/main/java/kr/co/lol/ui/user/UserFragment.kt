@@ -46,7 +46,7 @@ class UserFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
     var job: Job? = null
-    private lateinit var useId: String
+
     private lateinit var useApiKey: String
 
     // 활성화 하자.
@@ -63,11 +63,11 @@ class UserFragment : Fragment() {
         sharedViewModel = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
         appActivityViewModel = sharedViewModel
 
-        useId = sharedViewModel.userId.value!!
+
         useApiKey = sharedViewModel.apiKey.value!!
 
         // 뷰처리가 끝나면 시작하자. check
-        runRetrofit(useId)
+        runRetrofit()
 
         observeUiEffects()
         // 아래에 Retrofit을 적으면 에러가 남 추측하는데 함수안에 GlobalScope.launch(Dispatchers.IO)
@@ -97,7 +97,7 @@ class UserFragment : Fragment() {
                             runUserSearch(userId)
                         }
                         is userInfoSuccess ->{
-                            insertUserInfo()
+                            insertUserInfo(stepState.userId)
                         }
                         is userInfoFail ->{
                             userViewModel.setUserInputErrCode(stepState.code)
@@ -109,7 +109,7 @@ class UserFragment : Fragment() {
         }
     }
 
-    private fun insertUserInfo(){
+    private fun insertUserInfo(userId : String){
         var helper: RoomHelper? = null
         var champEngList = mutableListOf<String>()
         val fragmentContext = this.context ?.let { context ->
@@ -123,12 +123,11 @@ class UserFragment : Fragment() {
                     champEngList.add(eng)
                 }
             }
-
             this
         }
 
         sharedViewModel.sharedInputUserInfo(
-            useId,
+            userId,
             userViewModel.profileIconId,
             userViewModel.summonerLevel,
             userViewModel.loltear,
@@ -148,8 +147,9 @@ class UserFragment : Fragment() {
         )
     }
 
-    private fun runRetrofit(userId: String) {
-        runUserSearch(userId)
+    private fun runRetrofit() {
+        val useId = sharedViewModel.userId.value!!
+        runUserSearch(useId)
     }
 
     private fun runUserSearch(useId: String) {
@@ -175,7 +175,7 @@ class UserFragment : Fragment() {
                     userViewModel.userLevelInfo(comment)
                     //encryptedPUUID = comment.puuid // 숙련도 정보 체크때 써야함
                     Log.i(TAG, "comment.id = ${comment.id}, comment.puuid = ${comment.puuid}")
-                    rankRetfofit(comment.id, comment.puuid)
+                    rankRetfofit(userId, comment.id, comment.puuid)
                 } else {
                     //userViewModel.setStepState(
                     //    userInfoFail("사용자 검색 에러"),
@@ -189,7 +189,7 @@ class UserFragment : Fragment() {
         }
     }
 
-    suspend fun rankRetfofit(encryptedId: String, encryptedPUUID: String) {
+    suspend fun rankRetfofit(userId : String, encryptedId: String, encryptedPUUID: String) {
         val retrofitUserAPI = getInstance()
 
         val retrofitService = retrofitUserAPI.create(LolQueryLank::class.java)
@@ -213,14 +213,14 @@ class UserFragment : Fragment() {
                         }
                     }
                 }
-                topChamp(encryptedPUUID)
+                topChamp(userId, encryptedPUUID)
             } else {
                 userViewModel.setUserFail(response.code())
             }
         }
     }
 
-    suspend fun topChamp(encryptedPUUID : String) {
+    suspend fun topChamp(userId : String, encryptedPUUID : String) {
         val retrofitUserAPI = getInstance()
         val searchCount = 10
 
@@ -234,7 +234,7 @@ class UserFragment : Fragment() {
                 response.body()?.let{
                     userViewModel.setUseChamp(it)
                 }
-                userViewModel.setUserSuccess()
+                userViewModel.setUserSuccess(userId)
             } else {
                 userViewModel.setUserFail(response.code())
             }

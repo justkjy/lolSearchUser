@@ -165,8 +165,8 @@ class UserViewModel : ViewModel() {
         _stepUserState.value = userInfoFail(errorCode)
         _userFailCode.postValue(errorCode)
     }
-    fun setUserSuccess() {
-        _stepUserState.value = userInfoSuccess()
+    fun setUserSuccess(userId : String) {
+        _stepUserState.value = userInfoSuccess(userId)
     }
 
     // 에러 코드
