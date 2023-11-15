@@ -327,7 +327,25 @@ fun champSkill(skillList: List<SpellsData>) {
                     Spacer(modifier = Modifier.padding(Paddings.large))
 
                     Text(
-                        text = tabItems[index].description,
+                        text =
+
+                         String.let{
+                             var text = tabItems[index].description
+                             var findWord = 0
+                             var startPoint : Int = 0
+                             var endPoint : Int = 0
+                             while(findWord != -1) {
+                                 startPoint = text.indexOf("<")
+                                 endPoint = text.indexOf(">")
+                                 if((endPoint == -1) or (startPoint == -1)) {
+                                     findWord = -1
+                                 } else {
+                                     text = text.removeRange(startPoint, endPoint+1)
+                                 }
+                             }
+
+                             text
+                         },
                         style = LocalTextStyle.current.merge(
                                 TextStyle(
                                     lineHeight = 2.0.em,

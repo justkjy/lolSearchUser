@@ -214,7 +214,7 @@ fun LevelTop(
                     it.setInputButtonCheck
                 } ?: { },
                 clickAble = clickAble,
-                leadingIconData = LeadingIconData(R.drawable.warrior_helmet),
+                leadingIconData = LeadingIconData(R.drawable.warrior_helmet_2750),
             )
         }
     }
