@@ -224,7 +224,7 @@ fun LevelTop(
 @Composable
 fun HyperlinkInSentenceExample() {
     val sourceText = "Here development API KEY : "
-    val hyperlinkText = "CodingWithRashid"
+    val hyperlinkText = "click here"
     val endText = "\nDo NOT use this API key in a publicly available product!"
     val uri = "https://developer.riotgames.com/"
 
