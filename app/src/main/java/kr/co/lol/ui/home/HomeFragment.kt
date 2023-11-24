@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material.Colors
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.AlertDialogDefaults.containerColor
@@ -149,7 +150,7 @@ class HomeFragment : Fragment() {
                                 userid = "dongk"
                             }
                             if (apikey.isEmpty()) {
-                                apikey = "RGAPI-02b99080-b21d-4922-870a-94ce87bf6166"
+                                apikey = "RGAPI-d9bfe5ea-ae70-416d-a42b-1613893e45b4"
                             }
                             sharedViewModel.inputApiKey(apikey)
                             sharedViewModel.inputUserId(userid)
@@ -164,7 +165,7 @@ class HomeFragment : Fragment() {
 
 
                             if (apikey.isEmpty()) {
-                                apikey = "RGAPI-02b99080-b21d-4922-870a-94ce87bf6166"
+                                apikey = "RGAPI-d9bfe5ea-ae70-416d-a42b-1613893e45b4"
                             }
 
                             rotationChamp(apikey)
@@ -230,7 +231,9 @@ fun MessageBox(view:ChampionInitViewModel = viewModel()) {
     }
     Scaffold (
         modifier = Modifier.fillMaxWidth()
-            .fillMaxHeight(),
+            .fillMaxHeight(0.5f),
+
+
         snackbarHost = { SnackbarHost(snackbarHostState) },
 
         content = { innerPadding ->
@@ -263,6 +266,13 @@ fun MessageBox(view:ChampionInitViewModel = viewModel()) {
             }
         }
     )
+    Column(
+
+        Modifier.fillMaxSize()
+            .background(color = androidx.compose.ui.graphics.Color.White)
+    ) {
+
+    }
 }
 
 enum class ErrorCode (

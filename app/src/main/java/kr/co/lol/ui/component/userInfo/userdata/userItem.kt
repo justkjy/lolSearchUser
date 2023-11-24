@@ -1,5 +1,6 @@
 package kr.co.lol.ui.component.userInfo.userdata
 
+import android.content.Intent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
@@ -21,12 +22,17 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
@@ -34,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.layoutId
+import androidx.core.content.ContextCompat.startActivity
 import coil.compose.AsyncImage
 import kr.co.lol.R
 import kr.co.lol.internet.profileUrl
@@ -42,14 +49,120 @@ import kr.co.lol.ui.component.button.LeadingIconData
 import kr.co.lol.ui.component.button.PrimaryButton
 import kr.co.lol.ui.component.startPadding
 import kr.co.lol.ui.theme.Paddings
+import kr.co.lol.ui.usermatch.MatchActivity
 
 @Composable
-fun UserItem(gameType: GameType = GameType.LOL,
-                constraintSet: ConstraintSet,
-                 level1Title : String  = "일반",
-                 level2Title : String  = "",
-                 level3Title : String  = "",
-                 rankInfo : RankInfo = RankInfo("GOLD", "IV", 394, 5986, mutableListOf<String>()),
+fun UserItem(
+    userId: String,
+    apiKey: String = "",
+    gameType: GameType = GameType.LOL,
+    constraintSet: ConstraintSet,
+    level1Title: String = "일반",
+    level2Title: String = "",
+    level3Title: String = "",
+    rankInfo: RankInfo = RankInfo("GOLD", "IV", 394, 5986, mutableListOf<String>()),
+    matchList: List<String> = listOf<String>(
+        "KR_6812175923",
+        "KR_6810800561",
+        "KR_6810787381",
+        "KR_6810534387",
+        "KR_6810499776",
+        "KR_6810457996",
+        "KR_6810423013",
+        "KR_6810363384",
+        "KR_6808880454",
+        "KR_6808841052",
+        "KR_6808776793",
+        "KR_6808713712",
+        "KR_6807565304",
+        "KR_6807546560",
+        "KR_6807534122",
+        "KR_6807510917",
+        "KR_6807331764",
+        "KR_6807283627",
+        "KR_6806026800",
+        "KR_6806003457",
+        "KR_6805976124",
+        "KR_6805941764",
+        "KR_6805904685",
+        "KR_6805857984",
+        "KR_6805835268",
+        "KR_6805747483",
+        "KR_6805704144",
+        "KR_6802286886",
+        "KR_6802264432",
+        "KR_6802236108",
+        "KR_6802170366",
+        "KR_6802129112",
+        "KR_6799029793",
+        "KR_6799014182",
+        "KR_6797560020",
+        "KR_6797531525",
+        "KR_6797498931",
+        "KR_6796198625",
+        "KR_6796173016",
+        "KR_6796140725",
+        "KR_6793626335",
+        "KR_6793594198",
+        "KR_6793551446",
+        "KR_6793520948",
+        "KR_6793490155",
+        "KR_6793471472",
+        "KR_6793443780",
+        "KR_6793219429",
+        "KR_6793189468",
+        "KR_6793168007",
+        "KR_6793128613",
+        "KR_6789790392",
+        "KR_6789766949",
+        "KR_6789752107",
+        "KR_6789723344",
+        "KR_6789681960",
+        "KR_6789653581",
+        "KR_6788518345",
+        "KR_6788499513",
+        "KR_6788491288",
+        "KR_6788466523",
+        "KR_6787153711",
+        "KR_6787141437",
+        "KR_6787122654",
+        "KR_6785883035",
+        "KR_6785872063",
+        "KR_6785840866",
+        "KR_6785822670",
+        "KR_6784331812",
+        "KR_6784297835",
+        "KR_6784254745",
+        "KR_6784213757",
+        "KR_6780772482",
+        "KR_6780744984",
+        "KR_6779548240",
+        "KR_6779532088",
+        "KR_6779495979",
+        "KR_6779154449",
+        "KR_6779132411",
+        "KR_6779130276",
+        "KR_6779112456",
+        "KR_6779083139",
+        "KR_6779044201",
+        "KR_6778986992",
+        "KR_6778204002",
+        "KR_6777913011",
+        "KR_6777898247",
+        "KR_6777880916",
+        "KR_6776898426",
+        "KR_6776881874",
+        "KR_6776873459",
+        "KR_6776599702",
+        "KR_6776582922",
+        "KR_6776557940",
+        "KR_6776547388",
+        "KR_6776516368",
+        "KR_6776487108",
+        "KR_6776444475",
+        "KR_6776401632",
+        "KR_6776361099"
+    )
 ) {
 
     ConstraintLayout (
@@ -108,7 +221,7 @@ fun UserItem(gameType: GameType = GameType.LOL,
         UserLevel3(level3Title, rankInfo, gameType/*GameType.LOL*/)
 
         /// level 4 대전 기록
-        UserLevel4()
+        UserLevel4(gameType, userId, apiKey, matchList )
 
         // level 사이 라인 그리기
         val lineColor = MaterialTheme.colorScheme.primary
@@ -169,7 +282,8 @@ fun UserLevel2(title: String = "더블 업", RankInfo : RankInfo) {
     Image(
         painter = painterResource(id = RankInfo.tierResourceId),
         contentDescription = RankInfo.tier,
-        modifier = Modifier.layoutId("level2TierImg")
+        modifier = Modifier
+            .layoutId("level2TierImg")
             .padding(Paddings.none)
             .size(52.dp)
     )
@@ -187,9 +301,11 @@ fun UserLevel2(title: String = "더블 업", RankInfo : RankInfo) {
 }
 
 @Composable
-fun UserLevel3(title: String = "최고의 챔피언",
-               RankInfo : RankInfo,
-               gameType:GameType) {
+fun UserLevel3(
+    title: String = "최고의 챔피언",
+    RankInfo: RankInfo,
+    gameType: GameType,
+) {
     Box (
         modifier = BoxModifier(90.dp, "level3Box")
     ){
@@ -211,7 +327,11 @@ fun UserLevel3(title: String = "최고의 챔피언",
 }
 
 @Composable
-fun UserLevel4() {
+fun UserLevel4(gameType: GameType, userId: String, apiKey: String, matchList: List<String>) {
+    var clicked by rememberSaveable {
+        mutableStateOf(false)
+    }
+
     Box (
         contentAlignment = Alignment.Center,
         modifier = BoxModifier(80.dp, "buttonBox")
@@ -219,9 +339,27 @@ fun UserLevel4() {
             .padding(start = startPadding, end = startPadding)
     ){
         val leadingIconData = LeadingIconData(iconDrawable = R.drawable.earth, iconContentDescription = R.string.primaryButtonText)
-        PrimaryButton(leadingIconData = leadingIconData, id = R.string.primaryButtonDesc)
+        PrimaryButton(
+            leadingIconData = leadingIconData,
+            id = R.string.primaryButtonDesc,
+            onClick = {
+
+                clicked = true
+            }
+        )
+    }
+
+    //userId
+    if(GameType.LOL == gameType && clicked){
+        val context = LocalContext.current
+        val intent = Intent(context, MatchActivity::class.java)
+        intent.putExtra("userid", userId)
+        intent.putExtra("apiKey", apiKey)
+        intent.putExtra("matchList", ArrayList<String>(matchList))
+        startActivity(context, intent, null)
     }
 }
+
 
 @Composable
 fun BoxModifier(height: Dp, layoutId: String) = Modifier

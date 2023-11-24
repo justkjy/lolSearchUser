@@ -87,7 +87,7 @@ data class ChampionUnitData(
                 val maxammo: String,
                 val maxrank: Int,
                 val name: String,
-                val range: List<Int>,
+                val range: List<Any>,
                 val rangeBurn: String,
                 val resource: String,
                 val tooltip: String,

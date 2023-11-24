@@ -16,6 +16,8 @@ val championInfoWith = 90.dp
 
 val championAllItemHeight = 60.dp         // 모든 챔피언 card 높이
 
+val userMatchItemHeight = 260.dp           // 사용자 매치
+
 
 enum class GameType { LOL, TFT}
 

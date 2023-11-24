@@ -1,6 +1,7 @@
 package kr.co.lol.ui.component.userInfo.userdata
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -10,15 +11,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.Dimension
-import androidx.lifecycle.ViewModel
 import kr.co.lol.SharedViewModel
 import kr.co.lol.ui.component.GameType
 import kr.co.lol.ui.component.startPadding
@@ -56,6 +54,9 @@ fun UserLolCard(viewModel:SharedViewModel = viewModel()) {
             val rank = it.lolrank.observeAsState("").value
             val _championName = it.champEngList.observeAsState(emptyList()).value
             val championName = mutableListOf<String>()
+            val _matchList = it.matchList.observeAsState(emptyList()).value
+            val matchList = mutableListOf<String>()
+            val apiKey = it.apiKey.value!!
 /* view 모델 공유 체크 방법 알면 아래 소스 활용하자.
 //            val userName = viewModel.userId.observeAsState("").value
 //            val tier = viewModel.loltear.observeAsState("").value
@@ -70,6 +71,10 @@ fun UserLolCard(viewModel:SharedViewModel = viewModel()) {
                 championName.add(champ)
             }
 
+            for(matchItem in _matchList) {
+                matchList.add(matchItem)
+            }
+
             val rankInfo  = RankInfo(
                 tier,
                 rank,
@@ -77,22 +82,26 @@ fun UserLolCard(viewModel:SharedViewModel = viewModel()) {
                 profileId,
                 championName
             )
-
+            Log.i("TEST", "${matchList}")
             UserItem(
+                userId = userName,
+                apiKey = apiKey,
                 gameType = GameType.LOL,
                 constraintSet = funcConstraintLOLSet(),
                 level1Title = "일반",
                 level3Title = "최고의 챔피언",
-                rankInfo = rankInfo
+                rankInfo = rankInfo,
+                matchList = matchList
             )
         }
 
         if(appActivityViewModel == null){
             UserItem(
+                userId = "justkim",
                 gameType = GameType.LOL,
                 constraintSet = funcConstraintLOLSet(),
                 level1Title = "일반",
-                level3Title = "최고의 챔피언",
+                level3Title = "최고의 챔피언"
             )
         }
     }
@@ -115,6 +124,7 @@ fun UserTFTCard() {
             .height(userColumnHeight)
     ){
         UserItem(
+            userId = "justkim",
             gameType = GameType.TFT,
             constraintSet = funcConstraintTFTSet(),
             level1Title = "일반",

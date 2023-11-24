@@ -22,6 +22,7 @@
         android:name="kr.co.lol.ui.user.UserFragment"
         android:label="@string/lolmenu_label_userInfo"
         tools:layout="@layout/fragment_user" >
+
     </fragment>
 
     <fragment

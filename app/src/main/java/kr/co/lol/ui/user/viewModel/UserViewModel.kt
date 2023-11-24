@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kr.co.lol.dataclass.ChampionMasteryTop
+import kr.co.lol.dataclass.MatchListData
 import kr.co.lol.dataclass.UserData
 import kr.co.lol.dataclass.UserRankInfo
 import kr.co.lol.internet.TAG
@@ -261,6 +262,10 @@ class UserViewModel : ViewModel() {
     val champTopList : MutableList<Int>
         get() = _rawChampTopList
 
+    private var _rawMatchList = mutableListOf<String>()
+    val matchList : MutableList<String>
+        get() = _rawMatchList
+
     // 1차 사용자 정보 등록
     suspend fun userLevelInfo(userData: UserData) {
         _userEncryedId = userData.id
@@ -287,6 +292,13 @@ class UserViewModel : ViewModel() {
         _rawChampTopList.clear()
         for(item in topChamp) {
             _rawChampTopList.add(item.championId)
+        }
+    }
+
+    suspend fun setMatchList(matchList: List<String>) {
+        _rawMatchList.clear()
+        for(item in matchList) {
+            _rawMatchList.add(item)
         }
     }
 

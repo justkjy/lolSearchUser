@@ -25,8 +25,10 @@ import kr.co.lol.internet.DOSEARCH
 import kr.co.lol.internet.UserInfoStep
 import kr.co.lol.internet.retrofit.GetJsonFromRerofit
 import kr.co.lol.internet.retrofit.GetJsonFromRerofit.Companion.getInstance
+import kr.co.lol.internet.retrofit.GetJsonFromRerofit.Companion.getInstanceAsia
 import kr.co.lol.internet.retrofit.LolQueryItem
 import kr.co.lol.internet.retrofit.LolQueryLank
+import kr.co.lol.internet.retrofit.LolQueryMatchList
 import kr.co.lol.internet.retrofit.LolQueryTopChamp
 import kr.co.lol.internet.userInfoFail
 import kr.co.lol.internet.userInfoGetloading
@@ -97,6 +99,7 @@ class UserFragment : Fragment() {
                             runUserSearch(userId)
                         }
                         is userInfoSuccess ->{
+                            Log.i("TEST", "Success")
                             insertUserInfo(stepState.userId)
                         }
                         is userInfoFail ->{
@@ -123,6 +126,7 @@ class UserFragment : Fragment() {
                     champEngList.add(eng)
                 }
             }
+
             this
         }
 
@@ -135,15 +139,18 @@ class UserFragment : Fragment() {
             userViewModel.lolWin,
             userViewModel.lolLosses,
             userViewModel.champTopList,
-            champEngList
+            champEngList,
+            userViewModel.matchList
+
         )
-        Log.i(TAG, "${userViewModel.profileIconId}" +
+        Log.i("TEST", "${userViewModel.profileIconId}" +
                 "${userViewModel.summonerLevel}" +
                 "${userViewModel.loltear}" +
                 "${userViewModel.lolrank}" +
                 "${userViewModel.lolWin}"+
                 "${userViewModel.lolLosses}"+
-                "${champEngList}"
+                "${champEngList}" +
+                "${userViewModel.matchList}"
         )
     }
 
@@ -233,6 +240,29 @@ class UserFragment : Fragment() {
             if(response.isSuccessful) {
                 response.body()?.let{
                     userViewModel.setUseChamp(it)
+                }
+
+                matchList(userId, encryptedPUUID)
+
+            } else {
+                userViewModel.setUserFail(response.code())
+            }
+        }
+    }
+
+    suspend fun matchList(userId: String, encryptedPUUID : String) {
+        val retrofitUserAPI = getInstanceAsia()
+        val start = 0
+        val searchCount = 100
+
+        val retrofitService = retrofitUserAPI.create(LolQueryMatchList::class.java)
+            .getMatchList(encryptedPUUID, 0, 100, useApiKey)
+
+        val response = retrofitService
+        GlobalScope.launch(Dispatchers.IO) {
+            if(response.isSuccessful) {
+                response.body()?.let{
+                    userViewModel.setMatchList(it)
                 }
                 userViewModel.setUserSuccess(userId)
             } else {

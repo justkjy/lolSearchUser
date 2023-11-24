@@ -66,11 +66,14 @@ class SharedViewModel : ViewModel() {
     private val _champEngList = MutableLiveData<List<String>>(_rawChampEngList)
     val champEngList: LiveData<List<String>> = _champEngList // 사용
 
+    private val _rawMatchList = mutableStateListOf<String>()
+    private val _matchList = MutableLiveData<List<String>>(_rawMatchList)
+    val matchList: LiveData<List<String>> = _matchList
 
 
-
-    fun sharedInputUserInfo(userId: String, profileId : Int, summonerLevel : Int, tear: String, rank: String,
-                      win: Int, losses: Int, topChampion: List<Int>, topEngChamp: List<String>) {
+    fun sharedInputUserInfo(userId: String, profileId : Int, summonerLevel : Int, tear: String,
+                            rank: String, win: Int, losses: Int, topChampion: List<Int>,
+                            topEngChamp: List<String>, matchList: List<String>) {
         this._userId.value = userId
         this._profileIconId.value = profileId
         this._summonerLevel.value = summonerLevel
@@ -85,6 +88,12 @@ class SharedViewModel : ViewModel() {
         _rawChampEngList.addAll(topEngChamp)
         _champEngList.value = mutableListOf<String>().also {
             it.addAll(_rawChampEngList)
+        }
+
+        _rawMatchList.clear()
+        _rawMatchList.addAll(matchList)
+        _matchList.value = mutableListOf<String>().also {
+            it.addAll(_rawMatchList)
         }
         Log.i(TAG, "----------")
         //this._champEngList.value.addAll(topEngChamp)

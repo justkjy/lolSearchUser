@@ -12,6 +12,9 @@ sealed class ImageUrl   {
     class ChampionLargeImage(val chapionImage: String, val championSkinNum: Int) : ImageUrl()
     class ChampionPassiveImage(val passiveImage: String, val version: String) : ImageUrl()
     class ChampionSpellsImage(val spells: String, val version: String) : ImageUrl()
+    class MatchItem(val item: String, val version: String) : ImageUrl()
+    class MatchSpell(val spell: String, val version: String) : ImageUrl()
+
     companion object {
         fun fullUrl(imageUrl: ImageUrl) : String = when(imageUrl) {
             is ImageUrl.ProfileImage -> {
@@ -60,6 +63,18 @@ sealed class ImageUrl   {
                     "#version", imageUrl.version, true
                 ).replace("#championPassiveImage", imageUrl.spells)
             }
+
+            is ImageUrl.MatchItem -> {
+                "https://ddragon.leagueoflegends.com/cdn/#version/img/item/#itemImage".replace(
+                    "#version", imageUrl.version, true
+                ).replace("#itemImage", imageUrl.item)
+            }
+
+            is ImageUrl.MatchSpell -> {
+                "https://ddragon.leagueoflegends.com/cdn/#version/img/spell/#spellImage".replace(
+                    "#version", imageUrl.version, true
+                ).replace("#spellImage", imageUrl.spell)
+            }
         }
     }
 }
@@ -71,6 +86,8 @@ typealias  fullChampTilesUrl = ImageUrl.ChampionTilesImg
 typealias  fullChampSkinUrl = ImageUrl.ChampionLargeImage
 typealias  fullChampPassiveUrl = ImageUrl.ChampionPassiveImage
 typealias  fullChampSpellsUrl = ImageUrl.ChampionSpellsImage
+typealias  fullMatchItemUrl = ImageUrl.MatchItem
+typealias  matchSpell = ImageUrl.MatchSpell
 
 
 fun profileUrl(userProfile: Int): String {
@@ -104,6 +121,16 @@ fun champPassiveUrl(passive: String) : String {
 
 fun champSpellsUrl(spells: String) : String {
     val result  = fullChampSpellsUrl(spells, lolVersion)
+    return fullUrl(result)
+}
+
+fun matchItem(item: String) : String {
+    val result  = fullMatchItemUrl(item, lolVersion)
+    return fullUrl(result)
+}
+
+fun matchSpell(spell: String) : String {
+    val result  = matchSpell(spell, lolVersion)
     return fullUrl(result)
 }
 

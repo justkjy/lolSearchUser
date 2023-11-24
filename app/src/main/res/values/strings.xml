@@ -19,4 +19,6 @@
     <string name="lolmenu_label_userIput">사용자 입력</string>
     <string name="lolmenu_label_userInfo">사용자 정보</string>
     <string name="lolmenu_label_champInfo">챔피언 정보</string>
+    <string name="title_activity_func_match_dialog">funcMatchDialog</string>
+    <string name="title_activity_match">MatchActivity</string>
 </resources>
