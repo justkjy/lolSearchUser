@@ -14,7 +14,7 @@ sealed class ImageUrl   {
     class ChampionSpellsImage(val spells: String, val version: String) : ImageUrl()
     class MatchItem(val item: String, val version: String) : ImageUrl()
     class MatchSpell(val spell: String, val version: String) : ImageUrl()
-
+    class BlankItem(val version: String) : ImageUrl()
     companion object {
         fun fullUrl(imageUrl: ImageUrl) : String = when(imageUrl) {
             is ImageUrl.ProfileImage -> {
@@ -75,6 +75,11 @@ sealed class ImageUrl   {
                     "#version", imageUrl.version, true
                 ).replace("#spellImage", imageUrl.spell)
             }
+            is ImageUrl.BlankItem -> {
+                "https://ddragon.leagueoflegends.com/cdn/#version/img/tft-item/TFT_Item_UnusableSlot.png".replace(
+                    "#version", imageUrl.version, true
+                )
+            }
         }
     }
 }
@@ -87,7 +92,8 @@ typealias  fullChampSkinUrl = ImageUrl.ChampionLargeImage
 typealias  fullChampPassiveUrl = ImageUrl.ChampionPassiveImage
 typealias  fullChampSpellsUrl = ImageUrl.ChampionSpellsImage
 typealias  fullMatchItemUrl = ImageUrl.MatchItem
-typealias  matchSpell = ImageUrl.MatchSpell
+typealias  fullMatchSpell = ImageUrl.MatchSpell
+typealias  fullNoneItem = ImageUrl.BlankItem
 
 
 fun profileUrl(userProfile: Int): String {
@@ -104,6 +110,7 @@ fun champLoadingUrl(championImage: String): String {
     val result = fullChampLoadingUrl(championImage)
     return fullUrl(result)
 }
+
 fun champTilesUrl(championImage: String): String {
     val result = fullChampTilesUrl(championImage)
     return fullUrl(result)
@@ -130,7 +137,12 @@ fun matchItem(item: String) : String {
 }
 
 fun matchSpell(spell: String) : String {
-    val result  = matchSpell(spell, lolVersion)
+    val result  = fullMatchSpell(spell, lolVersion)
+    return fullUrl(result)
+}
+
+fun noneItem() : String {
+    val result  = fullNoneItem(lolVersion)
     return fullUrl(result)
 }
 

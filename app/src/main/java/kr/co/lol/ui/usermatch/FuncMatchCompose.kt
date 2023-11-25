@@ -32,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.blur
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
@@ -57,6 +58,7 @@ import kr.co.lol.internet.champSkinUrl
 import kr.co.lol.internet.fullChampSkinUrl
 import kr.co.lol.internet.matchItem
 import kr.co.lol.internet.matchSpell
+import kr.co.lol.internet.noneItem
 import kr.co.lol.room.data.roomHelperValue
 import kr.co.lol.ui.component.userMatchItemHeight
 import kr.co.lol.ui.theme.LolInfoViewerTheme
@@ -282,26 +284,33 @@ fun FuncshowMatech(
                 val (item1, item2, item3, item4, item5, item6, spell1, spell2, itemExtra) = createRefs()
 
                 val listItem1 = listOf<ConstrainedLayoutReference>(item3, item2, item1)
-                val line1 = createHorizontalChain(item3, item2, item1, chainStyle = ChainStyle.Packed(0.9f))
+                val line1 = createHorizontalChain(item3, item2, item1, chainStyle = ChainStyle.Packed(1.0f))
 
                 val listItem2 = listOf<ConstrainedLayoutReference>(item6, item5, item4)
-                val line2 = createHorizontalChain(item4, item5, item6, chainStyle = ChainStyle.Packed(0.9f))
+                val line2 = createHorizontalChain(item4, item5, item6, chainStyle = ChainStyle.Packed(1.0f))
 
                 val listItem3 = listOf<ConstrainedLayoutReference>(spell1, spell2, itemExtra)
-                val line3 = createHorizontalChain(itemExtra, spell2, spell1, chainStyle = ChainStyle.Packed(0.9f))
+                val line3 = createHorizontalChain(itemExtra, spell2, spell1, chainStyle = ChainStyle.Packed(1.0f))
 
                 var itemIndex = 0
                 for(item in listItem1) {
                     val itemNum = userItem[itemIndex]
+                    var url = matchItem("${itemNum}.png")
+                    if(itemNum == 0) {
+                        url = noneItem()
+                    }
+
                     AsyncImage(
-                        model = matchItem("${itemNum}.png"),
+                        model = url,
                         contentDescription = null,
                         placeholder = painterResource(R.drawable.itemblank),
                         modifier = Modifier
-                            .size(30.dp)
+                            .width(35.dp)
+                            .height(30.dp)
+                            .padding(end = 5.dp)
                             .constrainAs(item) {
-                                end.linkTo(parent.end)
-                                bottom.linkTo(userMatch.bottom, 50.dp + 32.dp)
+                                end.linkTo(userMatch.end)
+                                bottom.linkTo(userMatch.bottom, 50.dp + 32.dp + 10.dp)
                             }
                         )
                     itemIndex++
@@ -310,19 +319,27 @@ fun FuncshowMatech(
                 itemIndex = 5
                 for(item in listItem2) {
                     val itemNum = userItem[itemIndex]
+                    var url = matchItem("${itemNum}.png")
+
+                    if(itemNum == 0) {
+                        url = noneItem()
+                    }
                     AsyncImage(
-                        model = matchItem("${itemNum}.png"),
+                        model = url,
                         contentDescription = null,
                         placeholder = painterResource(R.drawable.itemblank),
                         modifier = Modifier
-                            .size(30.dp)
+                            .width(35.dp)
+                            .height(30.dp)
+                            .padding(end = 5.dp)
                             .constrainAs(item) {
-                                end.linkTo(parent.end)
-                                bottom.linkTo(userMatch.bottom, 50.dp)
+                                end.linkTo(userMatch.end)
+                                bottom.linkTo(userMatch.bottom, 55.dp)
                             }
                     )
                     itemIndex--
                 }
+
                 var spellIndex = 2
                 for(item in listItem3) {
                     var url = ""
@@ -339,8 +356,8 @@ fun FuncshowMatech(
                         modifier = Modifier
                             .size(25.dp)
                             .constrainAs(item) {
-                                end.linkTo(parent.end)
-                                bottom.linkTo(userMatch.bottom, 25.dp)
+                                end.linkTo(userMatch.end)
+                                bottom.linkTo(userMatch.bottom, 20.dp)
                             }
                     )
                     spellIndex--
@@ -352,6 +369,7 @@ fun FuncshowMatech(
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
+                        .padding(end = paddingValue)
                         .constrainAs(scoreBox) {
                             top.linkTo(userMatch.bottom)
                             start.linkTo(parent.start)
@@ -359,22 +377,24 @@ fun FuncshowMatech(
                         }
                 )
                 Row(
-                    modifier = Modifier.padding(start = paddingValue)
+                    modifier = Modifier
+                        .padding(start = paddingValue)
                         .constrainAs(scoreRow) {
                             start.linkTo(parent.start)
                             top.linkTo(scoreBox.top)
                             bottom.linkTo(scoreBox.bottom)
-                    }
+                        }
                 ) {
                     Image(
-                        painterResource(R.drawable.score),
+                        painterResource(R.drawable.itemblank),
                         contentDescription = "",
                         contentScale = ContentScale.None,
                         modifier = Modifier
                             .size(15.dp)
                     )
 
-
+                    Spacer(modifier = Modifier.padding(Paddings.small))
+    
                     val scoreValue = String.format("${userKill} / ${userDeath} / ${userassist}")
                     Text(
                         text = scoreValue,
@@ -383,7 +403,8 @@ fun FuncshowMatech(
                 }
 
                 Row(
-                    modifier = Modifier.padding(end = paddingValue)
+                    modifier = Modifier
+                        .padding(end = paddingValue)
                         .constrainAs(minionRow) {
                             start.linkTo(scoreRow.end)
                             top.linkTo(scoreBox.top)
@@ -391,13 +412,13 @@ fun FuncshowMatech(
                         }
                     ) {
                     Image(
-                        painterResource(R.drawable.minion),
+                        painterResource(R.drawable.minion3),
                         contentDescription = "",
-                        contentScale = ContentScale.None,
+                        contentScale = ContentScale.Fit,
                         modifier = Modifier
-                            .size(15.dp)
+                            .size(20.dp)
                     )
-
+                    Spacer(modifier = Modifier.padding(Paddings.small))
                     val scoreValue = String.format("${minion}")
                     Text(
                         text = scoreValue,
@@ -406,22 +427,24 @@ fun FuncshowMatech(
                 }
 
                 Row(
-                    modifier = Modifier.padding(end = paddingValue)
+                    modifier = Modifier
+                        .padding(end = paddingValue)
                         .constrainAs(goldRow) {
                             start.linkTo(minionRow.end)
                             top.linkTo(scoreBox.top)
                             bottom.linkTo(scoreBox.bottom)
                         }
                 ) {
+
                     Image(
-                        painterResource(R.drawable.items),
+                        painterResource(R.drawable.gold2),
                         contentDescription = "",
-                        contentScale = ContentScale.None,
+                        contentScale = ContentScale.Fit,
                         modifier = Modifier
                             .size(15.dp)
                     )
 
-
+                    Spacer(modifier = Modifier.padding(Paddings.small))
                     val scoreValue = String.format("${gold}")
                     Text(
                         text = scoreValue,
