@@ -150,7 +150,7 @@ class HomeFragment : Fragment() {
                                 userid = "dongk"
                             }
                             if (apikey.isEmpty()) {
-                                apikey = "RGAPI-d9bfe5ea-ae70-416d-a42b-1613893e45b4"
+                                apikey = "RGAPI-91a9b8af-b93c-42ff-b440-2ff1a70356ca"
                             }
                             sharedViewModel.inputApiKey(apikey)
                             sharedViewModel.inputUserId(userid)
@@ -165,7 +165,7 @@ class HomeFragment : Fragment() {
 
 
                             if (apikey.isEmpty()) {
-                                apikey = "RGAPI-d9bfe5ea-ae70-416d-a42b-1613893e45b4"
+                                apikey = "RGAPI-91a9b8af-b93c-42ff-b440-2ff1a70356ca"
                             }
 
                             rotationChamp(apikey)
