@@ -132,6 +132,7 @@ class UserFragment : Fragment() {
 
         sharedViewModel.sharedInputUserInfo(
             userId,
+            userViewModel.puuid,
             userViewModel.profileIconId,
             userViewModel.summonerLevel,
             userViewModel.loltear,

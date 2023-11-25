@@ -35,6 +35,7 @@ class MatchActivity : ComponentActivity() {
 
 
         val userId = intent.getStringExtra("userId")
+        val puuId = intent.getStringExtra("puuId")
         val apiKey = intent.getStringExtra("apiKey")
         val matchList = intent.getStringArrayListExtra("matchList")
 
@@ -48,7 +49,7 @@ class MatchActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    ItemsDemo(viewMatchModel.items)
+                    ItemsDemo(viewMatchModel.items, puuId!!)
                 }
             }
         }
@@ -56,12 +57,13 @@ class MatchActivity : ComponentActivity() {
 }
 
 @Composable
-fun ItemsDemo(flow: Flow<PagingData<UserMatchId>>) {
+fun ItemsDemo(flow: Flow<PagingData<UserMatchId>>, puuId : String) {
     val lazyPagingItems = flow.collectAsLazyPagingItems()
     LazyColumn {
         items(lazyPagingItems) { matchBody ->
             matchBody?.let{ userMatchId->
-                Text("${userMatchId.info.gameStartTimestamp}")
+                FuncshowMatech(userMatchId, puuId)
+                //Text("${userMatchId.info.gameStartTimestamp}")
             }
         }
     }
@@ -78,6 +80,7 @@ fun MatchPreview() {
         UserLevel4(
             GameType.LOL,
             "저스트킴",
+            "AH3tjkvRgXPgrUEaKIeZgVJcJeRKYJFiX27RXVs4yvZuF5GqueBBY7oL4SHci2RM9LdTPW5FsL3XhQ",
             "RGAPI-91a9b8af-b93c-42ff-b440-2ff1a70356ca",
             listOf<String>(
                 "KR_6806621897",

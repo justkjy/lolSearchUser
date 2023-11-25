@@ -1,6 +1,7 @@
 package kr.co.lol.ui.usermatch
 
 import android.bluetooth.BluetoothSocketException
+import android.content.Context
 import android.text.BoringLayout
 import android.text.TextPaint
 import androidx.compose.foundation.Image
@@ -51,20 +52,83 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.google.android.engage.common.datamodel.Image
 import kr.co.lol.R
+import kr.co.lol.dataclass.UserMatchId
 import kr.co.lol.internet.champSkinUrl
 import kr.co.lol.internet.fullChampSkinUrl
 import kr.co.lol.internet.matchItem
 import kr.co.lol.internet.matchSpell
+import kr.co.lol.room.data.roomHelperValue
 import kr.co.lol.ui.component.userMatchItemHeight
 import kr.co.lol.ui.theme.LolInfoViewerTheme
 import kr.co.lol.ui.theme.Paddings
 import kr.co.lol.ui.theme.shapes
+import java.nio.file.Files.find
 
 
 @Composable
 fun FuncshowMatech(
-
+    userMatchId : UserMatchId? = null,
+    puuId : String = ""
 ) {
+    var gamemMode = "ARAM"
+    var gameDuration = "16:31분"
+    var startTime = "2023/11/25 13:25"
+
+    var gameWin = "승리"
+    var champEngName = "Alistar"
+    var champKorName = "알리스타"
+    var chmapNum = 12
+    var champLevel =  0
+    var userItem = arrayOf(0, 0, 0, 0, 0, 0)
+    var userSpell = arrayOf(0, 0, 0) // 마지막껀 장신구임
+    var userKill = 0
+    var userDeath = 0
+    var userassist = 0
+
+    var minion = 0
+    var gold = 0
+
+    userMatchId?.let { match->
+        gamemMode = gameModeConvert(match.info.gameMode)
+        gameDuration = gameDurationConver(match.info.gameDuration)
+        startTime = gameUnixTimeToDate(match.info.gameStartTimestamp)
+
+        var userIndex = 0
+        for(item in match.metadata.participants) {
+            if(item.equals(puuId)) {
+                break
+            }
+            userIndex++
+        }
+        val userPart = match.info.participants[userIndex]
+        if(userPart.win) gameWin = "승리"
+        else gameWin = "패배"
+        champEngName = userPart.championName
+        val context = LocalContext.current
+        champKorName = champEngNameToKorName(champEngName, context)
+        chmapNum = userPart.championId
+        champLevel = userPart.champLevel
+        userItem[0] = userPart.item0
+        userItem[1] = userPart.item1
+        userItem[2] = userPart.item2
+        userItem[3] = userPart.item3
+        userItem[4] = userPart.item4
+        userItem[5] = userPart.item5
+
+        userSpell[0]= userPart.summoner1Id
+        userSpell[1]= userPart.summoner2Id
+        userSpell[2] = userPart.item6
+
+        userKill = userPart.kills
+        userDeath = userPart.deaths
+        userassist = userPart.assists
+
+        minion = userPart.totalMinionsKilled
+        gold = userPart.goldEarned
+
+    } ?: {
+
+    }
     Column(
         verticalArrangement = Arrangement.Center,
         modifier = Modifier
@@ -95,7 +159,7 @@ fun FuncshowMatech(
                 ) { }
 
                 Text(
-                    text = "무작이 총력전",
+                    text = gamemMode,
                     style = MaterialTheme.typography.titleSmall,
                     modifier = Modifier
                         .padding(start = paddingValue, top = paddingValue)
@@ -107,7 +171,7 @@ fun FuncshowMatech(
                 )
 
                 Text(
-                    text = "2023/11/24",
+                    text = startTime,
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier
                         .padding(start = paddingValue, top = Paddings.small)
@@ -138,7 +202,7 @@ fun FuncshowMatech(
                         }
                 ) {
                     Text(
-                        text = "승리"
+                        text = gameWin
                     )
                 }
 
@@ -162,7 +226,7 @@ fun FuncshowMatech(
                     val backColor = MaterialTheme.colorScheme.secondary
                     AsyncImage(
                         model = ImageRequest.Builder(LocalContext.current)
-                            .data(champSkinUrl("Alistar", 29))
+                            .data(champSkinUrl(champEngName, 0))
                             .build(),
 
                         contentDescription = null,
@@ -195,7 +259,7 @@ fun FuncshowMatech(
                             }
                     )
                 }
-                Text(text = "17",
+                Text(text = "${champLevel}",
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier
                         .padding(start = paddingValue)
@@ -205,7 +269,7 @@ fun FuncshowMatech(
                         }
                 )
 
-                Text(text = "알리스타",
+                Text(text = champKorName,
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier
                         .padding(start = paddingValue)
@@ -226,10 +290,11 @@ fun FuncshowMatech(
                 val listItem3 = listOf<ConstrainedLayoutReference>(spell1, spell2, itemExtra)
                 val line3 = createHorizontalChain(itemExtra, spell2, spell1, chainStyle = ChainStyle.Packed(0.9f))
 
-
+                var itemIndex = 0
                 for(item in listItem1) {
+                    val itemNum = userItem[itemIndex]
                     AsyncImage(
-                        model = matchItem("1058.png"),
+                        model = matchItem("${itemNum}.png"),
                         contentDescription = null,
                         placeholder = painterResource(R.drawable.itemblank),
                         modifier = Modifier
@@ -239,11 +304,14 @@ fun FuncshowMatech(
                                 bottom.linkTo(userMatch.bottom, 50.dp + 32.dp)
                             }
                         )
+                    itemIndex++
                 }
 
+                itemIndex = 5
                 for(item in listItem2) {
+                    val itemNum = userItem[itemIndex]
                     AsyncImage(
-                        model = matchItem("1058.png"),
+                        model = matchItem("${itemNum}.png"),
                         contentDescription = null,
                         placeholder = painterResource(R.drawable.itemblank),
                         modifier = Modifier
@@ -253,11 +321,19 @@ fun FuncshowMatech(
                                 bottom.linkTo(userMatch.bottom, 50.dp)
                             }
                     )
+                    itemIndex--
                 }
-
+                var spellIndex = 2
                 for(item in listItem3) {
+                    var url = ""
+                    if(spellIndex == 2) {
+                        url = matchItem("${userSpell[2]}.png")
+                    } else {
+                        url = matchSpell(spellConvert(userSpell[spellIndex]))
+                    }
+
                     AsyncImage(
-                        model = matchSpell(spellConvert(3)),
+                        model = url,
                         contentDescription = null,
                         placeholder = painterResource(R.drawable.itemblank),
                         modifier = Modifier
@@ -267,6 +343,7 @@ fun FuncshowMatech(
                                 bottom.linkTo(userMatch.bottom, 25.dp)
                             }
                     )
+                    spellIndex--
                 }
 
                 val (scoreBox, scoreRow, minionRow, goldRow) = createRefs()
@@ -297,10 +374,8 @@ fun FuncshowMatech(
                             .size(15.dp)
                     )
 
-                    val kill = 3
-                    val death = 0
-                    val assist = 5
-                    val scoreValue = String.format("${kill} / ${death} / ${assist}")
+
+                    val scoreValue = String.format("${userKill} / ${userDeath} / ${userassist}")
                     Text(
                         text = scoreValue,
                         style = MaterialTheme.typography.titleSmall
@@ -322,8 +397,6 @@ fun FuncshowMatech(
                         modifier = Modifier
                             .size(15.dp)
                     )
-
-                    val minion = 300
 
                     val scoreValue = String.format("${minion}")
                     Text(
@@ -348,7 +421,6 @@ fun FuncshowMatech(
                             .size(15.dp)
                     )
 
-                    val gold = 10000
 
                     val scoreValue = String.format("${gold}")
                     Text(
@@ -378,6 +450,46 @@ fun spellConvert(summonerId : Int) : String {
     }
 }
 
+fun gameModeConvert(gameMode : String)
+= when(gameMode) {
+        "CLASSIC" -> "소환사 협곡"
+        "ARAM" -> "칼바람"
+        "URF" -> "우르프"
+        "NEXUSBLITZ" -> "돌격 넥서스"
+        "TUTORIAL" -> "튜토리얼"
+        else->"그 외"
+    }
+
+fun gameDurationConver(gameDuration: Int) : String {
+    var min = gameDuration/60
+    var sec = gameDuration % 60
+    var hour = min / 60
+    var time = ""
+    if (hour > 0) {
+        time = "${hour}:${min}.${sec}분"
+    } else {
+        time = "${min}.${sec}분"
+    }
+    return time
+}
+
+fun gameUnixTimeToDate(unixTime : Long) : String {
+    val sdf = java.text.SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
+    val date = java.util.Date(unixTime)
+    return sdf.format(date)
+}
+
+fun champEngNameToKorName(champEngName: String, context: Context) : String {
+
+    var helper = roomHelperValue(context)
+    val lolInfoDb = helper!!.roomMemoDao()
+    val list =  lolInfoDb.getChampInfo(champEngName)
+    return if(list.isNullOrEmpty()) {
+        ""
+    } else {
+        list.first().nameKor
+    }
+}
 
 @Composable
 @Preview

@@ -48,6 +48,7 @@ fun UserLolCard(viewModel:SharedViewModel = viewModel()) {
         appActivityViewModel?.let {
 
             val userName = it.userId.observeAsState("").value
+            val puuId = it.puuid.observeAsState("").value
             val tier = it.loltear.observeAsState("").value
             val summonerLevel = it.summonerLevel.observeAsState(0).value
             val profileId = it.profileId.observeAsState(0).value
@@ -82,9 +83,11 @@ fun UserLolCard(viewModel:SharedViewModel = viewModel()) {
                 profileId,
                 championName
             )
+
             Log.i("TEST", "${matchList}")
             UserItem(
                 userId = userName,
+                puuId = puuId,
                 apiKey = apiKey,
                 gameType = GameType.LOL,
                 constraintSet = funcConstraintLOLSet(),
@@ -98,6 +101,7 @@ fun UserLolCard(viewModel:SharedViewModel = viewModel()) {
         if(appActivityViewModel == null){
             UserItem(
                 userId = "justkim",
+                puuId = "AH3tjkvRgXPgrUEaKIeZgVJcJeRKYJFiX27RXVs4yvZuF5GqueBBY7oL4SHci2RM9LdTPW5FsL3XhQ",
                 gameType = GameType.LOL,
                 constraintSet = funcConstraintLOLSet(),
                 level1Title = "일반",

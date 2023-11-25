@@ -53,7 +53,8 @@ import kr.co.lol.ui.usermatch.MatchActivity
 
 @Composable
 fun UserItem(
-    userId: String,
+    userId : String,
+    puuId : String = "AH3tjkvRgXPgrUEaKIeZgVJcJeRKYJFiX27RXVs4yvZuF5GqueBBY7oL4SHci2RM9LdTPW5FsL3XhQ",
     apiKey: String = "",
     gameType: GameType = GameType.LOL,
     constraintSet: ConstraintSet,
@@ -221,7 +222,7 @@ fun UserItem(
         UserLevel3(level3Title, rankInfo, gameType/*GameType.LOL*/)
 
         /// level 4 대전 기록
-        UserLevel4(gameType, userId, apiKey, matchList )
+        UserLevel4(gameType, userId, puuId, apiKey, matchList )
 
         // level 사이 라인 그리기
         val lineColor = MaterialTheme.colorScheme.primary
@@ -327,7 +328,7 @@ fun UserLevel3(
 }
 
 @Composable
-fun UserLevel4(gameType: GameType, userId: String, apiKey: String, matchList: List<String>) {
+fun UserLevel4(gameType: GameType, userId: String, puuId: String, apiKey: String, matchList: List<String>) {
     var clicked by rememberSaveable {
         mutableStateOf(false)
     }
@@ -355,6 +356,7 @@ fun UserLevel4(gameType: GameType, userId: String, apiKey: String, matchList: Li
         val intent = Intent(context, MatchActivity::class.java)
         intent.putExtra("userid", userId)
         intent.putExtra("apiKey", apiKey)
+        intent.putExtra("puuId", puuId)
         intent.putExtra("matchList", ArrayList<String>(matchList))
         startActivity(context, intent, null)
     }

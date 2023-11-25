@@ -26,9 +26,14 @@ class SharedViewModel : ViewModel() {
     // user Id
     val _userId = MutableLiveData<String>("")
     val userId: LiveData<String> = _userId
+
     val inputUserId: (id:String) -> (Unit) = {it ->
         _userId.value = it
     }
+
+    // puuid
+    private val _puuid = MutableLiveData<String>("")
+    val puuid: LiveData<String> = _puuid
 
     // 사용 프로필 아이콘 아이디
     private val _profileIconId = MutableLiveData<Int>(0)
@@ -71,10 +76,11 @@ class SharedViewModel : ViewModel() {
     val matchList: LiveData<List<String>> = _matchList
 
 
-    fun sharedInputUserInfo(userId: String, profileId : Int, summonerLevel : Int, tear: String,
+    fun sharedInputUserInfo(userId: String, puuId : String, profileId : Int, summonerLevel : Int, tear: String,
                             rank: String, win: Int, losses: Int, topChampion: List<Int>,
                             topEngChamp: List<String>, matchList: List<String>) {
         this._userId.value = userId
+        this._puuid.value = puuId
         this._profileIconId.value = profileId
         this._summonerLevel.value = summonerLevel
         this._loltear.value = tear
