@@ -81,7 +81,7 @@ fun MatchPreview() {
             GameType.LOL,
             "저스트킴",
             "AH3tjkvRgXPgrUEaKIeZgVJcJeRKYJFiX27RXVs4yvZuF5GqueBBY7oL4SHci2RM9LdTPW5FsL3XhQ",
-            "RGAPI-91a9b8af-b93c-42ff-b440-2ff1a70356ca",
+            "RGAPI-9f86464b-1464-4e80-8279-bd7591b18637",
             listOf<String>(
                 "KR_6806621897",
                 "KR_6806502831",
