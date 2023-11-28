@@ -68,6 +68,7 @@ import kr.co.lol.ui.theme.Paddings
 @Composable
 fun LevelTop(
     viewModel: ChampionInitViewModel? = null
+
 ) {
 
     var userId by rememberSaveable { mutableStateOf("")   }
@@ -89,14 +90,6 @@ fun LevelTop(
                 .padding(Paddings.large)
                 .background(Color.White)
         ) {
-//            AsyncImage(
-//                model = R.drawable.lollogo,
-//                contentDescription = "",
-//                contentScale = ContentScale.FillHeight,
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .height(50.dp)
-//            )
 
             Spacer(modifier = Modifier.padding(Paddings.extra))
             Row(
@@ -154,6 +147,11 @@ fun LevelTop(
 
                 Spacer(modifier = Modifier.padding(Paddings.xsmall))
 
+
+                val enableText = viewModel?.let { view ->
+                    view.needApiKey.observeAsState(false).value
+                }?: false
+
                 OutlinedTextField(
                     value = apiKey,
                     textStyle = MaterialTheme.typography.titleSmall,
@@ -163,12 +161,14 @@ fun LevelTop(
                             text = "DEVELOPMENT API KEY"
                         )
                     },
+                    enabled = enableText,
                     onValueChange = {
                         apiKey = it
                         viewModel?.let { view ->
                             view.inputApiKey(it)
                         }
                     },
+
                     modifier = Modifier
                         .padding(
                             start = Paddings.large,

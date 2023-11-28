@@ -47,6 +47,13 @@ class ChampionInitViewModel : ViewModel() {
         this._apiKey.value = id
     }
 
+    // 키가 만료 되었거나 잘 못 되었을때 직접 넣는걸로 하자
+    private val _needApiKey = MutableLiveData<Boolean>(false)
+    val needApiKey : LiveData<Boolean> = _needApiKey
+    fun inputApiKey(state: Boolean) {
+        this._needApiKey.value = state
+    }
+
     // 버튼 눌렀을때 랭크 정보 점프 네비게이션
     private val _inputButtonCheck = MutableLiveData(false)
     val iputButtonCheck:LiveData<Boolean> = _inputButtonCheck

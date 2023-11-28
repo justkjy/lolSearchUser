@@ -149,11 +149,13 @@ class HomeFragment : Fragment() {
                             if (userid.isEmpty()) {
                                 userid = "dongk"
                             }
+
                             if (apikey.isEmpty()) {
-                                apikey = "RGAPI-9f86464b-1464-4e80-8279-bd7591b18637"
+                                apikey = "RGAPI-a2161692-7fdf-4e6c-9d99-e3594f07fa24"
                             }
                             sharedViewModel.inputApiKey(apikey)
                             sharedViewModel.inputUserId(userid)
+
                             searchUser(userid, apikey, viewHomeModel)
                         }
                         is navFailState -> {
@@ -161,13 +163,8 @@ class HomeFragment : Fragment() {
                             viewHomeModel.setInputWait()
                         }
                         is navSuccessState -> {
-                            var apikey = viewHomeModel.apiKey.value!!
-
-
-                            if (apikey.isEmpty()) {
-                                apikey = "RGAPI-9f86464b-1464-4e80-8279-bd7591b18637"
-                            }
-
+                            //var apikey = viewHomeModel.apiKey.value!!
+                            var apikey = sharedViewModel.apiKey.value!!
                             rotationChamp(apikey)
                             view?.let { viewNav ->
                                 viewNav.findNavController()
@@ -203,6 +200,10 @@ suspend fun searchUser(userId : String, useApiKey: String, viewModel: ChampionIn
         val response = retrofitService
         if(response.code() != 200 ) {
             viewModel.setNavState(navFailState(response.code()))
+
+            if(response.code() == 403) {
+                viewModel.inputApiKey(true)
+            }
             return
         }
 
@@ -228,6 +229,7 @@ fun MessageBox(view:ChampionInitViewModel = viewModel()) {
     var text = ""
     if(code > 0) {
         text = viewCode(code)
+
     }
     Scaffold (
         modifier = Modifier.fillMaxWidth()
