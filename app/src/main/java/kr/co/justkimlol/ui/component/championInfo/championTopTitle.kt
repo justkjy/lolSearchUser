@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -26,8 +27,13 @@ import androidx.compose.ui.graphics.RadialGradientShader
 import androidx.compose.ui.graphics.Shader
 import androidx.compose.ui.graphics.ShaderBrush
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.MeasureScope
+import androidx.compose.ui.layout.layout
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontVariation.width
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -43,8 +49,10 @@ fun ChampionTopImg(
     profileId : Int = 5986,
     userName : String = "Just Kim",
     userTier : String = "GOLD",
-    skillNum : Int = 150,
+    skillNum : Int = 160,
 ) {
+    var layoutWidth = 0
+    var layoutHeight = 0
     Column(
         verticalArrangement = Arrangement.Center,
         modifier = Modifier
@@ -57,16 +65,16 @@ fun ChampionTopImg(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(Paddings.small)
+
         ) {
+
             ConstraintLayout(
                 Modifier.fillMaxSize()
+
             ) {
                 val (backleftImg, backrightImg, backColor) = createRefs()
-                val (profileImg, levelImg, profileName, tearIcon) = createRefs()
 
-                createHorizontalChain(profileName, tearIcon, chainStyle = ChainStyle.Packed)
-                val barrierValue = createTopBarrier(profileName, tearIcon)
-                
+
                 // 배경 이미지
                 //Row{
                     AsyncImage(
@@ -119,6 +127,9 @@ fun ChampionTopImg(
                     Color.Black.copy(0.5f),
                     Color.White.copy(0.0f))
                 )
+
+                val (levelImg) = createRefs()
+
                 Box(
                     Modifier
                         .width(200.dp)
@@ -127,67 +138,107 @@ fun ChampionTopImg(
                         .background(brush)
                         .padding(4.dp)
                         .constrainAs(backColor) {
-                            top.linkTo(levelImg.top)
+                            bottom.linkTo(parent.bottom)
                             start.linkTo(parent.start)
                             end.linkTo(parent.end)
                         }
                 ) { }
-
-                AsyncImage(model = profileUrl(profileId),
-                            contentDescription = null,
-                            placeholder = painterResource(R.drawable.user_cowboy),
-                            contentScale = ContentScale.Fit,
-                            modifier = Modifier
-                                .size(40.dp)
-                                .clip(CircleShape)
-                                .constrainAs(profileImg){
-                                    top.linkTo(levelImg.top)
-                                    bottom.linkTo(levelImg.bottom)
-                                    start.linkTo(levelImg.start)
-                                    end.linkTo(levelImg.end)
-
-                                }
+                var modifier = Modifier.size(200.dp)
+                Column(
+                    modifier = modifier
+                        .constrainAs(levelImg) {
+                        bottom.linkTo(parent.bottom)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    }
+                ){
+                    tierProfile(
+                        modifier = modifier,
+                        profileId = profileId,
+                        userTier = userTier,
+                        userName = userName,
+                        skillNum = skillNum
                     )
+                }
 
-                AsyncImage(
-                    model = skillLevelResource(skillNum),
-                    contentDescription = null,
-                    placeholder = painterResource(R.drawable.user_cowboy),
-                    contentScale = ContentScale.Fit,
-                    modifier = Modifier
-                        .size(50.dp)
-                        .clip(CircleShape)
-                        .constrainAs(levelImg){
-                            start.linkTo(parent.start)
-                            end.linkTo(parent.end)
-                            bottom.linkTo(barrierValue, 10.dp)
-                        }
-                )
-
-
-                Text(
-                    text = userName,
-                    modifier = Modifier
-                        .constrainAs(profileName){
-                            bottom.linkTo(parent.bottom, 10.dp)
-                            end.linkTo(profileName.start, 10.dp)
-                        }
-                )
-
-                AsyncImage(
-                    model = tierResource(userTier),
-                    contentDescription = null,
-                    modifier = Modifier.size(20.dp)
-                        .constrainAs(tearIcon) {
-                            start.linkTo(profileName.end, 10.dp)
-                            top.linkTo(profileName.top)
-                        }
-                )
             }
 
         }
     }
 }
+
+@Composable
+fun tierProfile(
+    modifier : Modifier,
+    profileId : Int,
+    skillNum: Int,
+    userName: String,
+    userTier: String,
+    userColor : Color = MaterialTheme.colorScheme.onPrimary
+) {
+
+    ConstraintLayout(
+        modifier = modifier
+    ) {
+        val (profileImg, levelImg, profileName, tearIcon) = createRefs()
+
+        AsyncImage(model = profileUrl(profileId),
+            contentDescription = null,
+            placeholder = painterResource(R.drawable.user_cowboy),
+            contentScale = ContentScale.Fit,
+            modifier = Modifier
+                .fillMaxSize(0.4f)
+                .clip(CircleShape)
+                .constrainAs(profileImg){
+                    top.linkTo(levelImg.top)
+                    bottom.linkTo(levelImg.bottom)
+                    start.linkTo(levelImg.start)
+                    end.linkTo(levelImg.end)
+                }
+        )
+
+        AsyncImage(
+            model = skillLevelResource(skillNum),
+            contentDescription = null,
+            placeholder = painterResource(R.drawable.user_cowboy),
+            contentScale = ContentScale.Fit,
+            modifier = Modifier
+                .fillMaxSize(0.6f)
+                .clip(CircleShape)
+                .constrainAs(levelImg){
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                    top.linkTo(parent.top, 10.dp)
+                    bottom.linkTo(parent.bottom)
+                }
+        )
+
+
+        createHorizontalChain(profileName, tearIcon, chainStyle =  ChainStyle.Packed)
+        Text(
+            text = userName,
+            color = userColor,
+            modifier = Modifier
+                .padding(end = 5.dp)
+                .constrainAs(profileName){
+                    top.linkTo(levelImg.bottom)
+                    start.linkTo(parent.start, 10.dp)
+                    end.linkTo(parent.end, 10.dp)
+                }
+        )
+
+        AsyncImage(
+            model = tierResource(userTier),
+            contentDescription = null,
+            modifier = Modifier.size(20.dp)
+                .constrainAs(tearIcon) {
+                    start.linkTo(profileName.end, 10.dp)
+                    top.linkTo(profileName.top)
+                }
+        )
+    }
+}
+
 
 @Composable
 @Preview

@@ -21,12 +21,8 @@ fun ThemeColor(isDarkTheme : Boolean = false) : ColorScheme {
             secondary = Grey40,
             surfaceVariant = Grey43,
             background = Grey50,
+            tertiary = Purple40,
 
-            surface = Color.White,
-            onSecondary = Color.White,
-            onTertiary = Color.White,
-            onBackground = Color.White,
-            onSurface = Color.White
         )
     } else {
         lightColorScheme(
@@ -38,7 +34,8 @@ fun ThemeColor(isDarkTheme : Boolean = false) : ColorScheme {
             onPrimary = Color.White,
             secondary = Grey40,
             surfaceVariant = Grey43,
-            background = Grey50
+            background = Grey50,
+            tertiary = Purple40
         /* Other default colors to override
         background = Color(0xFFFFFBFE),
         surface = Color(0xFFFFFBFE),

@@ -1,4 +1,4 @@
-package kr.co.justkimlol.ui.usermatch
+package kr.co.justkimlol.mainfragment.user.usermatch
 
 import android.util.Log
 import androidx.paging.PagingSource
@@ -39,7 +39,7 @@ class MatchPageSource(
 
         var loadSize = params.loadSize
         if(page == 1) {
-            loadSize = params.loadSize/3
+            loadSize = 5
         }
 
         val range = page.until(page + loadSize)

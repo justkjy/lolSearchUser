@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="kr.co.justkimlol.ui.home.HomeFragment"
+        android:name="kr.co.justkimlol.mainfragment.home.HomeFragment"
         android:label="@string/lolmenu_label_userIput"
         tools:layout="@layout/fragment_home" >
 
@@ -19,7 +19,7 @@
 
     <fragment
         android:id="@+id/navigation_user"
-        android:name="kr.co.justkimlol.ui.user.UserFragment"
+        android:name="kr.co.justkimlol.mainfragment.user.UserFragment"
         android:label="@string/lolmenu_label_userInfo"
         tools:layout="@layout/fragment_user" >
 
@@ -27,7 +27,7 @@
 
     <fragment
         android:id="@+id/navigation_champion"
-        android:name="kr.co.justkimlol.ui.champion.ChampionFragment"
+        android:name="kr.co.justkimlol.mainfragment.champion.ChampionFragment"
         android:label="@string/lolmenu_label_champInfo"
         tools:layout="@layout/fragment_champion" >
     </fragment>

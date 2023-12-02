@@ -1,4 +1,4 @@
-package kr.co.justkimlol.ui.usermatch
+package kr.co.justkimlol.mainfragment.user.usermatch
 
 import android.content.Context
 import androidx.compose.foundation.Image
@@ -49,8 +49,11 @@ import kr.co.justkimlol.ui.theme.Paddings
 
 @Composable
 fun FuncshowMatech(
-    userMatchId : UserMatchId? = null,
-    puuId : String = ""
+    index: Int = 0,
+    userMatchId: UserMatchId? = null,
+    puuId: String = "",
+    insertChampUpdate: (index: Int, championEngName: String, win: Boolean, kill: Int, death: Int) -> Unit
+    = {_,_, _, _, _ -> }
 ) {
     var gamemMode = "ARAM"
     var gameDuration = "16:31분"
@@ -107,6 +110,8 @@ fun FuncshowMatech(
 
         minion = userPart.totalMinionsKilled
         gold = userPart.goldEarned
+
+        insertChampUpdate(index, champEngName, userPart.win, userKill, userDeath)
 
     } ?: {
 

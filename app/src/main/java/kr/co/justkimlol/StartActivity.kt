@@ -9,9 +9,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import kr.co.justkimlol.ui.champion.ChampionFragment
-import kr.co.justkimlol.ui.home.HomeFragment
-import kr.co.justkimlol.ui.user.UserFragment
+import kr.co.justkimlol.mainfragment.champion.ChampionFragment
+import kr.co.justkimlol.mainfragment.home.HomeFragment
+import kr.co.justkimlol.mainfragment.user.UserFragment
 import kr.co.justkimlol.databinding.ActivityNavigationMainBinding
 
 

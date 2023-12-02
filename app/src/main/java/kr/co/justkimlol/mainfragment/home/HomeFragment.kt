@@ -1,4 +1,4 @@
-package kr.co.justkimlol.ui.home
+package kr.co.justkimlol.mainfragment.home
 
 import android.os.Bundle
 import android.util.Log
@@ -19,13 +19,18 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
+import androidx.datastore.dataStore
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.lifecycleScope
@@ -49,8 +54,9 @@ import kr.co.justkimlol.internet.retrofit.GetJsonFromRerofit
 import kr.co.justkimlol.internet.retrofit.LolQueryUserName
 import kr.co.justkimlol.room.data.RoomHelper
 import kr.co.justkimlol.room.data.roomHelperValue
-import kr.co.justkimlol.ui.home.viewModel.ChampionInitViewModel
-import kr.co.justkimlol.ui.home.viewModel.PatchState
+import kr.co.justkimlol.mainfragment.home.viewModel.ChampionInitViewModel
+import kr.co.justkimlol.mainfragment.home.viewModel.DataStoreViewModel
+import kr.co.justkimlol.mainfragment.home.viewModel.PatchState
 import kr.co.justkimlol.ui.navigation.navFailState
 import kr.co.justkimlol.ui.navigation.navSuccessState
 import kr.co.justkimlol.ui.navigation.navWaitState
@@ -63,7 +69,7 @@ class HomeFragment : Fragment() {
     private val viewHomeModel: ChampionInitViewModel by viewModels()
     // 공유 라이브 뷰
     private lateinit var sharedViewModel: SharedViewModel
-
+    private lateinit var storeViewModel : DataStoreViewModel
 
     private var _binding: FragmentHomeBinding? = null
 
@@ -81,7 +87,16 @@ class HomeFragment : Fragment() {
     ): View? {
 
         sharedViewModel = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
+        // loadUserId
+        storeViewModel = ViewModelProvider(this).get(DataStoreViewModel::class.java)
+
         observeUiEffects()
+
+        var searchUserName = ""
+        storeViewModel.read.observe(this, Observer{
+            searchUserName = it.toString()
+            viewHomeModel.inputUserid(searchUserName)
+        })
 
         val fragmentContext = this.context ?.let { context ->
             helper = roomHelperValue(context)
@@ -122,6 +137,7 @@ class HomeFragment : Fragment() {
                         is getJsonSuccess -> {
                             val message = it.msg
                             viewHomeModel.setChampionInfo(PatchState.COMPLETE)
+
                         }
                     }
                 }
@@ -157,6 +173,8 @@ class HomeFragment : Fragment() {
                         is navSuccessState -> {
                             //var apikey = viewHomeModel.apiKey.value!!
                             var apikey = sharedViewModel.apiKey.value!!
+                            // 검색한 아이디 저장
+                            storeViewModel.insert(viewHomeModel.userId.value!!)
                             rotationChamp(apikey)
                             view?.let { viewNav ->
                                 viewNav.findNavController()
@@ -214,7 +232,7 @@ suspend fun searchUser(userId : String, useApiKey: String, viewModel: ChampionIn
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MessageBox(view:ChampionInitViewModel = viewModel()) {
+fun MessageBox(view: ChampionInitViewModel = viewModel()) {
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
     val code = view.errorCode.observeAsState(0).value
@@ -224,7 +242,8 @@ fun MessageBox(view:ChampionInitViewModel = viewModel()) {
 
     }
     Scaffold (
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
             .fillMaxHeight(0.5f),
 
 
@@ -232,7 +251,8 @@ fun MessageBox(view:ChampionInitViewModel = viewModel()) {
 
         content = { innerPadding ->
             //GlobalScope.launch(Dispatchers.IO) {
-            Column(modifier = Modifier.fillMaxSize()
+            Column(modifier = Modifier
+                .fillMaxSize()
                 .background(androidx.compose.ui.graphics.Color.White)
             ) {
 
@@ -262,7 +282,8 @@ fun MessageBox(view:ChampionInitViewModel = viewModel()) {
     )
     Column(
 
-        Modifier.fillMaxSize()
+        Modifier
+            .fillMaxSize()
             .background(color = androidx.compose.ui.graphics.Color.White)
     ) {
 

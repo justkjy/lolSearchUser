@@ -1,4 +1,4 @@
-package kr.co.justkimlol.ui.usermatch
+package kr.co.justkimlol.mainfragment.user.usermatch.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.Flow
 import kr.co.justkimlol.dataclass.UserMatchId
 import kr.co.justkimlol.internet.retrofit.GetJsonFromRerofit
 import kr.co.justkimlol.internet.retrofit.LolQueryMatchId
+import kr.co.justkimlol.mainfragment.user.usermatch.MatchPageSource
 
 class MatchViewModel : ViewModel() {
 
@@ -25,6 +26,5 @@ class MatchViewModel : ViewModel() {
         ).flow
             .cachedIn(viewModelScope)
     }
-
 
 }

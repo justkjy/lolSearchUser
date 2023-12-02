@@ -27,7 +27,7 @@ import kr.co.justkimlol.ui.component.userInfoLevelTopHeight
 import kr.co.justkimlol.ui.theme.LolInfoViewerTheme
 import kr.co.justkimlol.ui.theme.Paddings
 import androidx.lifecycle.viewmodel.compose.viewModel
-import kr.co.justkimlol.ui.user.appActivityViewModel
+import kr.co.justkimlol.mainfragment.user.appActivityViewModel
 
 @Composable
 fun UserLolCard(viewModel:SharedViewModel = viewModel()) {

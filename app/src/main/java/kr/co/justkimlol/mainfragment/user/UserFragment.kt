@@ -1,4 +1,4 @@
-package kr.co.justkimlol.ui.user
+package kr.co.justkimlol.mainfragment.user
 
 import android.os.Bundle
 import android.util.Log
@@ -9,6 +9,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -31,9 +32,11 @@ import kr.co.justkimlol.internet.userInfoFail
 import kr.co.justkimlol.internet.userInfoGetloading
 import kr.co.justkimlol.internet.userInfoSuccess
 import kr.co.justkimlol.internet.userStepMsg
+import kr.co.justkimlol.mainfragment.home.viewModel.DataStoreViewModel
 import kr.co.justkimlol.room.data.RoomHelper
 import kr.co.justkimlol.room.data.roomHelperValue
-import kr.co.justkimlol.ui.user.viewModel.UserViewModel
+import kr.co.justkimlol.mainfragment.user.viewModel.UserViewModel
+import kr.co.justkimlol.ui.component.userInfo.UserTop
 import kr.co.justkimlol.ui.theme.LolInfoViewerTheme
 
 var appActivityViewModel : SharedViewModel? = null
@@ -64,6 +67,7 @@ class UserFragment : Fragment() {
 
 
         useApiKey = sharedViewModel.apiKey.value!!
+
 
         // 뷰처리가 끝나면 시작하자. check
         runRetrofit()

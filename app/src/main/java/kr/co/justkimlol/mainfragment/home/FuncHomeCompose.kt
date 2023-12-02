@@ -1,4 +1,4 @@
-package kr.co.justkimlol.ui.home
+package kr.co.justkimlol.mainfragment.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -42,20 +42,23 @@ import androidx.compose.ui.unit.dp
 import kr.co.justkimlol.R
 import kr.co.justkimlol.ui.component.button.LeadingIconData
 import kr.co.justkimlol.ui.component.button.PrimaryButton
-import kr.co.justkimlol.ui.home.viewModel.ChampionInitViewModel
-import kr.co.justkimlol.ui.home.viewModel.PatchState
+import kr.co.justkimlol.mainfragment.home.viewModel.ChampionInitViewModel
+import kr.co.justkimlol.mainfragment.home.viewModel.PatchState
 import kr.co.justkimlol.ui.theme.LolWhiteTheme
 import kr.co.justkimlol.ui.theme.Paddings
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LevelTop(
-    viewModel: ChampionInitViewModel? = null
-
+    viewModel: ChampionInitViewModel? = null,
 ) {
-
     var userId by rememberSaveable { mutableStateOf("")   }
     var apiKey by rememberSaveable { mutableStateOf("")   }
+
+    userId  =  viewModel?.let {
+        it.userId.observeAsState("").value
+    }?:""
+
 
     Column(
         modifier = Modifier
@@ -195,6 +198,7 @@ fun LevelTop(
                 text = "LogIn",
                 onClick = viewModel?.let {
                     it.setInputButtonCheck
+
                 } ?: { },
                 clickAble = clickAble,
                 leadingIconData = LeadingIconData(R.drawable.warrior_helmet_2750),

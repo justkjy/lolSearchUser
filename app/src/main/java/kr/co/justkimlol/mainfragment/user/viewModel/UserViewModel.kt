@@ -1,4 +1,4 @@
-package kr.co.justkimlol.ui.user.viewModel
+package kr.co.justkimlol.mainfragment.user.viewModel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

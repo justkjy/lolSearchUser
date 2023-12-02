@@ -1,4 +1,4 @@
-package kr.co.justkimlol.ui.user
+package kr.co.justkimlol.ui.component.userInfo
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -25,17 +25,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
-import kr.co.justkimlol.ui.component.userInfo.searchUser
 import kr.co.justkimlol.ui.component.userInfo.userdata.UserLolCard
 import kr.co.justkimlol.ui.component.userInfo.userdata.UserTFTCard
-import kr.co.justkimlol.ui.home.viewCode
+import kr.co.justkimlol.mainfragment.home.viewCode
 import kr.co.justkimlol.ui.theme.LolInfoViewerTheme
 import kr.co.justkimlol.ui.theme.Paddings
-import kr.co.justkimlol.ui.user.viewModel.UserViewModel
+import kr.co.justkimlol.mainfragment.user.viewModel.UserViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UserTop(view : UserViewModel = viewModel()){
+
+
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
     var text = ""
@@ -141,7 +142,7 @@ fun UserTftInfo() {
 
 @Preview
 @Composable
-fun PreviewSearchUser() {
+fun PreviewUserInfo() {
     LolInfoViewerTheme(true) {
         UserTop()
     }

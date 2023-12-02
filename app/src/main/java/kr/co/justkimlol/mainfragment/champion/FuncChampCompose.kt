@@ -1,4 +1,4 @@
-package kr.co.justkimlol.ui.champion
+package kr.co.justkimlol.mainfragment.champion
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column

@@ -1,4 +1,4 @@
-package kr.co.justkimlol.ui.champion
+package kr.co.justkimlol.mainfragment.champion
 
 import android.os.Bundle
 import android.view.LayoutInflater

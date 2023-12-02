@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kr.co.justkimlol.ui.component.startPadding
 import kr.co.justkimlol.ui.theme.LolInfoViewerTheme
-import kr.co.justkimlol.ui.user.viewModel.UserViewModel
+import kr.co.justkimlol.mainfragment.user.viewModel.UserViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)

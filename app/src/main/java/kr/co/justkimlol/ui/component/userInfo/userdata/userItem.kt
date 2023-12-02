@@ -49,7 +49,7 @@ import kr.co.justkimlol.ui.component.button.LeadingIconData
 import kr.co.justkimlol.ui.component.button.PrimaryButton
 import kr.co.justkimlol.ui.component.startPadding
 import kr.co.justkimlol.ui.theme.Paddings
-import kr.co.justkimlol.ui.usermatch.MatchActivity
+import kr.co.justkimlol.mainfragment.user.usermatch.MatchActivity
 
 @Composable
 fun UserItem(
@@ -222,7 +222,7 @@ fun UserItem(
         UserLevel3(level3Title, rankInfo, gameType/*GameType.LOL*/)
 
         /// level 4 대전 기록
-        UserLevel4(gameType, userId, puuId, apiKey, matchList )
+        UserLevel4(gameType, userId, puuId, apiKey, rankInfo, matchList)
 
         // level 사이 라인 그리기
         val lineColor = MaterialTheme.colorScheme.primary
@@ -328,7 +328,12 @@ fun UserLevel3(
 }
 
 @Composable
-fun UserLevel4(gameType: GameType, userId: String, puuId: String, apiKey: String, matchList: List<String>) {
+fun UserLevel4(gameType: GameType,
+               userId: String,
+               puuId: String,
+               apiKey: String,
+               rankInfo: RankInfo,
+               matchList: List<String>) {
     var clicked by rememberSaveable {
         mutableStateOf(false)
     }
@@ -354,11 +359,20 @@ fun UserLevel4(gameType: GameType, userId: String, puuId: String, apiKey: String
     if(GameType.LOL == gameType && clicked){
         val context = LocalContext.current
         val intent = Intent(context, MatchActivity::class.java)
-        intent.putExtra("userid", userId)
+
+        intent.putExtra("userId", userId)
         intent.putExtra("apiKey", apiKey)
         intent.putExtra("puuId", puuId)
+        intent.putExtra("profileId", rankInfo.profileId )
+        intent.putExtra("userTier", rankInfo._tier )
+        intent.putExtra("skillNum", rankInfo.summonerLevel )
         intent.putExtra("matchList", ArrayList<String>(matchList))
+
+        intent.putExtra("Top1", rankInfo.championName[0]?.let{ it } ?: "")
+        intent.putExtra("Top2", rankInfo.championName[1]?.let{ it } ?: "")
+        intent.putExtra("Top3", rankInfo.championName[2]?.let{ it } ?: "")
         startActivity(context, intent, null)
+        clicked = false
     }
 }
 
