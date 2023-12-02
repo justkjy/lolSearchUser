@@ -1,5 +1,6 @@
 package kr.co.justkimlol.mainfragment.user.usermatch
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.service.autofill.FieldClassification.Match
 import android.util.Log
@@ -16,6 +17,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
@@ -26,6 +28,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
@@ -136,7 +139,7 @@ fun ItemsDemo(
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+@SuppressLint("SuspiciousIndentation")
 @Composable
 fun PreviewCustomCircular(
     userName : String,
@@ -170,63 +173,82 @@ fun PreviewCustomCircular(
                 .background(MaterialTheme.colorScheme.background)
                 .fillMaxWidth()
         ) {
-            Row {
-                tierProfile(
-                    modifier = Modifier.size(100.dp),
-                    profileId = profileId,
-                    userName = userName,
-                    userTier = tier,
-                    skillNum = skillNum
-                )
-                Spacer(modifier = Modifier.padding(Paddings.small))
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(alignment = Alignment.CenterHorizontally)
+            ) {
+                var maxWidth = 0.5f
+                if (userName.length > 16) {
+                    maxWidth = 0.7f
+                }
                 Column(
-                    verticalArrangement = Arrangement.Center,
-                    modifier = Modifier.height(100.dp)
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .fillMaxWidth(maxWidth)
                 ) {
-                    Spacer(modifier = Modifier.padding(Paddings.medium))
-                    Row {
-                        Text(text = "COUNT",
-                            color = Color.Gray,
-                            style = MaterialTheme.typography.titleSmall,
-                            modifier = Modifier
-                                .padding(Paddings.small)
-                        )
+                    tierProfile(
+                        modifier = Modifier.height(100.dp)
+                                            .fillMaxWidth(),
+                        profileId = profileId,
+                        userName = userName,
+                        userTier = tier,
+                        skillNum = skillNum
+                    )
+                }
 
-                        Text(text = "$totalCount",
-                            color = Color.White,
-                            style = MaterialTheme.typography.titleSmall,
-                            modifier = Modifier
-                                .padding(Paddings.small)
-                        )
-                    }
+                Spacer(modifier = Modifier.padding(Paddings.small))
+                Column {
+                    Column(
+                        verticalArrangement = Arrangement.Center,
+                        modifier = Modifier.height(100.dp)
+                    ) {
+                        Spacer(modifier = Modifier.padding(Paddings.medium))
+                        Row {
+                            Text(text = "COUNT",
+                                color = Color.Gray,
+                                style = MaterialTheme.typography.titleSmall,
+                                modifier = Modifier
+                                    .padding(Paddings.small)
+                            )
 
-                    Row {
-                        Text(text = "WIN", color = Color.Gray,
-                            style = MaterialTheme.typography.titleSmall,
-                            modifier = Modifier
-                                .padding(Paddings.small)
-                        )
+                            Text(text = "$totalCount",
+                                color = Color.White,
+                                style = MaterialTheme.typography.titleSmall,
+                                modifier = Modifier
+                                    .padding(Paddings.small)
+                            )
+                        }
 
-                        Text(text = "$totalWin", color = Color.Blue,
-                            style = MaterialTheme.typography.titleSmall,
-                            modifier = Modifier
-                                .padding(Paddings.small)
-                        )
-                    }
-                    Row {
-                        Text(text = "LOSE", color = Color.Gray,
-                            style = MaterialTheme.typography.titleSmall,
-                            modifier = Modifier
-                                .padding(Paddings.small)
-                        )
+                        Row {
+                            Text(text = "WIN", color = Color.Gray,
+                                style = MaterialTheme.typography.titleSmall,
+                                modifier = Modifier
+                                    .padding(Paddings.small)
+                            )
 
-                        Text(text = "$totalLose", color = Color.Red,
-                            style = MaterialTheme.typography.titleSmall,
-                            modifier = Modifier
-                                .padding(Paddings.small)
-                        )
+                            Text(text = "$totalWin", color = Color.Blue,
+                                style = MaterialTheme.typography.titleSmall,
+                                modifier = Modifier
+                                    .padding(Paddings.small)
+                            )
+                        }
+                        Row {
+                            Text(text = "LOSE", color = Color.Gray,
+                                style = MaterialTheme.typography.titleSmall,
+                                modifier = Modifier
+                                    .padding(Paddings.small)
+                            )
+
+                            Text(text = "$totalLose", color = Color.Red,
+                                style = MaterialTheme.typography.titleSmall,
+                                modifier = Modifier
+                                    .padding(Paddings.small)
+                            )
+                        }
                     }
                 }
+
             }
 
             Card(

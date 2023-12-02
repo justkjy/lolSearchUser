@@ -14,6 +14,7 @@ import kr.co.justkimlol.dataclass.ChampAllListData
 import kr.co.justkimlol.room.data.RoomHelper
 import kr.co.justkimlol.room.data.roomHelperValue
 import kr.co.justkimlol.ui.component.button.ChampionList
+import kr.co.justkimlol.ui.component.championInfo.all.ChampLolInfo
 import kr.co.justkimlol.ui.theme.LolInfoViewerTheme
 
 class ChampionFragment : Fragment() {

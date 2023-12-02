@@ -1,13 +1,24 @@
-package kr.co.justkimlol.mainfragment.champion
+package kr.co.justkimlol.ui.component.championInfo.all
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -17,17 +28,19 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import kr.co.justkimlol.dataclass.ChampAllListData
 import kr.co.justkimlol.dataclass.SpellsData
 import kr.co.justkimlol.room.data.RoomHelper
 import kr.co.justkimlol.room.data.roomHelperValue
 import kr.co.justkimlol.ui.component.button.ChampionList
 import kr.co.justkimlol.ui.component.championInfo.ChampionTopImg
-import kr.co.justkimlol.ui.component.championInfo.all.ChampionItem
 import kr.co.justkimlol.ui.component.championInfo.championDetail
 import kr.co.justkimlol.ui.component.championInfo.rotaion.championRotationList
+import kr.co.justkimlol.ui.component.startPadding
 import kr.co.justkimlol.ui.theme.LolInfoViewerTheme
 import kr.co.justkimlol.ui.theme.Paddings
+import okhttp3.internal.filterList
 
 @Composable
 fun ChampLolInfo(
@@ -44,17 +57,28 @@ fun ChampLolInfo(
         mutableIntStateOf(0)
     }
 
+    var fillterName by rememberSaveable {
+        mutableStateOf("")
+    }
+
     var clicked by rememberSaveable {
         mutableStateOf(false)
     }
-    val onClicked : (click : Boolean, clickedNum : Int) -> (Unit)
-            = { click, clickNum ->
+
+    var clickedChampEngName by rememberSaveable {
+        mutableStateOf("")
+    }
+
+    val onClicked : (click : Boolean, clickedNum : Int, champEngName : String) -> (Unit)
+            = { click, clickNum, champEngName->
                     clickIndex = clickNum
                     clicked = click
+                    clickedChampEngName = champEngName
             }
 
     Column(
         modifier = Modifier.background(MaterialTheme.colorScheme.background)
+            .padding(bottom = 60.dp)
     ) {
         ChampionTopImg(
             profileId = profileId,
@@ -63,18 +87,56 @@ fun ChampLolInfo(
             skillNum = skillNum,
         )
         championRotationList(rotationInfo)
+        Row {
+            Text(
+                text = "챔피언 리스트",
+                color = MaterialTheme.colorScheme.primary,
+                style = MaterialTheme.typography.titleSmall,
+                modifier = Modifier
+                    .padding(Paddings.large)
+            )
 
-        Text(
-            text = "챔피언 리스트",
-            color = MaterialTheme.colorScheme.primary,
-            style = MaterialTheme.typography.titleSmall,
-            modifier = Modifier
-                .padding(Paddings.large)
-        )
+            TextField(
+                value = fillterName,
+                onValueChange = {fillterName = it},
+                singleLine = true,
+                textStyle = MaterialTheme.typography.titleSmall,
+                label = {
+                        Text(
+                            text ="챔피언 이름(kor)",
+                            style = MaterialTheme.typography.titleSmall
+                        )
+                },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Filled.Search,
+                        contentDescription = "챔피언 이름"
+                    )
+                },
+                trailingIcon = {
+                    IconButton(
+                        onClick = {
+                            fillterName = ""
+                        }) {
+                        Icon(
+                            Icons.Filled.Clear,
+                            contentDescription = "필드 지우기"
+                        )
+                    }
+                },
+
+                modifier = Modifier.padding(start = startPadding, end = startPadding)
+            )
+        }
+
         Spacer(modifier = Modifier.padding(Paddings.medium))
 
         LazyColumn {
-            itemsIndexed(champAllList) {index, item->
+            itemsIndexed(
+                champAllList.filter { champList ->
+                    champList.nameKor.indexOf(fillterName) >= 0
+                }
+            ) {index, item->
                 ChampionItem(
                     index = index,
                     champEngName = item.nameEng,
@@ -93,7 +155,10 @@ fun ChampLolInfo(
     }
 
     if(clicked) {
-        val engName = champAllList[clickIndex].nameEng
+
+        //val engName = champAllList[clickIndex].nameEng
+        Log.i("champ", "$clickedChampEngName")
+        val engName = clickedChampEngName
         val lolInfoDb = roomHelper!!.roomMemoDao()
         val list = lolInfoDb.getChampInfo(engName)
         // ChampStory
@@ -152,7 +217,7 @@ fun ChampLolInfo(
 
         championDetail(
             skinList = skinList,
-            champEngName= champAllList[clickIndex].nameEng,
+            champEngName= clickedChampEngName,
             champStory = story,
             onConfirmation = onConfirmation,
             skillList = skillList

@@ -241,6 +241,7 @@ class UserFragment : Fragment() {
         GlobalScope.launch(Dispatchers.IO) {
             if(response.isSuccessful) {
                 response.body()?.let{
+                    it.sortByDescending { item -> item.championPointsSinceLastLevel }
                     userViewModel.setUseChamp(it)
                 }
 

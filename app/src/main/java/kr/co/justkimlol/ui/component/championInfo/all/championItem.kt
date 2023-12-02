@@ -37,7 +37,7 @@ fun ChampionItem(
     champEngName: String = "Aatrox",
     champKorName: String = "아트룩스",
     champTitle: String = "다르킨의 검",
-    onClick: (Boolean, Int) -> (Unit) = {_,_->},
+    onClick: (Boolean, Int, String) -> (Unit) = {_,_,_->},
     positionList : MutableList<String> = mutableListOf<String>("Support", "Tank"),
 ) {
     OutlinedCard(
@@ -116,7 +116,7 @@ fun ChampionItem(
 
             Button(
                 onClick = {
-                          onClick(true, index)
+                          onClick(true, index, champEngName)
                 },
                 modifier = Modifier.constrainAs(buttonDetail){
                     top.linkTo(champImgAllItem.top)
