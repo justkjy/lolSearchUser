@@ -11,7 +11,6 @@ interface LolQueryItem {
     @GET("summoner/v4/summoners/by-name/{userName}")
     suspend fun getUserInfo(
         @Path("userName") userName: String,
-        @Query("api_key") api_key : String
-    //): Call<UserData>
+        @Query("api_key") apiKey : String
     ): Response<UserData>
 }

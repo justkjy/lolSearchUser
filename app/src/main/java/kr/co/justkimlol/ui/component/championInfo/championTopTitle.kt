@@ -51,8 +51,6 @@ fun ChampionTopImg(
     userTier : String = "GOLD",
     skillNum : Int = 160,
 ) {
-    var layoutWidth = 0
-    var layoutHeight = 0
     Column(
         verticalArrangement = Arrangement.Center,
         modifier = Modifier
@@ -67,13 +65,11 @@ fun ChampionTopImg(
                 .padding(Paddings.small)
 
         ) {
-
             ConstraintLayout(
                 Modifier.fillMaxSize()
 
             ) {
                 val (backleftImg, backrightImg, backColor) = createRefs()
-
 
                 // 배경 이미지
                 //Row{
@@ -104,9 +100,8 @@ fun ChampionTopImg(
                                 end.linkTo(parent.end, margin = 5.dp)
                             }
                     )
-                //}
 
-                val largeRadialGradient = object : ShaderBrush() {
+                object : ShaderBrush() {
                     override fun createShader(size: Size): Shader {
                         val biggerDimension = maxOf(size.height/2, size.width)
                         return RadialGradientShader(
@@ -134,7 +129,6 @@ fun ChampionTopImg(
                     Modifier
                         .width(200.dp)
                         .height(200.dp)
-                        //.background(largeRadialGradient)
                         .background(brush)
                         .padding(4.dp)
                         .constrainAs(backColor) {
@@ -143,7 +137,7 @@ fun ChampionTopImg(
                             end.linkTo(parent.end)
                         }
                 ) { }
-                var modifier = Modifier.size(200.dp)
+                val modifier = Modifier.size(200.dp)
                 Column(
                     modifier = modifier
                         .constrainAs(levelImg) {
@@ -152,7 +146,7 @@ fun ChampionTopImg(
                         end.linkTo(parent.end)
                     }
                 ){
-                    tierProfile(
+                    TierProfile(
                         modifier = modifier,
                         profileId = profileId,
                         userTier = userTier,
@@ -168,7 +162,7 @@ fun ChampionTopImg(
 }
 
 @Composable
-fun tierProfile(
+fun TierProfile(
     modifier : Modifier,
     profileId : Int,
     skillNum: Int,
@@ -212,7 +206,6 @@ fun tierProfile(
                     bottom.linkTo(parent.bottom)
                 }
         )
-
 
         createHorizontalChain(profileName, tearIcon, chainStyle =  ChainStyle.Packed)
         Text(

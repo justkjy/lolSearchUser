@@ -47,7 +47,6 @@ import kr.co.justkimlol.mainfragment.home.viewModel.PatchState
 import kr.co.justkimlol.ui.theme.LolWhiteTheme
 import kr.co.justkimlol.ui.theme.Paddings
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LevelTop(
     viewModel: ChampionInitViewModel? = null,
@@ -58,7 +57,6 @@ fun LevelTop(
     userId  =  viewModel?.let {
         it.userId.observeAsState("").value
     }?:""
-
 
     Column(
         modifier = Modifier
@@ -76,7 +74,6 @@ fun LevelTop(
                 .padding(Paddings.large)
                 .background(Color.White)
         ) {
-
             Spacer(modifier = Modifier.padding(Paddings.extra))
             Row(
                 horizontalArrangement = Arrangement.Center
@@ -133,7 +130,6 @@ fun LevelTop(
 
                 Spacer(modifier = Modifier.padding(Paddings.xsmall))
 
-
                 val enableText = viewModel?.let { view ->
                     view.needApiKey.observeAsState(false).value
                 }?: false
@@ -143,7 +139,6 @@ fun LevelTop(
                     textStyle = MaterialTheme.typography.titleSmall,
                     label = {
                         Text(
-                            //style = MaterialTheme.typography.bodyMedium,
                             text = "DEVELOPMENT API KEY"
                         )
                     },
@@ -183,7 +178,6 @@ fun LevelTop(
                     .height(60.dp)
             )
 
-            //Box {
             val progress = viewModel?.let {
                 it.championInfo.observeAsState(PatchState.LOADING).value
             }

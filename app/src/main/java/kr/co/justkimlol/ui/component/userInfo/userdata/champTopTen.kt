@@ -25,9 +25,6 @@ import kr.co.justkimlol.ui.theme.Paddings
 @Composable
 fun ChampTopList(champList:MutableList<String>) {
         LazyRow(
-            //contentPadding = PaddingValues(
-            //    horizontal = Paddings.small
-            //),
             modifier = Modifier.padding(start = startPadding, end = startPadding)
                 .fillMaxWidth()
         ){
@@ -56,7 +53,6 @@ fun TftDackTopList(dackList:MutableList<Int>) {
             AsyncImage(
                 model = item,
                 contentScale = ContentScale.Crop,
-                //placeholder = painterResource(R.drawable.warrior_helmet),
                 contentDescription = "",
                 modifier = Modifier
                     .clip(CircleShape)

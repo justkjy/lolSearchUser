@@ -31,8 +31,6 @@ import kr.co.justkimlol.mainfragment.user.appActivityViewModel
 
 @Composable
 fun UserLolCard(viewModel:SharedViewModel = viewModel()) {
-
-
     val userColumnHeight = userInfoLevelTopHeight +
                             userInfoLevelCenter2Height +
                             userInfoLevelBottomHeight
@@ -44,9 +42,7 @@ fun UserLolCard(viewModel:SharedViewModel = viewModel()) {
             .fillMaxWidth()
             .height(userColumnHeight)
     ){
-
         appActivityViewModel?.let {
-
             val userName = it.userId.observeAsState("").value
             val puuId = it.puuid.observeAsState("").value
             val tier = it.loltear.observeAsState("").value
@@ -58,16 +54,7 @@ fun UserLolCard(viewModel:SharedViewModel = viewModel()) {
             val _matchList = it.matchList.observeAsState(emptyList()).value
             val matchList = mutableListOf<String>()
             val apiKey = it.apiKey.value!!
-/* view 모델 공유 체크 방법 알면 아래 소스 활용하자.
-//            val userName = viewModel.userId.observeAsState("").value
-//            val tier = viewModel.loltear.observeAsState("").value
-//            val summonerLevel = viewModel.summonerLevel.observeAsState(0).value
-//            val profileId = viewModel.profileId.observeAsState(0).value
-//connect fail
-//            val rank = viewModel.lolrank.observeAsState("").value
-//            val _championName = viewModel.champEngList.observeAsState(emptyList()).value
-//            val championName = mutableListOf<String>()
-*/
+
             for(champ in _championName) {
                 championName.add(champ)
             }
@@ -84,7 +71,7 @@ fun UserLolCard(viewModel:SharedViewModel = viewModel()) {
                 championName
             )
 
-            Log.i("TEST", "${matchList}")
+            Log.i("TEST", "$matchList")
             UserItem(
                 userId = userName,
                 puuId = puuId,
@@ -113,12 +100,10 @@ fun UserLolCard(viewModel:SharedViewModel = viewModel()) {
 
 @Composable
 fun UserTFTCard() {
-
     val userColumnHeight = userInfoLevelTopHeight +
                         userInfoLevelCenter1Height +
                         userInfoLevelCenter2Height +
                         userInfoLevelBottomHeight
-
 
     Card (
         shape = MaterialTheme.shapes.large,
@@ -137,7 +122,6 @@ fun UserTFTCard() {
         )
     }
 }
-
 
 @Composable
 fun funcConstraintLOLSet() =
@@ -160,9 +144,7 @@ fun funcConstraintLOLSet() =
             top.linkTo(level3Box.bottom, 0.dp)
             start.linkTo(parent.start)
         }
-
         createVerticalChain(level1Box, level3Box, buttonBox, chainStyle = ChainStyle.SpreadInside)
-
         // user layout
         val userTitle = createRefFor("level1Title")
         val userTier = createRefFor("level1TitleValue")
@@ -279,7 +261,6 @@ fun funcConstraintTFTSet() =
 
 @Preview
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UserCardPreview() {
     LolInfoViewerTheme(true) {

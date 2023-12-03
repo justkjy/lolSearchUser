@@ -35,10 +35,9 @@ import kr.co.justkimlol.ui.theme.LolInfoViewerTheme
 fun ChampionItem(
     index: Int = 0,
     champEngName: String = "Aatrox",
-    champKorName: String = "아트룩스",
     champTitle: String = "다르킨의 검",
     onClick: (Boolean, Int, String) -> (Unit) = {_,_,_->},
-    positionList : MutableList<String> = mutableListOf<String>("Support", "Tank"),
+    positionList : MutableList<String> = mutableListOf("Support", "Tank"),
 ) {
     OutlinedCard(
         shape = MaterialTheme.shapes.extraLarge,
@@ -71,13 +70,13 @@ fun ChampionItem(
             ) { }
 
             if(champEngName == "Alistar") {
-                positionList.get(0)
+                positionList[0]
             }
 
             if(positionList.size > 0) {
                 val position = champTagResource(positionList)
                 AsyncImage(
-                    model = position.get(0),
+                    model = position[0],
                     contentScale = ContentScale.Crop,
                     placeholder = painterResource(R.drawable.warrior_helmet),
                     contentDescription = "포지션",
@@ -93,7 +92,7 @@ fun ChampionItem(
 
                 if(position.size > 1) {
                     AsyncImage(
-                        model = position.get(1),
+                        model = position[1],
                         contentScale = ContentScale.Crop,
                         placeholder = painterResource(R.drawable.warrior_helmet),
                         contentDescription = "포지션",
@@ -108,11 +107,7 @@ fun ChampionItem(
                     )
                     createVerticalChain(tagItem1, tagItem2, chainStyle =  ChainStyle.Spread)
                 }
-
-
             }
-
-
 
             Button(
                 onClick = {
@@ -125,7 +120,6 @@ fun ChampionItem(
                     end.linkTo(champImgAllItem.end)
                 }
             ) {
-                
             }
 
             AsyncImage(
@@ -165,10 +159,8 @@ fun ChampionItem(
                         end.linkTo(parent.end, margin = 10.dp)
                     }
             )
-
             createVerticalChain(champTitleItem, champKorNameAllItem, chainStyle =  ChainStyle.Spread)
         }
-
     }
 }
 

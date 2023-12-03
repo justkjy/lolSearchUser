@@ -1,43 +1,40 @@
 package kr.co.justkimlol.ui.component.circleprocess
 
+import android.graphics.Paint
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Color
-import android.graphics.Paint
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
-import androidx.compose.ui.graphics.nativeCanvas
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -61,14 +58,10 @@ import co.yml.charts.ui.linechart.model.ShadowUnderLine
 import coil.compose.AsyncImage
 import kr.co.justkimlol.R
 import kr.co.justkimlol.internet.champTilesUrl
-import kr.co.justkimlol.ui.component.championInfo.tierProfile
-
+import kr.co.justkimlol.ui.component.championInfo.TierProfile
 import kr.co.justkimlol.ui.theme.LolInfoViewerTheme
 import kr.co.justkimlol.ui.theme.Paddings
-import kotlin.math.PI
-import kotlin.math.cos
 import kotlin.math.floor
-import kotlin.math.sin
 
 @Composable
 fun CustomCircularProccess(
@@ -84,7 +77,6 @@ fun CustomCircularProccess(
     loseValue : Int = 0,
     onPositionChange: (Int)->Unit
 ) {
-
     val winPercent = Float.let {
         var percent = 0f
         if (winValue > 0) {
@@ -95,9 +87,6 @@ fun CustomCircularProccess(
 
     var circleCenter by remember {
         mutableStateOf(Offset.Zero)
-    }
-    var positionValue by remember {
-        mutableStateOf(winPercent)
     }
 
     Column(modifier = modifier) {
@@ -113,33 +102,10 @@ fun CustomCircularProccess(
                         .fillMaxSize()
                         .pointerInput(true) {
                             detectDragGestures(
-                                onDragStart = { offset ->
-//                            dragStartedAngle = -atan2(
-//                                x = circleCenter.y - offset.y,
-//                                y = circleCenter.x - offset.x
-//                            ) * (108f / PI).toFloat()
-//                            dragStartedAngle = (dragStartedAngle + 180f).mod(360f)
-                                },
-                                onDrag = { change, _ ->
-//                            var touchAngle = -atan2(
-//                                x = circleCenter.y - change.position.y,
-//                                y = circleCenter.x - change.position.x
-//                            ) * (180f / PI).toFloat()
-//                            touchAngle = (touchAngle + 180f).mod(360f)
-//
-//                            val currentAngle = oldPositionValue*360f/(maxValue-minValue)
-//                            changeAngle = touchAngle - currentAngle
-//
-//                            val lowerThreshold = currentAngle - (360f / (maxValue-minValue) * 5)
-//                            val higherThreshold = currentAngle + (360f / (maxValue-minValue) * 5)
-//
-//                            if(dragStartedAngle in lowerThreshold .. higherThreshold){
-//                                positionValue = (oldPositionValue + (changeAngle/(360f/(maxValue-minValue))).roundToInt())
-//                            }
+                                onDragStart = {},
+                                onDrag = { _, _ ->
                                 },
                                 onDragEnd = {
-//                            oldPositionValue = positionValue
-//                            onPositionChange(positionValue)
                                 }
                             )
                         }
@@ -176,30 +142,6 @@ fun CustomCircularProccess(
                             (height - circleRadius * 2f) / 2f
                         )
                     )
-
-                    val outerRadius = circleRadius + circleThickness / 2f
-                    val gap = 15f
-                    for (i in 0..(maxValue - minValue)) {
-                        val color =
-                            if (i < positionValue - minValue) primaryColor else primaryColor.copy(
-                                alpha = 0.3f
-                            )
-                        val angleInDegrees = i * 360f / (maxValue - minValue).toFloat()
-                        val angleInRad = angleInDegrees * PI / 180f + PI / 2f
-
-                        val yGapAdjustment = cos(angleInDegrees * PI / 180f) * gap
-                        val xGapAdjustment = -sin(angleInDegrees * PI / 180f) * gap
-
-                        val start = Offset(
-                            x = (outerRadius * cos(angleInRad) + circleCenter.x + xGapAdjustment).toFloat(),
-                            y = (outerRadius * sin(angleInRad) + circleCenter.y + yGapAdjustment).toFloat()
-                        )
-
-                        val end = Offset(
-                            x = (outerRadius * cos(angleInRad) + circleCenter.x + xGapAdjustment).toFloat(),
-                            y = (outerRadius * sin(angleInRad) + circleThickness + circleCenter.y + yGapAdjustment).toFloat()
-                        )
-                    }
                 }
             }
             val (champImg, text1, text2) = createRefs()
@@ -248,76 +190,6 @@ fun CustomCircularProccess(
                         end.linkTo(parent.end)
                     }
             )
-
-            Canvas(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .pointerInput(true) {
-                        detectDragGestures(
-                            onDragStart = { offset ->
-//                            dragStartedAngle = -atan2(
-//                                x = circleCenter.y - offset.y,
-//                                y = circleCenter.x - offset.x
-//                            ) * (108f / PI).toFloat()
-//                            dragStartedAngle = (dragStartedAngle + 180f).mod(360f)
-                            },
-                            onDrag = { change, _ ->
-//                            var touchAngle = -atan2(
-//                                x = circleCenter.y - change.position.y,
-//                                y = circleCenter.x - change.position.x
-//                            ) * (180f / PI).toFloat()
-//                            touchAngle = (touchAngle + 180f).mod(360f)
-//
-//                            val currentAngle = oldPositionValue*360f/(maxValue-minValue)
-//                            changeAngle = touchAngle - currentAngle
-//
-//                            val lowerThreshold = currentAngle - (360f / (maxValue-minValue) * 5)
-//                            val higherThreshold = currentAngle + (360f / (maxValue-minValue) * 5)
-//
-//                            if(dragStartedAngle in lowerThreshold .. higherThreshold){
-//                                positionValue = (oldPositionValue + (changeAngle/(360f/(maxValue-minValue))).roundToInt())
-//                            }
-                            },
-                            onDragEnd = {
-//                            oldPositionValue = positionValue
-//                            onPositionChange(positionValue)
-                            }
-                        )
-                    }
-            ) {
-
-//                drawContext.canvas.nativeCanvas.apply {
-//                    drawIntoCanvas {
-//
-//                        drawText(
-//                            "Win : $winValue",
-//                            circleCenter.x,
-//                            circleCenter.y - 45,
-//                            Paint().
-//                            apply {
-//                                textSize = 20.sp.toPx()
-//                                textAlign = Paint.Align.CENTER
-//                                color = Color.White.toArgb()
-//                                isFakeBoldText = true
-//                                alpha = 0
-//                            }
-//
-//                        )
-////                        drawText(
-////                            "$positionValue %",
-////                            circleCenter.x,
-////                            circleCenter.y + 45.dp.toPx() / 2f,
-////                            Paint().apply {
-////                                textSize = 38.sp.toPx()
-////                                textAlign = Paint.Align.CENTER
-////                                color = Color.White.toArgb()
-////                                isFakeBoldText = true
-////                            }
-////                        )
-//                    }
-//                }
-            }
-
         }
     }
 }
@@ -432,33 +304,17 @@ fun PreviewLineChart (
     val pink = Color(0xFFFF4AAA)
     val steps = 16
 
-    var mostYStep = pointsData.maxOf { it.y.toInt() }
+    val mostYStep = pointsData.maxOf { it.y.toInt() }
 
-    var yStepSize = mostYStep
-//    var yStepSize = when(mostYStep) {
-//        in 0..5 -> {
-//            mostYStep = 5
-//            30.dp
-//        }
-//        in 6..10 -> {
-//            mostYStep = 10
-//            15.dp
-//        }
-//        else -> {
-//            mostYStep = 16
-//            1.dp
-//        }
-//    }
-
-    var xStepSize = when(pointsData.size) {
+    val xStepSize = when(pointsData.size) {
         in 0..5 -> 50.dp
         else -> 20.dp
     }
+
     val xAxisData = AxisData.Builder()
         .axisStepSize(xStepSize)
         .topPadding(105.dp)
         .steps(pointsData.size - 1)
-        //.steps(stepsX)
         .labelData { i ->
             var valuePoint = pointsData[i].x.toString()
             if(pointsData.size - 1 >= 10) {
@@ -483,12 +339,6 @@ fun PreviewLineChart (
         .labelAndAxisLinePadding(30.dp)
         .backgroundColor(Color.Transparent)
         .labelData { i ->
-
-            // Add yMin to get the negative axis values to the scale
-//            val yMin = pointsData.minOf { it.y }
-//            val yMax = pointsData.maxOf { it.y }
-//            val yScale = (yMax - yMin) / steps
-//            ((i * yScale) + yMin).formatToSinglePrecision()
             var valueData = ""
             if(mostYStep >= 5) {
                 if( i % 5 == 0) {
@@ -504,7 +354,6 @@ fun PreviewLineChart (
         .axisLineColor(Color.White)
         .axisLabelColor(Color.White)
         .build()
-
 
     return LineChartData (
         linePlotData = LinePlotData(
@@ -561,14 +410,13 @@ fun PreviewLineChart (
 @Preview
 fun PreviewCustomCircular() {
     LolInfoViewerTheme(true) {
-
         Column(
             modifier = Modifier
                 .background(MaterialTheme.colorScheme.background)
                 .fillMaxWidth()
         ) {
             Row {
-                tierProfile(
+                TierProfile(
                     modifier = Modifier.size(100.dp),
                     profileId = 5986,
                     userName = "justKim",
@@ -646,15 +494,12 @@ fun PreviewCustomCircular() {
                 CustomCircularProccess(
                     modifier = Modifier
                         .size(130.dp)
-                        .background(MaterialTheme.colorScheme.background)
-                    ,
+                        .background(MaterialTheme.colorScheme.background),
                     primaryColor = Color.Blue,
                     secondaryColor = Color.Red,
                     circleRadius = 100f,
                     onPositionChange = { }
                 )
-
-
                 CustomCircularProccess(
                     modifier = Modifier
                         .size(130.dp)
@@ -664,21 +509,17 @@ fun PreviewCustomCircular() {
                     secondaryColor = Color.Red,
                     circleRadius = 100f,
                     onPositionChange = {
-
                     }
                 )
 
                 CustomCircularProccess(
                     modifier = Modifier
                         .size(130.dp)
-                        .background(MaterialTheme.colorScheme.background)
-                    ,
+                        .background(MaterialTheme.colorScheme.background),
                     primaryColor = Color.Blue,
                     secondaryColor = Color.Red,
                     circleRadius = 100f,
-                    onPositionChange = {
-
-                    }
+                    onPositionChange = { }
                 )
             }
         }

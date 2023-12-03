@@ -32,7 +32,6 @@ import kr.co.justkimlol.ui.theme.LolInfoViewerTheme
 import kr.co.justkimlol.ui.theme.Paddings
 import kr.co.justkimlol.mainfragment.user.viewModel.UserViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UserTop(view : UserViewModel = viewModel()){
 
@@ -45,7 +44,6 @@ fun UserTop(view : UserViewModel = viewModel()){
     if(code > 0) {
         text = viewCode(code)
     }
-
 
     Scaffold (
         Modifier.fillMaxHeight(0.9f),
@@ -73,7 +71,6 @@ fun UserTop(view : UserViewModel = viewModel()){
                 }
                 scope.launch {
                     if (text.isNotEmpty()) {
-
                         val result = snackbarHostState.showSnackbar( // 스낵바 결과 받기 가능
                             message = text,
                             actionLabel = "close",

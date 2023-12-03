@@ -5,6 +5,7 @@ import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kr.co.justkimlol.dataclass.ChampionUnitData
 import kr.co.justkimlol.room.data.InfoVersion
 import kr.co.justkimlol.room.data.LolChampInfoEntity
@@ -16,11 +17,8 @@ import java.net.HttpURLConnection
 import java.net.URL
 import javax.net.ssl.HttpsURLConnection
 
-
-val TAG = "GETURL"
+const val TAG = "GETURL"
 var lolVersion = "13.18.1"
-
-enum class GetChampType { VERSION, ALLCHAPINFO, DETAILCHAMPINFO }
 
 sealed class GetJsonFromUrl {
     data object Loading : GetJsonFromUrl()
@@ -38,12 +36,12 @@ fun getConnectUrl(db: RoomHelper,
 ) = CoroutineScope(Dispatchers.IO).launch {
 
     val versionUrl = "https://ddragon.leagueoflegends.com/api/versions.json"
-    var champAllInfoUrl = "https://ddragon.leagueoflegends.com/cdn/#version#/data/ko_KR/champion.json"
-    var champDetailUrl = "https://ddragon.leagueoflegends.com/cdn/#version#/data/ko_KR/champion/#champname#.json"
+    val champAllInfoUrl = "https://ddragon.leagueoflegends.com/cdn/#version#/data/ko_KR/champion.json"
+    val champDetailUrl = "https://ddragon.leagueoflegends.com/cdn/#version#/data/ko_KR/champion/#champname#.json"
 
     try {
         var urlValue = versionUrl
-        var getVersionJson = getJsonFileFromHttps(urlValue)
+        val getVersionJson = getJsonFileFromHttps(urlValue)
 
         if(getVersionJson.isEmpty()) {
             state(getJsonFailed("버전 정보 획득 실패"))
@@ -72,22 +70,22 @@ fun getConnectUrl(db: RoomHelper,
             val list = jsonRead(getJson)
             // 개별 챔피언 정보 획득
             // key = 챔프 이름 , value = json파일
-            val champItemList:MutableMap<String, String> = mutableMapOf<String, String>()
+            val champItemList:MutableMap<String, String> = mutableMapOf()
             for(item in list) {
                 val urlChampItem = champDetailUrl.replace("#version#", newVersion.version)
                     .replace("#champname#", item)
-                val getJson = getJsonFileFromHttps(urlChampItem)
+                val jsonData = getJsonFileFromHttps(urlChampItem)
 
-                if(getJson.isEmpty()) {
+                if(jsonData.isEmpty()) {
                     state(getJsonFailed("개별 챔프 획득 실패"))
                     return@launch
                 }
                 patchDetailState("챔피언 : $item")
-                champItemList.put(item, getJson)
+                champItemList[item] = jsonData
             }
             // 챔프 등록
             if(championUnitInfo(db, champItemList)) {
-                complateLolPath(db, InfoVersion(newVersion.no, newVersion.version, true))
+                completeLolPath(db, InfoVersion(newVersion.no, newVersion.version, true))
             }
             patchDetailState("패치 완료")
         }
@@ -102,7 +100,9 @@ fun getConnectUrl(db: RoomHelper,
 // Http 연결 후 json 파일 획득
 suspend fun getJsonFileFromHttps(urlValue: String) : String {
     val url = URL(urlValue)
-    val urlConnection = url.openConnection() as HttpsURLConnection
+    val urlConnection = withContext(Dispatchers.IO) {
+        url.openConnection()
+    } as HttpsURLConnection
     urlConnection.requestMethod = "GET"
 
     return if (urlConnection.responseCode == HttpURLConnection.HTTP_OK) {
@@ -187,30 +187,14 @@ suspend fun jsonRead(jsonBody: String) : List<String>{
 // 챔피언 개별 정보
 fun championUnitInfo(db: RoomHelper, champInfo: MutableMap<String, String>) : Boolean {
 
-    val champInfoData : MutableList<LolChampInfoEntity> = mutableListOf<LolChampInfoEntity>()
+    val champInfoData : MutableList<LolChampInfoEntity> = mutableListOf()
 
     champInfo.forEach() {championName, championJsonString ->
         // val targetChampName = championName 실제 코드 적용시
-        val targetChampName = championName
-
         var jsonSubBody = championJsonString
 
-
-//        val removeItemMap = mapOf<String, String>("\"stats\":{" to "}],"
-//            //"\"spells\":[{" to "}],"
-//        )
-//
-//        removeItemMap.forEach { removeData, endData ->
-//            val startPoint = jsonSubBody.indexOf(removeData, 0, false)
-//            val endPoint = jsonSubBody.indexOf(endData, startPoint + removeData.length, false)
-//            if(startPoint > -1 && startPoint < endPoint) {
-//                jsonSubBody = jsonSubBody.removeRange(startPoint, endPoint + endData.length)
-//            } else {
-//                println("error")
-//            }
-//        }
-
-        jsonSubBody = jsonSubBody.replace("{\"" + targetChampName,
+        jsonSubBody = jsonSubBody.replace(
+            "{\"$championName",
             "{\"" + "Main"
         )
 
@@ -229,33 +213,29 @@ fun championUnitInfo(db: RoomHelper, champInfo: MutableMap<String, String>) : Bo
         val passiveDescription = championData.Main.passive.description
         val passiveImage = championData.Main.passive.image.full
 
-        val spellsQ_id = championData.Main.spells[0].id
-        val spellsQ_Description = championData.Main.spells[0].description
-        val spellsQ_Name = championData.Main.spells[0].name
-        val spellsQ_Image = championData.Main.spells[0].image.full
-        val spellsQ_tooltip = championData.Main.spells[0].tooltip
+        val spellsQId = championData.Main.spells[0].id
+        val spellsQDescription = championData.Main.spells[0].description
+        val spellsQName = championData.Main.spells[0].name
+        val spellsQImage = championData.Main.spells[0].image.full
+        val spellsQToolTip = championData.Main.spells[0].tooltip
 
-        val spellsW_id = championData.Main.spells[1].id
-        val spellsW_Description = championData.Main.spells[1].description
-        val spellsW_Name = championData.Main.spells[1].name
-        val spellsW_Image = championData.Main.spells[1].image.full
-        val spellsW_tooltip = championData.Main.spells[1].tooltip
+        val spellsWId = championData.Main.spells[1].id
+        val spellsWDescription = championData.Main.spells[1].description
+        val spellsWName = championData.Main.spells[1].name
+        val spellsWImage = championData.Main.spells[1].image.full
+        val spellsWToolTip = championData.Main.spells[1].tooltip
 
-        val spellsE_id = championData.Main.spells[2].id
-        val spellsE_Description = championData.Main.spells[2].description
-        val spellsE_Name = championData.Main.spells[2].name
-        val spellsE_Image = championData.Main.spells[2].image.full
-        val spellsE_tooltip = championData.Main.spells[2].tooltip
+        val spellsEId = championData.Main.spells[2].id
+        val spellsEDescription = championData.Main.spells[2].description
+        val spellsEName = championData.Main.spells[2].name
+        val spellsEImage = championData.Main.spells[2].image.full
+        val spellsEToolTip = championData.Main.spells[2].tooltip
 
-        val spellsR_id = championData.Main.spells[3].id
-        val spellsR_Description = championData.Main.spells[3].description
-        val spellsR_Name = championData.Main.spells[3].name
-        val spellsR_Image = championData.Main.spells[3].image.full
-        val spellsR_tooltip = championData.Main.spells[3].tooltip
-
-
-
-
+        val spellsRId = championData.Main.spells[3].id
+        val spellsRDescription = championData.Main.spells[3].description
+        val spellsRName = championData.Main.spells[3].name
+        val spellsRImage = championData.Main.spells[3].image.full
+        val spellsRToolTip = championData.Main.spells[3].tooltip
 
         var strTags = ""
         for(item in championData.Main.tags) {
@@ -265,7 +245,7 @@ fun championUnitInfo(db: RoomHelper, champInfo: MutableMap<String, String>) : Bo
         strTags = strTags.removeRange(strTags.length-1, strTags.length)
 
         for(item in championSkinData) {
-            championSkinList.put(item.num,item.name)
+            championSkinList[item.num] = item.name
         }
 
         val skinData = String.let {
@@ -291,46 +271,42 @@ fun championUnitInfo(db: RoomHelper, champInfo: MutableMap<String, String>) : Bo
             passiveDescription = passiveDescription,
             passiveImage = passiveImage,
 
-            spellsQid = spellsQ_id,
-            spellsQDescription = spellsQ_Description,
-            spellsQName = spellsQ_Name,
-            spellsQImage = spellsQ_Image,
-            spellsQtooltip = spellsQ_tooltip,
+            spellsQid = spellsQId,
+            spellsQDescription = spellsQDescription,
+            spellsQName = spellsQName,
+            spellsQImage = spellsQImage,
+            spellsQtooltip = spellsQToolTip,
 
-            spellsWid = spellsW_id,
-            spellsWDescription = spellsW_Description,
-            spellsWName = spellsW_Name,
-            spellsWImage = spellsW_Image,
-            spellsWtooltip = spellsW_tooltip,
+            spellsWid = spellsWId,
+            spellsWDescription = spellsWDescription,
+            spellsWName = spellsWName,
+            spellsWImage = spellsWImage,
+            spellsWtooltip = spellsWToolTip,
 
-            spellsEid = spellsE_id,
-            spellsEDescription = spellsE_Description,
-            spellsEName = spellsE_Name,
-            spellsEImage = spellsE_Image,
-            spellsEtooltip = spellsE_tooltip,
+            spellsEid = spellsEId,
+            spellsEDescription = spellsEDescription,
+            spellsEName = spellsEName,
+            spellsEImage = spellsEImage,
+            spellsEtooltip = spellsEToolTip,
 
-            spellsRid = spellsR_id,
-            spellsRDescription = spellsR_Description,
-            spellsRName = spellsR_Name,
-            spellsRImage = spellsR_Image,
-            spellsRtooltip = spellsR_tooltip
+            spellsRid = spellsRId,
+            spellsRDescription = spellsRDescription,
+            spellsRName = spellsRName,
+            spellsRImage = spellsRImage,
+            spellsRtooltip = spellsRToolTip
         )
 
         champInfoData.add(championDetail)
     }
-
     db.roomMemoDao().insertChampAll(champInfoData)
     return true
 }
 
 // 쳄프 개별 등록 완료 버전 정보에 패치 완료 업데이트 등록
-fun complateLolPath(db:RoomHelper, infoVersion : InfoVersion) {
+fun completeLolPath(db:RoomHelper, infoVersion : InfoVersion) {
     val lolInfoDb = db.roomMemoDao()
     if(infoVersion.no == -1)
         lolInfoDb.insertVersion(LolVersionEntity( version = infoVersion.version, update =true))
     else
         lolInfoDb.patchVersionState(LolVersionEntity(infoVersion.no, infoVersion.version, true))
 }
-
-
-

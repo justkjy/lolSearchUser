@@ -5,9 +5,8 @@ data class ChampAllListData(
     val nameKor : String,
     val nameEng : String,
     val title : String,
-    val _tag : String
+    val tags : String
 ) {
-    val deckResourceList =  mutableListOf<Int>()
-    val tag : List<String>
-        get() = _tag.split("\n")
+    val tagList : List<String>
+        get() = tags.split("\n")
 }

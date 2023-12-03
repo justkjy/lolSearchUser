@@ -1,6 +1,5 @@
 package kr.co.justkimlol
 
-
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import kr.co.justkimlol.R

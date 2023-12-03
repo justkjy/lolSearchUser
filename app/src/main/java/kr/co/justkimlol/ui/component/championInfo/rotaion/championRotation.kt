@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -25,23 +24,19 @@ import kr.co.justkimlol.ui.theme.Paddings
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun championRotationList(
-    championList : MutableList<ChampionList> = mutableListOf<ChampionList>()
+fun ChampionRotationList(
+    championList : MutableList<ChampionList> = mutableListOf()
 ) {
     Column(
         modifier = Modifier
             .padding(Paddings.large)
             .fillMaxWidth()
     ) {
-        val championNumber = remember { mutableListOf<Int>() }
-
         Text(
             text = "로테이션 챔피언",
             color = MaterialTheme.colorScheme.primary,
             style = MaterialTheme.typography.titleSmall,
         )
-
-        //val listChampion = remember { mutableStateListOf<ChampionList>()}
 
         val listChampion = mutableListOf<ChampionList>().also {
             if(championList.isEmpty()) {
@@ -77,15 +72,14 @@ fun championRotationList(
 }
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
-fun championRotationListPreview() {
+fun ChampionRotationListPreview() {
     LolInfoViewerTheme(true) {
         Scaffold(
             containerColor = MaterialTheme.colorScheme.background
         ) {
-            championRotationList()
+            ChampionRotationList()
         }
     }
 }

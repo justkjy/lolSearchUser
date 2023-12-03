@@ -21,30 +21,24 @@ class ChampionFragment : Fragment() {
 
     // 로그인 viewModel
    private lateinit var sharedViewModel: SharedViewModel
-   private var _binding: FragmentChampionBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
-    var helper: RoomHelper? = null
+   private var helper: RoomHelper? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        sharedViewModel = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
+    ): View {
+        sharedViewModel = ViewModelProvider(requireActivity())[SharedViewModel::class.java]
 
         val profileId = sharedViewModel.profileId.value!!
         val userName = sharedViewModel.userId.value!!
         val userTier = sharedViewModel.loltear.value!!
-        val skillnum = sharedViewModel.summonerLevel.value!!
+        val skillNum = sharedViewModel.summonerLevel.value!!
 
+        val championAllList = mutableListOf<ChampAllListData>()
+        val championRotationData = mutableListOf<ChampionList>()
 
-        var championAllList = mutableListOf<ChampAllListData>()
-        var championRotationData = mutableListOf<ChampionList>()
-
-        val fragmentContext = this.context ?.let { context ->
+        this.context ?.let { context ->
             helper = roomHelperValue(context)
             val lolInfoDb = helper!!.roomMemoDao()
             val list =  lolInfoDb.getChampAll()
@@ -68,11 +62,8 @@ class ChampionFragment : Fragment() {
                     championRotationData.add(ChampionList(engName, korName))
                 }
             }
-
             this
         }
-
-
 
         return ComposeView(requireContext()).apply {
             setContent {
@@ -83,7 +74,7 @@ class ChampionFragment : Fragment() {
                             profileId,
                             userName,
                             userTier,
-                            skillnum,
+                            skillNum,
                             championAllList,
                             championRotationData,
                         )

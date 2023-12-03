@@ -16,10 +16,7 @@ import kr.co.justkimlol.databinding.ActivityNavigationMainBinding
 
 
 class StartActivity : AppCompatActivity() {
-
-    //private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityNavigationMainBinding
-
     private lateinit var sharedViewModel: SharedViewModel
 
     @RequiresApi(Build.VERSION_CODES.R)
@@ -31,7 +28,6 @@ class StartActivity : AppCompatActivity() {
         sharedViewModel = ViewModelProvider(this).get(SharedViewModel::class.java)
 
         val navView: BottomNavigationView = binding.navView
-        val navClickEvent = binding.navView
 
         binding.navView.setOnItemSelectedListener { item ->
             when (item.itemId) {
@@ -50,21 +46,11 @@ class StartActivity : AppCompatActivity() {
                 else -> {
                     true
                 }
-
             }
         }
 
 
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-//        val appBarConfiguration = AppBarConfiguration(
-//            setOf(
-//                R.id.navigation_home, R.id.navigation_user
-//            )
-//        )
-//        //setupActionBarWithNavController(navController, appBarConfiguration)
-//        navView.setupWithNavController(navController)
 
         val mainDestinations = setOf(
             R.id.navigation_user, R.id.navigation_champion
@@ -77,7 +63,6 @@ class StartActivity : AppCompatActivity() {
                 else -> View.GONE
             }
         }
-
     }
 
     private fun changeFragment(fragment: Fragment) {

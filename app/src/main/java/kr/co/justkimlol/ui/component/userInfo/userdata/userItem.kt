@@ -247,7 +247,7 @@ fun UserItem(
 @Composable
 fun UserLevel1(title: String = "랭크", rankInfo : RankInfo) {
     Box (
-        modifier = BoxModifier(80.dp, "level1Box")
+        modifier = boxModifier(80.dp, "level1Box")
     )
     Text(
         text = title,
@@ -271,7 +271,7 @@ fun UserLevel1(title: String = "랭크", rankInfo : RankInfo) {
 @Composable
 fun UserLevel2(title: String = "더블 업", RankInfo : RankInfo) {
     Box (
-        modifier = BoxModifier(80.dp, "level2Box")
+        modifier = boxModifier(80.dp, "level2Box")
     )
     Text(
         text = title,
@@ -304,11 +304,11 @@ fun UserLevel2(title: String = "더블 업", RankInfo : RankInfo) {
 @Composable
 fun UserLevel3(
     title: String = "최고의 챔피언",
-    RankInfo: RankInfo,
+    rankInfo: RankInfo,
     gameType: GameType,
 ) {
     Box (
-        modifier = BoxModifier(90.dp, "level3Box")
+        modifier = boxModifier(90.dp, "level3Box")
     ){
         Column(modifier = Modifier.padding(Paddings.none)) {
             Text(
@@ -319,9 +319,9 @@ fun UserLevel3(
             )
             Spacer(modifier = Modifier.padding(Paddings.small))
             if(gameType == GameType.LOL)
-                ChampTopList(RankInfo.championName)
+                ChampTopList(rankInfo.championName)
             else {
-                TftDackTopList(RankInfo.tftResource())
+                TftDackTopList(rankInfo.tftResource())
             }
         }
     }
@@ -340,7 +340,7 @@ fun UserLevel4(gameType: GameType,
 
     Box (
         contentAlignment = Alignment.Center,
-        modifier = BoxModifier(80.dp, "buttonBox")
+        modifier = boxModifier(80.dp, "buttonBox")
             .background(MaterialTheme.colorScheme.secondary)
             .padding(start = startPadding, end = startPadding)
     ){
@@ -349,7 +349,6 @@ fun UserLevel4(gameType: GameType,
             leadingIconData = leadingIconData,
             id = R.string.primaryButtonDesc,
             onClick = {
-
                 clicked = true
             }
         )
@@ -376,9 +375,8 @@ fun UserLevel4(gameType: GameType,
     }
 }
 
-
 @Composable
-fun BoxModifier(height: Dp, layoutId: String) = Modifier
+fun boxModifier(height: Dp, layoutId: String) = Modifier
     .fillMaxWidth()
     .height(height)
     .focusable(enabled = false)

@@ -9,5 +9,4 @@ data class SpellsData(
     val description :String,
     val image : String,
     val spellsQtooltip : String = "",
-
 )

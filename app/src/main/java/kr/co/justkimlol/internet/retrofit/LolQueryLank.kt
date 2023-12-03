@@ -11,7 +11,6 @@ interface LolQueryLank {
     @GET("/lol/league/v4/entries/by-summoner/{encryptedSummonerId}")
     suspend fun getRankInfo(
         @Path("encryptedSummonerId") encryptedSummonerId: String,
-        @Query("api_key") api_key : String
-    //): Response<UserRankInfo.UserRankInfoItem>
+        @Query("api_key") apiKey : String
     ): Response<UserRankInfo>
 }

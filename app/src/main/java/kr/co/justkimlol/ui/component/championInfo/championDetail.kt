@@ -52,9 +52,9 @@ import kr.co.justkimlol.internet.champSpellsUrl
 import kr.co.justkimlol.ui.theme.LolInfoViewerTheme
 import kr.co.justkimlol.ui.theme.Paddings
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalPagerApi::class)
+@OptIn(ExperimentalPagerApi::class)
 @Composable
-fun championDetail(
+fun ChampionDetail(
     onDismissRequest: () -> Unit = {},
     onConfirmation: () -> Unit = {},
     champEngName: String = "Volibear",
@@ -403,10 +403,11 @@ data class TabItem(
     val unSelectedIcon: ImageVector,
     val selectedIcon: ImageVector
 )
+
 @Preview
 @Composable
 fun PreviewChampionDetail() {
     LolInfoViewerTheme {
-        championDetail()
+        ChampionDetail()
     }
 }

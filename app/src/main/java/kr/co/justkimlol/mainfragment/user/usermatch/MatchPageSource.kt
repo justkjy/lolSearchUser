@@ -43,8 +43,7 @@ class MatchPageSource(
         }
 
         val range = page.until(page + loadSize)
-
-        val matchIdList = getMatchList(range.start, range.count())
+        val matchIdList = getMatchList(range.first, range.count())
         var matchList = mutableListOf<UserMatchId>()
         if(matchIdList.isNotEmpty()) {
             for (matchId in matchIdList) {

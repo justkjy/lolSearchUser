@@ -9,7 +9,7 @@ sealed class ImageUrl   {
     class ChampionImage(val championImage: String, val version: String) : ImageUrl()
     class ChampionLoadingImage(val championImage: String) : ImageUrl()
     class ChampionTilesImg(val championImage: String) : ImageUrl()
-    class ChampionLargeImage(val chapionImage: String, val championSkinNum: Int) : ImageUrl()
+    class ChampionLargeImage(val championImage: String, val championSkinNum: Int) : ImageUrl()
     class ChampionPassiveImage(val passiveImage: String, val version: String) : ImageUrl()
     class ChampionSpellsImage(val spells: String, val version: String) : ImageUrl()
     class MatchItem(val item: String, val version: String) : ImageUrl()
@@ -48,7 +48,7 @@ sealed class ImageUrl   {
 
             is ImageUrl.ChampionLargeImage -> {
                 "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/#1_#2.jpg".replace(
-                    "#1", imageUrl.chapionImage, true
+                    "#1", imageUrl.championImage, true
                 ).replace("#2", "${imageUrl.championSkinNum}")
             }
 

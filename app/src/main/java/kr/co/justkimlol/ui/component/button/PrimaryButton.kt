@@ -23,7 +23,6 @@ import kr.co.justkimlol.R
 import kr.co.justkimlol.ui.theme.LolInfoViewerTheme
 import kr.co.justkimlol.ui.theme.Paddings
 
-
 val LEADING_ICON_SIZE = 24.dp
 
 @Composable
@@ -34,8 +33,6 @@ fun PrimaryButton(
     clickAble: Boolean = true,
     onClick: () -> Unit = { }
 ) {
-
-
     Button(
         onClick =  onClick ,
         enabled = clickAble,

@@ -113,9 +113,8 @@ fun FuncshowMatech(
 
         insertChampUpdate(index, champEngName, userPart.win, userKill, userDeath)
 
-    } ?: {
-
     }
+
     Column(
         verticalArrangement = Arrangement.Center,
         modifier = Modifier
@@ -488,8 +487,7 @@ fun gameUnixTimeToDate(unixTime : Long) : String {
 }
 
 fun champEngNameToKorName(champEngName: String, context: Context) : String {
-
-    var helper = roomHelperValue(context)
+    val helper = roomHelperValue(context)
     val lolInfoDb = helper!!.roomMemoDao()
     val list =  lolInfoDb.getChampInfo(champEngName)
     return if(list.isNullOrEmpty()) {

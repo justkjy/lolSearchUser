@@ -6,10 +6,10 @@ import kr.co.justkimlol.R
 sealed class ResourceInfo {
     class ChampPosition(val tag: String) : ResourceInfo()
     class TierIcon(val tier : String) : ResourceInfo()
-    class skillLevelIcon(val level : Int) : ResourceInfo()
+    class SkillLevelIcon(val level : Int) : ResourceInfo()
 
     companion object {
-        fun converResource(champ: ResourceInfo): Int =
+        fun ConverResource(champ: ResourceInfo): Int =
             when (champ) {
                 is ResourceInfo.ChampPosition -> {
                     positionIn(champ.tag)
@@ -19,7 +19,7 @@ sealed class ResourceInfo {
                     tearIconIn(champ.tier)
                 }
 
-                is ResourceInfo.skillLevelIcon -> {
+                is ResourceInfo.SkillLevelIcon -> {
                     eogBoderIn(champ.level)
                 }
             }
@@ -94,14 +94,14 @@ sealed class ResourceInfo {
 
 typealias resourcePosition = ResourceInfo.ChampPosition
 typealias resourceTier = ResourceInfo.TierIcon
-typealias resourceEog= ResourceInfo.skillLevelIcon
+typealias resourceEog= ResourceInfo.SkillLevelIcon
 
 ///////////////////////////////////////////////////////////use
 fun champTagResource(tag: MutableList<String>) : MutableList<Int> {
     val resourceIdList = mutableListOf<Int>().let { items ->
         for(item in tag) {
             val id = resourcePosition(item)
-            items.add(ResourceInfo.converResource(id))
+            items.add(ResourceInfo.ConverResource(id))
         }
         items
     }
@@ -110,10 +110,10 @@ fun champTagResource(tag: MutableList<String>) : MutableList<Int> {
 
 fun tierResource(tier: String) : Int {
     val tierValue = resourceTier(tier)
-    return ResourceInfo.converResource(tierValue)
+    return ResourceInfo.ConverResource(tierValue)
 }
 
 fun skillLevelResource(level: Int) : Int {
     val tierValue = resourceEog(level)
-    return ResourceInfo.converResource(tierValue)
+    return ResourceInfo.ConverResource(tierValue)
 }

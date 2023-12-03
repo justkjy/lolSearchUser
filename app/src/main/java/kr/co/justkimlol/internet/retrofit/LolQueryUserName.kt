@@ -10,7 +10,7 @@ interface LolQueryUserName {
     @GET("/lol/summoner/v4/summoners/by-name/{summonerName}")
     suspend fun getUserInfo(
         @Path("summonerName") summonerName: String,
-        @Query("api_key") api_key : String
+        @Query("api_key") apiKey : String
     ): Response<UserData>
 }
 

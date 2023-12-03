@@ -16,20 +16,15 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
-import androidx.datastore.dataStore
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -37,6 +32,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.findNavController
 import com.google.gson.Gson
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -50,17 +46,17 @@ import kr.co.justkimlol.internet.getJsonLoad
 import kr.co.justkimlol.internet.getJsonSuccess
 import kr.co.justkimlol.dataclass.ChampionRotationData
 import kr.co.justkimlol.internet.TAG
-import kr.co.justkimlol.internet.retrofit.GetJsonFromRerofit
+import kr.co.justkimlol.internet.retrofit.GetJsonFromRetrofit
 import kr.co.justkimlol.internet.retrofit.LolQueryUserName
 import kr.co.justkimlol.room.data.RoomHelper
 import kr.co.justkimlol.room.data.roomHelperValue
 import kr.co.justkimlol.mainfragment.home.viewModel.ChampionInitViewModel
 import kr.co.justkimlol.mainfragment.home.viewModel.DataStoreViewModel
 import kr.co.justkimlol.mainfragment.home.viewModel.PatchState
+import kr.co.justkimlol.ui.navigation.navCheckState
 import kr.co.justkimlol.ui.navigation.navFailState
 import kr.co.justkimlol.ui.navigation.navSuccessState
 import kr.co.justkimlol.ui.navigation.navWaitState
-import kr.co.justkimlol.ui.navigation.navcheckState
 import kr.co.justkimlol.ui.theme.LolWhiteTheme
 
 class HomeFragment : Fragment() {
@@ -73,22 +69,17 @@ class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
-
-    var helper: RoomHelper? = null
-
-    var showErrorCode = 0
+    private var helper: RoomHelper? = null
+    
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-
-        sharedViewModel = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
+    ): View {
+        sharedViewModel = ViewModelProvider(requireActivity())[SharedViewModel::class.java]
+       
         // loadUserId
-        storeViewModel = ViewModelProvider(this).get(DataStoreViewModel::class.java)
+        storeViewModel = ViewModelProvider(this)[DataStoreViewModel::class.java]
 
         observeUiEffects()
 
@@ -98,7 +89,7 @@ class HomeFragment : Fragment() {
             viewHomeModel.inputUserid(searchUserName)
         })
 
-        val fragmentContext = this.context ?.let { context ->
+        this.context ?.let { context ->
             helper = roomHelperValue(context)
             this
         }
@@ -123,7 +114,7 @@ class HomeFragment : Fragment() {
     private fun observeUiEffects() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewHomeModel.feedState.collect { it ->
+                viewHomeModel.feedState.collect { 
                     when(it) {
                         is getJsonFailed -> {
                             val message = it.error
@@ -135,9 +126,7 @@ class HomeFragment : Fragment() {
                             viewHomeModel.setChampionInfo(PatchState.PROGRESS)
                         }
                         is getJsonSuccess -> {
-                            val message = it.msg
                             viewHomeModel.setChampionInfo(PatchState.COMPLETE)
-
                         }
                     }
                 }
@@ -151,7 +140,7 @@ class HomeFragment : Fragment() {
                         is navWaitState -> {
 
                         }
-                        is navcheckState -> {
+                        is navCheckState -> {
                             var apikey = viewHomeModel.apiKey.value!!
                             var userid = viewHomeModel.userId.value!!
                             if (userid.isEmpty()) {
@@ -171,7 +160,6 @@ class HomeFragment : Fragment() {
                             viewHomeModel.setInputWait()
                         }
                         is navSuccessState -> {
-                            //var apikey = viewHomeModel.apiKey.value!!
                             var apikey = sharedViewModel.apiKey.value!!
                             // 검색한 아이디 저장
                             storeViewModel.insert(viewHomeModel.userId.value!!)
@@ -179,7 +167,6 @@ class HomeFragment : Fragment() {
                             view?.let { viewNav ->
                                 viewNav.findNavController()
                                     .navigate(R.id.action_navigation_home_to_navigation_user)
-                                
                             }
                         }
                     }
@@ -200,28 +187,27 @@ class HomeFragment : Fragment() {
     }
 }
 
+@OptIn(DelicateCoroutinesApi::class)
 suspend fun searchUser(userId : String, useApiKey: String, viewModel: ChampionInitViewModel) {
-
-    val retrofitUserAPI = GetJsonFromRerofit.getInstance()
+    val retrofitUserAPI = GetJsonFromRetrofit.getInstance()
 
     try{
         val retrofitService = retrofitUserAPI.create(LolQueryUserName::class.java)
             .getUserInfo(userId, useApiKey)
-        val response = retrofitService
-        if(response.code() != 200 ) {
-            viewModel.setNavState(navFailState(response.code()))
+        if(retrofitService.code() != 200 ) {
+            viewModel.setNavState(navFailState(retrofitService.code()))
 
-            if(response.code() == 403) {
+            if(retrofitService.code() == 403) {
                 viewModel.inputApiKey(true)
             }
             return
         }
 
         GlobalScope.launch(Dispatchers.IO) {
-            if (response.isSuccessful) {
+            if (retrofitService.isSuccessful) {
                 viewModel.setNavState(navSuccessState)
             } else {
-                val errorCode = response.code()
+                val errorCode = retrofitService.code()
                 viewModel.setNavState(navFailState(errorCode))
             }
         }
@@ -264,17 +250,6 @@ fun MessageBox(view: ChampionInitViewModel = viewModel()) {
                         actionLabel = "close",
                         duration = SnackbarDuration.Long
                     )
-                    //viewModel?.let{it.setChangeCode(0)}
-                    // 스낵바 결과
-                    when (result) {
-                        SnackbarResult.Dismissed -> {
-                            // 스낵바 닫기
-                        }
-
-                        SnackbarResult.ActionPerformed -> {
-                            // 동작 수행
-                        }
-                    }
                     view.setCodeClear()
                 }
             }
@@ -285,9 +260,7 @@ fun MessageBox(view: ChampionInitViewModel = viewModel()) {
         Modifier
             .fillMaxSize()
             .background(color = androidx.compose.ui.graphics.Color.White)
-    ) {
-
-    }
+    ) {   }
 }
 
 enum class ErrorCode (

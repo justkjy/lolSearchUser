@@ -1,15 +1,12 @@
 package kr.co.justkimlol.internet
 
-const val WAITSTEP = "WAITSTEP"
-const val DOSEARCH = "SEARCHSTEP"
-
 sealed class UserInfoStep {
-    object loading : UserInfoStep()
+    data object Loading : UserInfoStep()
     class SearchMsg(val userId: String): UserInfoStep()
     class Success(val userId : String): UserInfoStep()
     class Fail(val code:Int) : UserInfoStep()
 }
-typealias userInfoGetloading = UserInfoStep.loading
+typealias userInfoGetLoading = UserInfoStep.Loading
 typealias userStepMsg = UserInfoStep.SearchMsg
 typealias userInfoSuccess = UserInfoStep.Success
 typealias userInfoFail = UserInfoStep.Fail

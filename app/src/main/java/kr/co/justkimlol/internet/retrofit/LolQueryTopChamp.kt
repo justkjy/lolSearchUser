@@ -13,6 +13,6 @@ interface LolQueryTopChamp {
     suspend fun getTopChampInfo(
         @Path("encryptedPUUID") encryptedPUUID: String,
         @Query("count") count : Int,
-        @Query("api_key") api_key : String
+        @Query("api_key") apiKey : String
     ): Response<ChampionMasteryTop>
 }

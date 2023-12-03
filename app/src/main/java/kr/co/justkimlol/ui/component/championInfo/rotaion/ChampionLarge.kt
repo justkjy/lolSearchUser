@@ -60,8 +60,9 @@ fun ChampionImgCard(
 
                 //Last item
                 val viewportWidth = layoutInfo.viewportEndOffset + layoutInfo.viewportStartOffset
-                if (itemInfo.index + 1 == layoutInfo.totalItemsCount &&
-                    itemInfo.offset + itemInfo.size <= viewportWidth)
+                if (((itemInfo.index + 1) == layoutInfo.totalItemsCount) &&
+                    ((itemInfo.offset + itemInfo.size) <= viewportWidth)
+                )
                     return@derivedStateOf Red
 
                 //Other items
@@ -75,17 +76,14 @@ fun ChampionImgCard(
         }
     }
 
-//    val converColor = when(backgroundColor) {
-//        Red -> Color.LightGray
-//        else-> MaterialTheme.colorScheme.primary
-//    }
     val converColor = Color.LightGray
 
     val scale by remember {
         derivedStateOf {
             val currentItem = state.layoutInfo.visibleItemsInfo.firstOrNull { it.index == index } ?: return@derivedStateOf 1.0f
             val halfRowWidth = state.layoutInfo.viewportSize.width/2
-            (1f - minOf(1f, abs(currentItem.offset + (currentItem.size / 2) - halfRowWidth ).toFloat() / halfRowWidth) * 0.10f)
+            (1f - minOf(1f, kotlin.math.abs(currentItem.offset + (currentItem.size / 2) - halfRowWidth)
+                .toFloat() / halfRowWidth) * 0.10f)
         }
     }
 
@@ -111,7 +109,6 @@ fun ChampionImgCard(
             text = champinKorName,
             style = MaterialTheme.typography.bodyMedium,
             textAlign = TextAlign.Center,
-            //color = MaterialTheme.colorScheme.primary,
             color = converColor,
             modifier = Modifier
                 .padding(Paddings.small)
@@ -122,16 +119,12 @@ fun ChampionImgCard(
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
-fun championLarPreview() {
+fun ChampionLarPreview() {
     LolInfoViewerTheme(true) {
         Scaffold(
             containerColor = MaterialTheme.colorScheme.background
-
-        ) {
-            //ChampionImgCard()
-        }
+        ) {      }
     }
 }

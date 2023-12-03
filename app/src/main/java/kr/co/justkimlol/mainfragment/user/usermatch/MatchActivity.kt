@@ -2,7 +2,6 @@ package kr.co.justkimlol.mainfragment.user.usermatch
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.service.autofill.FieldClassification.Match
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -17,40 +16,33 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.items
 import androidx.paging.compose.itemsIndexed
 import co.yml.charts.common.model.Point
 import co.yml.charts.ui.linechart.LineChart
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.last
 import kr.co.justkimlol.dataclass.UserMatchId
 import kr.co.justkimlol.internet.TAG
 import kr.co.justkimlol.mainfragment.user.usermatch.viewmodel.MatchChampViewModel
 import kr.co.justkimlol.mainfragment.user.usermatch.viewmodel.MatchViewModel
 import kr.co.justkimlol.ui.component.GameType
-import kr.co.justkimlol.ui.component.championInfo.tierProfile
+import kr.co.justkimlol.ui.component.championInfo.TierProfile
 import kr.co.justkimlol.ui.component.circleprocess.CustomCircularProccess
 import kr.co.justkimlol.ui.component.circleprocess.PreviewLineChart
 import kr.co.justkimlol.ui.component.userInfo.userdata.RankInfo
@@ -60,8 +52,8 @@ import kr.co.justkimlol.ui.theme.Paddings
 
 class MatchActivity : ComponentActivity() {
 
-    lateinit var viewMatchModel : MatchViewModel
-    lateinit var viewChampionConditionModel : MatchChampViewModel
+    private lateinit var viewMatchModel : MatchViewModel
+    private lateinit var viewChampionConditionModel : MatchChampViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -83,7 +75,7 @@ class MatchActivity : ComponentActivity() {
         viewMatchModel = ViewModelProvider(this).get(MatchViewModel::class.java)
         viewMatchModel.setPageItem(matchList!!, apiKey?.let { it }?: "")
 
-        viewChampionConditionModel = ViewModelProvider(this).get(MatchChampViewModel::class.java)
+        viewChampionConditionModel = ViewModelProvider(this)[MatchChampViewModel::class.java]
         viewChampionConditionModel.insertMost3Champ(topChamp1!!, topChamp2!!, topChamp3!!)
 
         setContent {
@@ -164,7 +156,7 @@ fun PreviewCustomCircular(
     val champ3Win = matchChampViewModel.champ3WinCount.observeAsState(0).value
     val champ3Lose = matchChampViewModel.champ3LoseCount.observeAsState(0).value
 
-    val killinfoList : List<Point>
+    val killInfoList : List<Point>
     = matchChampViewModel.killInfoChart.observeAsState(mutableListOf<Point>(Point(0f, 0f))).value
 
 
@@ -187,7 +179,7 @@ fun PreviewCustomCircular(
                     modifier = Modifier
                         .fillMaxWidth(maxWidth)
                 ) {
-                    tierProfile(
+                    TierProfile(
                         modifier = Modifier.height(100.dp)
                                             .fillMaxWidth(),
                         profileId = profileId,
@@ -258,13 +250,13 @@ fun PreviewCustomCircular(
                     .height(200.dp)
                     .background(MaterialTheme.colorScheme.background)
             ) {
-                Log.i(TAG, "point = ${killinfoList}")
+                Log.i(TAG, "point = $killInfoList")
                 LineChart(
                     modifier = Modifier
                         .background(MaterialTheme.colorScheme.background)
                         .fillMaxWidth()
                         .fillMaxHeight(),
-                    lineChartData = PreviewLineChart(killinfoList)
+                    lineChartData = PreviewLineChart(killInfoList)
                 )
             }
 
@@ -314,7 +306,6 @@ fun PreviewCustomCircular(
                     winValue = champ3Win,
                     loseValue = champ3Lose,
                     onPositionChange = {
-
                     }
                 )
             }
@@ -335,7 +326,7 @@ fun MatchPreview() {
             RankInfo("GOLD", "IV", 394, 5986, mutableListOf<String>(
                 "Maokai", "Ornn", "Galio", "Volibear")
             ),
-            listOf<String>(
+            listOf(
                 "KR_6806621897",
                 "KR_6806502831",
                 "KR_6806365513",
