@@ -6,24 +6,33 @@
    1) https://developer.riotgames.com/apis
       
 3. 페이지
-   1) 시작 페이지 
+   1) 시작 페이지
+ ![image](https://github.com/justkjy/lolSearchUser/assets/150637462/16dc2f45-0a7f-498f-8791-cc3cbf1807e3)
 
-  ![home](https://github.com/justkjy/lolSearchUser/assets/150637462/3509da43-1a45-4eb1-a538-b543a3fb8b78)
 
    2) 시작페이지에 입력한 로그인 정보
-      ![userInfo](https://github.com/justkjy/lolSearchUser/assets/150637462/00ed90e8-4d4f-4b7c-b228-5978905a393d)
+ ![userInfo](https://github.com/justkjy/lolSearchUser/assets/150637462/00ed90e8-4d4f-4b7c-b228-5978905a393d)
 
    3) 아이디 검색
-      ![아이디 검색](https://github.com/justkjy/lolSearchUser/assets/150637462/f2efe595-4967-42c1-a0e2-19094553691f)
+ ![아이디 검색](https://github.com/justkjy/lolSearchUser/assets/150637462/f2efe595-4967-42c1-a0e2-19094553691f)
+
+     a) 대전기록
+![image](https://github.com/justkjy/lolSearchUser/assets/150637462/3a7fe82f-9b1e-4318-b26a-fdb903eb88e0)
+
 
    4) 바텀 앱바의 3번째 메뉴
+
       a) 로테이션 챔피언과 전체 챔피언 명단
-      ![챔피언 정보](https://github.com/justkjy/lolSearchUser/assets/150637462/158ed2e7-ac3f-4f72-bb2d-e5551d71502c)
+      ![image](https://github.com/justkjy/lolSearchUser/assets/150637462/be00727f-5423-4162-a5d5-a73dc61bffc5)
+
 
       b) 챔피언의 프로필 이미지 클릭
-         ![스킨_스토리](https://github.com/justkjy/lolSearchUser/assets/150637462/9dbaf9ff-da69-497a-9ddf-18ee250d8d4f)
+         - 상단 스킨 Tab / 하단 스토리 & 스킬
+         - 스토리
+         ![image](https://github.com/justkjy/lolSearchUser/assets/150637462/fce31e74-1101-4e8b-9979-65cbbc2df1d2)
+        - 스킬
+         ![image](https://github.com/justkjy/lolSearchUser/assets/150637462/d74b273b-bdab-4ce3-82b0-899f4cae3f45)
 
-         ![스킨_스토리2](https://github.com/justkjy/lolSearchUser/assets/150637462/739c3c0e-a76a-4e43-b1ca-bddd1c79255c)
  
  5. 해결해야될 문제
    1) 시작 페이지 > 바텀 엡바 현재 패이지 표시(레드 컬러)가 표시안됨
