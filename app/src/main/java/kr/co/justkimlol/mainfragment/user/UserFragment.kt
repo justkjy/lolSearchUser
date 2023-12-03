@@ -20,11 +20,9 @@ import kr.co.justkimlol.SharedViewModel
 import kr.co.justkimlol.databinding.FragmentUserBinding
 import kr.co.justkimlol.dataclass.UserRankInfo
 import kr.co.justkimlol.internet.TAG
-import kr.co.justkimlol.internet.retrofit.GetJsonFromRetrofit
 import kr.co.justkimlol.internet.retrofit.GetJsonFromRetrofit.Companion.getInstance
 import kr.co.justkimlol.internet.retrofit.GetJsonFromRetrofit.Companion.getInstanceAsia
 import kr.co.justkimlol.internet.retrofit.LolQueryGameName
-import kr.co.justkimlol.internet.retrofit.LolQueryItem
 import kr.co.justkimlol.internet.retrofit.LolQueryLank
 import kr.co.justkimlol.internet.retrofit.LolQueryMatchList
 import kr.co.justkimlol.internet.retrofit.LolQueryTopChamp
@@ -33,9 +31,9 @@ import kr.co.justkimlol.internet.userInfoFail
 import kr.co.justkimlol.internet.userInfoGetLoading
 import kr.co.justkimlol.internet.userInfoSuccess
 import kr.co.justkimlol.internet.userStepMsg
+import kr.co.justkimlol.mainfragment.user.viewModel.UserViewModel
 import kr.co.justkimlol.room.data.RoomHelper
 import kr.co.justkimlol.room.data.roomHelperValue
-import kr.co.justkimlol.mainfragment.user.viewModel.UserViewModel
 import kr.co.justkimlol.ui.component.userInfo.UserTop
 import kr.co.justkimlol.ui.theme.LolInfoViewerTheme
 
