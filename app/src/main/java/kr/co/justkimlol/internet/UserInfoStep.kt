@@ -2,8 +2,8 @@ package kr.co.justkimlol.internet
 
 sealed class UserInfoStep {
     data object Loading : UserInfoStep()
-    class SearchMsg(val userId: String): UserInfoStep()
-    class Success(val userId : String): UserInfoStep()
+    class SearchMsg(val userId: String, val tagLine: String): UserInfoStep()
+    class Success(val userId : String, val tagLine: String): UserInfoStep()
     class Fail(val code:Int) : UserInfoStep()
 }
 typealias userInfoGetLoading = UserInfoStep.Loading

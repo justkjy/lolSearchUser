@@ -64,7 +64,7 @@ val Typography = Typography(
     ),
 
     // other Brush
-    headlineSmall = TextStyle(
+    headlineLarge = TextStyle(
         fontFamily = lineSeedBold,
         fontSize = 24.sp,
         brush = Brush.verticalGradient(listOf(
@@ -73,5 +73,10 @@ val Typography = Typography(
                 Color.White
             )
         )
-    )
+    ),
+    headlineSmall = TextStyle(
+        fontFamily = lineSeedBold,
+        fontSize = 16.sp,
+        color = Color.Gray
+    ),
 )

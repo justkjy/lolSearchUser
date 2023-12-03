@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kr.co.justkimlol.dataclass.ChampionMasteryTop
 import kr.co.justkimlol.dataclass.UserData
+import kr.co.justkimlol.dataclass.UserIdWithTagData
 import kr.co.justkimlol.dataclass.UserRankInfo
 import kr.co.justkimlol.internet.UserInfoStep
 import kr.co.justkimlol.internet.userInfoFail
@@ -21,16 +22,17 @@ class UserViewModel : ViewModel() {
     // 사용자 정보 획득 절차
     private val _stepUserState: MutableStateFlow<UserInfoStep>
         = MutableStateFlow(userInfoGetLoading)
+
     val stepUserState: StateFlow<UserInfoStep> = _stepUserState
-    fun setStepUserFind(id : String){
-        _stepUserState.value = userStepMsg(id)
+    fun setStepUserFind(id : String, tagLine: String){
+        _stepUserState.value = userStepMsg(id, tagLine)
     }
     fun setUserFail(errorCode : Int) {
         _stepUserState.value = userInfoFail(errorCode)
         _userFailCode.postValue(errorCode)
     }
-    fun setUserSuccess(userId : String) {
-        _stepUserState.value = userInfoSuccess(userId)
+    fun setUserSuccess(userId : String, tagLine: String) {
+        _stepUserState.value = userInfoSuccess(userId, tagLine)
     }
 
     // 에러 코드
@@ -47,6 +49,9 @@ class UserViewModel : ViewModel() {
     // 검색에 활용해야하니깐 userid는 라이브 뷰로 사용하자.
     private var _userId = MutableLiveData("")
     val userId: LiveData<String> = _userId
+
+    private var _tagLine = MutableLiveData("")
+    val tagLine: LiveData<String> = _tagLine
 
     // 로그인한 API key
     private val _apiKey = MutableLiveData("")
@@ -120,24 +125,23 @@ class UserViewModel : ViewModel() {
         get() = _rawMatchList
 
     // 1차 사용자 정보 등록
-    fun userLevelInfo(userData: UserData) {
-        _userEncryedId = userData.id
-        _accountId = userData.accountId
-        _userId.postValue(userData.name)
-        _profileIconId = userData.profileIconId
-        _puuid = userData.puuid
-        _summonerLevel = userData.summonerLevel
+    fun userLevelInfo(puuid: String, userId: String, tagLine: String,  profileIconId: Int, summonerLevel: Int) {
+        _userId.postValue(userId)
+        _tagLine.postValue(tagLine)
+        _puuid = puuid
+        _profileIconId = profileIconId
+        _summonerLevel = summonerLevel
     }
 
     // 2차 사용자 랭크 등록
     fun setRankInfo(rankData: UserRankInfo.UserRankInfoItem) {
-            _leagueId = rankData.leagueId
-            _queueType = rankData.queueType
-            _loltear = rankData.tier
-            _lolrank = rankData.rank
-            _lolPoint = rankData.leaguePoints
-            _lolWin = rankData.wins
-            _lolLosses = rankData.losses
+        _leagueId = rankData.leagueId
+        _queueType = rankData.queueType
+        _loltear = rankData.tier
+        _lolrank = rankData.rank
+        _lolPoint = rankData.leaguePoints
+        _lolWin = rankData.wins
+        _lolLosses = rankData.losses
     }
 
     // 3차 10개 챔프 등록

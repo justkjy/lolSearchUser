@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
@@ -38,7 +37,6 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kr.co.justkimlol.R
 import kr.co.justkimlol.SharedViewModel
-import kr.co.justkimlol.databinding.FragmentHomeBinding
 import kr.co.justkimlol.internet.getConnectUrl
 import kr.co.justkimlol.internet.getJsonFailed
 import kr.co.justkimlol.internet.getJsonFileFromHttps
@@ -47,13 +45,14 @@ import kr.co.justkimlol.internet.getJsonSuccess
 import kr.co.justkimlol.dataclass.ChampionRotationData
 import kr.co.justkimlol.internet.TAG
 import kr.co.justkimlol.internet.retrofit.GetJsonFromRetrofit
-import kr.co.justkimlol.internet.retrofit.LolQueryUserName
+import kr.co.justkimlol.internet.retrofit.LolQueryGameName
 import kr.co.justkimlol.room.data.RoomHelper
 import kr.co.justkimlol.room.data.roomHelperValue
 import kr.co.justkimlol.mainfragment.home.viewModel.ChampionInitViewModel
 import kr.co.justkimlol.mainfragment.home.viewModel.DataStoreViewModel
 import kr.co.justkimlol.mainfragment.home.viewModel.PatchState
-import kr.co.justkimlol.ui.component.HomeInfo.LevelTop
+import kr.co.justkimlol.ui.component.homeInfo.LevelTop
+import kr.co.justkimlol.ui.component.userInfo.SearchIdWithTagLine
 import kr.co.justkimlol.ui.navigation.navCheckState
 import kr.co.justkimlol.ui.navigation.navFailState
 import kr.co.justkimlol.ui.navigation.navSuccessState
@@ -67,8 +66,6 @@ class HomeFragment : Fragment() {
     // 공유 라이브 뷰
     private lateinit var sharedViewModel: SharedViewModel
     private lateinit var storeViewModel : DataStoreViewModel
-
-    private var _binding: FragmentHomeBinding? = null
 
     private var helper: RoomHelper? = null
     
@@ -85,9 +82,15 @@ class HomeFragment : Fragment() {
         observeUiEffects()
 
         var searchUserName = ""
-        storeViewModel.read.observe(this, Observer{
+        var searchTagLine = ""
+        storeViewModel.readUserName.observe(this, Observer{
             searchUserName = it.toString()
             viewHomeModel.inputUserid(searchUserName)
+        })
+
+        storeViewModel.readTagLine.observe(this, Observer{
+            searchTagLine = it.toString()
+            viewHomeModel.inputTagLine(searchTagLine)
         })
 
         this.context ?.let { context ->
@@ -143,32 +146,42 @@ class HomeFragment : Fragment() {
                         }
                         is navCheckState -> {
                             var apikey = viewHomeModel.apiKey.value!!
+
                             var userid = viewHomeModel.userId.value!!
+                            var tagLine = viewHomeModel.tagLine.value!!
+
                             if (userid.isEmpty()) {
                                 userid = "dongk"
+                            }
+
+                            if (tagLine.isEmpty()) {
+                                tagLine = "KR1"
                             }
 
                             if (apikey.isEmpty()) {
                                 apikey = "RGAPI-a2161692-7fdf-4e6c-9d99-e3594f07fa24"
                             }
                             sharedViewModel.inputApiKey(apikey)
+
                             sharedViewModel.inputUserId(userid)
 
-                            searchUser(userid, apikey, viewHomeModel)
+                            sharedViewModel.inputTagLine(tagLine)
+
+                            searchUser(userid, tagLine, apikey, viewHomeModel)
                         }
                         is navFailState -> {
                             viewHomeModel.setChangeCode(state.errorCode)
                             viewHomeModel.setInputWait()
                         }
                         is navSuccessState -> {
-                            var apikey = sharedViewModel.apiKey.value!!
+                            val apikey = sharedViewModel.apiKey.value!!
                             // 검색한 아이디 저장
-                            storeViewModel.insert(viewHomeModel.userId.value!!)
+                            storeViewModel.insert(viewHomeModel.userId.value!!, viewHomeModel.tagLine.value!!)
+
                             rotationChamp(apikey)
-                            view?.let { viewNav ->
-                                viewNav.findNavController()
-                                    .navigate(R.id.action_navigation_home_to_navigation_user)
-                            }
+                            val puuid = viewHomeModel.puuid.value!!
+                            sharedViewModel.inputpuuid(puuid)
+                            view?.findNavController()?.navigate(R.id.action_navigation_home_to_navigation_user)
                         }
                     }
                 }
@@ -189,12 +202,12 @@ class HomeFragment : Fragment() {
 }
 
 @OptIn(DelicateCoroutinesApi::class)
-suspend fun searchUser(userId : String, useApiKey: String, viewModel: ChampionInitViewModel) {
-    val retrofitUserAPI = GetJsonFromRetrofit.getInstance()
+suspend fun searchUser(userId : String, tagLine: String, useApiKey: String, viewModel: ChampionInitViewModel) {
+    val retrofitUserAPI = GetJsonFromRetrofit.getInstanceAsia()
 
     try{
-        val retrofitService = retrofitUserAPI.create(LolQueryUserName::class.java)
-            .getUserInfo(userId, useApiKey)
+        val retrofitService = retrofitUserAPI.create(LolQueryGameName::class.java)
+            .getGameUserInfo(userId, tagLine, useApiKey)
         if(retrofitService.code() != 200 ) {
             viewModel.setNavState(navFailState(retrofitService.code()))
 
@@ -206,6 +219,8 @@ suspend fun searchUser(userId : String, useApiKey: String, viewModel: ChampionIn
 
         GlobalScope.launch(Dispatchers.IO) {
             if (retrofitService.isSuccessful) {
+                val gameName = retrofitService.body()!!
+                viewModel.inputpuuidLine(gameName.puuid)
                 viewModel.setNavState(navSuccessState)
             } else {
                 val errorCode = retrofitService.code()
@@ -217,7 +232,6 @@ suspend fun searchUser(userId : String, useApiKey: String, viewModel: ChampionIn
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MessageBox(view: ChampionInitViewModel = viewModel()) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -226,7 +240,6 @@ fun MessageBox(view: ChampionInitViewModel = viewModel()) {
     var text = ""
     if(code > 0) {
         text = viewCode(code)
-
     }
     Scaffold (
         modifier = Modifier
@@ -257,7 +270,6 @@ fun MessageBox(view: ChampionInitViewModel = viewModel()) {
         }
     )
     Column(
-
         Modifier
             .fillMaxSize()
             .background(color = androidx.compose.ui.graphics.Color.White)

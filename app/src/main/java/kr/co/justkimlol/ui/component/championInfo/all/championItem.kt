@@ -139,7 +139,7 @@ fun ChampionItem(
 
             Text(
                 text = champEngName,
-                style = MaterialTheme.typography.headlineSmall,
+                style = MaterialTheme.typography.headlineLarge,
                 modifier = Modifier
                     .constrainAs(champTitleItem) {
                         top.linkTo(parent.top)

@@ -21,16 +21,25 @@ class SharedViewModel : ViewModel() {
     }
 
     // user Id
-    val _userId = MutableLiveData("")
+    private val _userId = MutableLiveData("")
     val userId: LiveData<String> = _userId
-
     val inputUserId: (id:String) -> (Unit) = {it ->
         _userId.value = it
+    }
+
+    // tagLine
+    private val _tagLine = MutableLiveData("")
+    val tagLine: LiveData<String> = _tagLine
+    val inputTagLine: (tagLine:String) -> (Unit) = {it ->
+        _tagLine.value = it
     }
 
     // puuid
     private val _puuid = MutableLiveData("")
     val puuid: LiveData<String> = _puuid
+    val inputpuuid: (puuid:String) -> (Unit) = {it ->
+        _puuid.value = it
+    }
 
     // 사용 프로필 아이콘 아이디
     private val _profileIconId = MutableLiveData(0)

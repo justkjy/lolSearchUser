@@ -32,13 +32,27 @@ class ChampionInitViewModel : ViewModel() {
     }
 
     // 입력 유저 아이디 등록
-    private val _userId = MutableLiveData<String>("")
+    private val _userId = MutableLiveData("")
     val userId : LiveData<String> = _userId
     fun inputUserid(id: String){
         this._userId.value = id
     }
 
-    private val _apiKey = MutableLiveData<String>("")
+    // 입력 유저 테그 등록
+    private val _tagLine = MutableLiveData("")
+    val tagLine : LiveData<String> = _tagLine
+    fun inputTagLine(tagLine: String){
+        this._tagLine.value = tagLine
+    }
+
+    // puuid
+    private val _puuid = MutableLiveData("")
+    val puuid : LiveData<String> = _puuid
+    fun inputpuuidLine(puuid: String){
+        this._puuid.postValue(puuid)
+    }
+
+    private val _apiKey = MutableLiveData("")
     val apiKey : LiveData<String> = _apiKey
     fun inputApiKey(id: String){
         this._apiKey.value = id

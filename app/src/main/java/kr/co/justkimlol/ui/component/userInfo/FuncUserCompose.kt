@@ -59,7 +59,7 @@ fun UserTop(view : UserViewModel = viewModel()){
                 .fillMaxWidth()
                 .background(MaterialTheme.colorScheme.background)
             ) {
-                searchUser("")
+                SearchIdWithTagLine("")
 
                 LazyColumn {
                     item {

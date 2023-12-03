@@ -10,9 +10,10 @@ import kr.co.justkimlol.mainfragment.home.RegisterUserStoreData
 class DataStoreViewModel(application: Application) : AndroidViewModel(application) {
     private val myDataStore = RegisterUserStoreData(application)
 
-    fun insert(userName : String) = viewModelScope.launch {
-        myDataStore.insertUserName(userName)
+    fun insert(userName : String, tagLine: String) = viewModelScope.launch {
+        myDataStore.insertUserInfo(userName, tagLine)
     }
+    val readUserName = myDataStore.getUserName.asLiveData()
+    val readTagLine = myDataStore.getTagName.asLiveData()
 
-    val read = myDataStore.getUserName.asLiveData()
 }

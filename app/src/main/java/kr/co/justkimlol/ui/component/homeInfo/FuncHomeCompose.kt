@@ -1,4 +1,4 @@
-package kr.co.justkimlol.ui.component.HomeInfo
+package kr.co.justkimlol.ui.component.homeInfo
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -14,10 +14,12 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -51,11 +53,12 @@ fun LevelTop(
     viewModel: ChampionInitViewModel? = null,
 ) {
     var userId by rememberSaveable { mutableStateOf("")   }
+    var tagLine by rememberSaveable { mutableStateOf("")   }
+
     var apiKey by rememberSaveable { mutableStateOf("")   }
 
-    userId  =  viewModel?.let {
-        it.userId.observeAsState("").value
-    }?:""
+    userId  =  viewModel?.userId?.observeAsState("")?.value ?:""
+    tagLine  =  viewModel?.tagLine?.observeAsState("")?.value ?:""
 
     Column(
         modifier = Modifier
@@ -85,7 +88,7 @@ fun LevelTop(
                 )
             }
             Spacer(modifier = Modifier.padding(Paddings.extra))
-
+            val iconColumn = 0.07f
             Row(
                 horizontalArrangement = Arrangement.Center,
                 modifier = Modifier.fillMaxWidth()
@@ -94,8 +97,9 @@ fun LevelTop(
                     Icons.Default.Person,
                     "소환사 이름",
                     modifier = Modifier.align(Alignment.CenterVertically)
+                        .fillMaxWidth(iconColumn)
                 )
-                Spacer(modifier = Modifier.padding(Paddings.xsmall))
+
                 OutlinedTextField(
                     value = userId,
                     textStyle = MaterialTheme.typography.titleSmall,
@@ -106,9 +110,7 @@ fun LevelTop(
                     },
                     onValueChange = {
                         userId = it
-                        viewModel?.let { view ->
-                            view.inputUserid(it)
-                        }
+                        viewModel?.inputUserid(it)
                     },
                     modifier = Modifier
                         .padding(
@@ -119,20 +121,68 @@ fun LevelTop(
                 )
             }
 
+            Row {
+                Text(
+                    text = "",
+                    modifier = Modifier.fillMaxWidth(iconColumn)
+                )
+                OutlinedTextField(
+                    value = tagLine,
+                    textStyle = MaterialTheme.typography.titleSmall,
+                    label = {
+                        Text(
+                            text = "TAG",
+                            color = Color.Gray
+                        )
+                    },
+                    leadingIcon = {
+                        Text(
+                            text = "#",
+                            style = MaterialTheme.typography.headlineSmall,
+                        )
+                    },
+                    onValueChange = {
+                        tagLine = it
+                        viewModel?.inputTagLine(tagLine)
+                    },
+                    trailingIcon = {
+                        IconButton(
+                            onClick = {
+                                tagLine = "KR1"
+                                viewModel?.inputTagLine(tagLine)
+                            }) {
+                            Icon(
+                                Icons.Filled.Clear,
+                                contentDescription = "필드 지우기"
+                            )
+                        }
+                    },
+                    modifier = Modifier
+                        .padding(
+                            start = Paddings.large,
+                            end = Paddings.medium
+                        )
+                        .fillMaxWidth(0.6f)
+                )
+                Text(
+                    text = "기본 테그 KR1",
+                    color = Color.Gray,
+                    style = MaterialTheme.typography.titleSmall,
+                    modifier = Modifier.fillMaxSize()
+                        .align(alignment = Alignment.Bottom)
+                )
+            }
+
             Spacer(modifier = Modifier.padding(Paddings.large))
             Row(horizontalArrangement = Arrangement.Center) {
                 Icon(
                     painter = painterResource(R.drawable.baseline_key_24),
                     contentDescription = "소환사 이름",
                     modifier = Modifier.align(Alignment.CenterVertically)
+                        .fillMaxWidth(iconColumn)
                 )
 
-                Spacer(modifier = Modifier.padding(Paddings.xsmall))
-
-                val enableText = viewModel?.let { view ->
-                    view.needApiKey.observeAsState(false).value
-                }?: false
-
+                val enableText = viewModel?.needApiKey?.observeAsState(false)?.value ?: false
                 OutlinedTextField(
                     value = apiKey,
                     textStyle = MaterialTheme.typography.titleSmall,
@@ -144,11 +194,8 @@ fun LevelTop(
                     enabled = enableText,
                     onValueChange = {
                         apiKey = it
-                        viewModel?.let { view ->
-                            view.inputApiKey(it)
-                        }
+                        viewModel?.inputApiKey(it)
                     },
-
                     modifier = Modifier
                         .padding(
                             start = Paddings.large,
@@ -162,13 +209,11 @@ fun LevelTop(
 
             Spacer(modifier = Modifier.padding(Paddings.large))
 
-            val patchProgessState = viewModel?.let { view ->
-                view.patchProgressStep.observeAsState("").value
-            } ?: ""
+            val patchProgressState = viewModel?.patchProgressStep?.observeAsState("")?.value ?: ""
 
             // 패치 진행 정보
             Text(
-                text = patchProgessState,
+                text = patchProgressState,
                 color = Color.Red,
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.titleSmall,
@@ -177,9 +222,7 @@ fun LevelTop(
                     .height(60.dp)
             )
 
-            val progress = viewModel?.let {
-                it.championInfo.observeAsState(PatchState.LOADING).value
-            }
+            val progress = viewModel?.championInfo?.observeAsState(PatchState.LOADING)?.value
             var clickAble = false
             if (progress == PatchState.COMPLETE) {
                 clickAble = true
@@ -189,10 +232,7 @@ fun LevelTop(
 
             PrimaryButton(
                 text = "LogIn",
-                onClick = viewModel?.let {
-                    it.setInputButtonCheck
-
-                } ?: { },
+                onClick = viewModel?.setInputButtonCheck ?: { },
                 clickAble = clickAble,
                 leadingIconData = LeadingIconData(R.drawable.warrior_helmet_2750),
             )

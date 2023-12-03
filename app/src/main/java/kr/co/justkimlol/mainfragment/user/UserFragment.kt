@@ -23,10 +23,12 @@ import kr.co.justkimlol.internet.TAG
 import kr.co.justkimlol.internet.retrofit.GetJsonFromRetrofit
 import kr.co.justkimlol.internet.retrofit.GetJsonFromRetrofit.Companion.getInstance
 import kr.co.justkimlol.internet.retrofit.GetJsonFromRetrofit.Companion.getInstanceAsia
+import kr.co.justkimlol.internet.retrofit.LolQueryGameName
 import kr.co.justkimlol.internet.retrofit.LolQueryItem
 import kr.co.justkimlol.internet.retrofit.LolQueryLank
 import kr.co.justkimlol.internet.retrofit.LolQueryMatchList
 import kr.co.justkimlol.internet.retrofit.LolQueryTopChamp
+import kr.co.justkimlol.internet.retrofit.LolQueryUserIdUsePuuid
 import kr.co.justkimlol.internet.userInfoFail
 import kr.co.justkimlol.internet.userInfoGetLoading
 import kr.co.justkimlol.internet.userInfoSuccess
@@ -59,7 +61,6 @@ class UserFragment : Fragment() {
         sharedViewModel = ViewModelProvider(requireActivity())[SharedViewModel::class.java]
         appActivityViewModel = sharedViewModel
 
-
         useApiKey = sharedViewModel.apiKey.value!!
 
 
@@ -84,7 +85,8 @@ class UserFragment : Fragment() {
                         is userInfoGetLoading -> {}
                         is userStepMsg -> {
                             val userId = stepState.userId
-                            runUserSearch(userId)
+                            val tagLine = stepState.tagLine
+                            runUserSearch(userId, tagLine)
                         }
                         is userInfoSuccess -> {
                             Log.i("TEST", "Success")
@@ -134,15 +136,28 @@ class UserFragment : Fragment() {
     }
 
     private fun runRetrofit() {
-        val useId = sharedViewModel.userId.value!!
-        runUserSearch(useId)
+        val puuid = sharedViewModel.puuid.value!!
+        val userId = sharedViewModel.userId.value!!
+        val tagLine = sharedViewModel.tagLine.value!!
+        runPuuidSearch(puuid, userId, tagLine)
     }
 
     @OptIn(DelicateCoroutinesApi::class)
-    private fun runUserSearch(useId: String) {
+    private fun runPuuidSearch(puuid : String, userId: String, tagLine: String) {
+        try {
+            GlobalScope.launch(Dispatchers.IO) {
+                puuidRetrofit(puuid, userId, tagLine)
+            }
+        }  catch (e: Exception) {
+            Log.i(TAG, "err1 = ${e.printStackTrace()}")
+        }
+    }
+
+    @OptIn(DelicateCoroutinesApi::class)
+    private fun runUserSearch(useId: String, tagLine: String) {
         try {
                 GlobalScope.launch(Dispatchers.IO) {
-                    userRetrofit(useId)
+                    userRetrofit(useId, tagLine)
                 }
         }  catch (e: Exception) {
             Log.i(TAG, "err1 = ${e.printStackTrace()}")
@@ -150,19 +165,16 @@ class UserFragment : Fragment() {
     }
 
     @OptIn(DelicateCoroutinesApi::class)
-    private suspend fun userRetrofit(userId : String) {
-        val retrofitUserAPI = GetJsonFromRetrofit.getInstance()
+    private suspend fun userRetrofit(userId : String, tagLine: String) {
+        val retrofitUserAPI = getInstanceAsia()
 
         try{
             GlobalScope.launch(Dispatchers.IO) {
-                val retrofitService = retrofitUserAPI.create(LolQueryItem::class.java)
-                    .getUserInfo(userId, useApiKey)
+                val retrofitService = retrofitUserAPI.create(LolQueryGameName::class.java)
+                    .getGameUserInfo(userId, tagLine, useApiKey)
                 if (retrofitService.isSuccessful) {
                     val comment = retrofitService.body()!!
-                    userViewModel.userLevelInfo(comment)
-                    //encryptedPUUID = comment.puuid // 숙련도 정보 체크때 써야함
-                    Log.i(TAG, "comment.id = ${comment.id}, comment.puuid = ${comment.puuid}")
-                    rankRetfofit(userId, comment.id, comment.puuid)
+                    puuidRetrofit(comment.puuid, userId, tagLine)
                 } else {
                     //userViewModel.setStepState(
                     //    userInfoFail("사용자 검색 에러"),
@@ -177,7 +189,34 @@ class UserFragment : Fragment() {
     }
 
     @OptIn(DelicateCoroutinesApi::class)
-    suspend fun rankRetfofit(userId : String, encryptedId: String, encryptedPUUID: String) {
+    private suspend fun puuidRetrofit(puuid: String, userId : String, tagLine: String) {
+        val retrofitpuuidAPI = getInstance()
+
+        try{
+            GlobalScope.launch(Dispatchers.IO) {
+                val retrofitService = retrofitpuuidAPI.create(LolQueryUserIdUsePuuid::class.java)
+                    .getUserInfo(puuid, useApiKey)
+                if (retrofitService.isSuccessful) {
+                    val comment = retrofitService.body()!!
+                    userViewModel.userLevelInfo(
+                        comment.puuid, userId, tagLine, comment.profileIconId, comment.summonerLevel
+                    )
+                    rankRetfofit(userId, tagLine, comment.id, comment.puuid)
+                } else {
+                    //userViewModel.setStepState(
+                    //    userInfoFail("사용자 검색 에러"),
+                    //    "검색 아이디가 없거나 api 키가 만료 되었습니다."
+                    //)
+                    userViewModel.setUserFail(retrofitService.code())
+                }
+            }
+        }  catch (e: Exception) {
+            Log.i(TAG, "err2 = ${e.printStackTrace()}")
+        }
+    }
+
+    @OptIn(DelicateCoroutinesApi::class)
+    suspend fun rankRetfofit(userId : String, tagLine: String, encryptedId: String, puuid: String) {
         val retrofitUserAPI = getInstance()
 
         val retrofitService = retrofitUserAPI.create(LolQueryLank::class.java)
@@ -201,7 +240,7 @@ class UserFragment : Fragment() {
                         }
                     }
                 }
-                topChamp(userId, encryptedPUUID)
+                topChamp(userId, tagLine, puuid)
             } else {
                 userViewModel.setUserFail(response.code())
             }
@@ -209,12 +248,12 @@ class UserFragment : Fragment() {
     }
 
     @OptIn(DelicateCoroutinesApi::class)
-    private suspend fun topChamp(userId : String, encryptedPUUID : String) {
+    private suspend fun topChamp(userId : String, tagLine: String, puuid : String) {
         val retrofitUserAPI = getInstance()
         val searchCount = 10
 
         val retrofitService = retrofitUserAPI.create(LolQueryTopChamp::class.java)
-            .getTopChampInfo(encryptedPUUID, searchCount, useApiKey)
+            .getTopChampInfo(puuid, searchCount, useApiKey)
 
         GlobalScope.launch(Dispatchers.IO) {
             if (retrofitService.isSuccessful) {
@@ -222,7 +261,7 @@ class UserFragment : Fragment() {
                     it.sortByDescending { item -> item.championPointsSinceLastLevel }
                     userViewModel.setUseChamp(it)
                 }
-                matchList(userId, encryptedPUUID)
+                matchList(userId, tagLine, puuid)
             } else {
                 userViewModel.setUserFail(retrofitService.code())
             }
@@ -230,7 +269,7 @@ class UserFragment : Fragment() {
     }
 
     @OptIn(DelicateCoroutinesApi::class)
-    private suspend fun matchList(userId: String, encryptedPUUID : String) {
+    private suspend fun matchList(userId: String, tagLine: String, encryptedPUUID : String) {
         val retrofitUserAPI = getInstanceAsia()
         val retrofitService = retrofitUserAPI.create(LolQueryMatchList::class.java)
             .getMatchList(encryptedPUUID, 0, 100, useApiKey)
@@ -240,7 +279,7 @@ class UserFragment : Fragment() {
                 retrofitService.body()?.let {
                     userViewModel.setMatchList(it)
                 }
-                userViewModel.setUserSuccess(userId)
+                userViewModel.setUserSuccess(userId, tagLine)
             } else {
                 userViewModel.setUserFail(retrofitService.code())
             }

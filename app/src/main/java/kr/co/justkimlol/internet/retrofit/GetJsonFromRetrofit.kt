@@ -8,7 +8,7 @@ class GetJsonFromRetrofit {
     companion object {
         private const val BASE_URL = "https://kr.api.riotgames.com/lol/"
         private const val ASIA_URL = "https://asia.api.riotgames.com/lol/"
-        private const val SEA_URL = "https://asia.api.riotgames.com/lol/"
+
         private var INSTANCE_KR: Retrofit? = null
         private var INSTANCE_ASIA: Retrofit? = null
 

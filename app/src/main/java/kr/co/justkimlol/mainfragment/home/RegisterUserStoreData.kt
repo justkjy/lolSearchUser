@@ -14,15 +14,22 @@ class RegisterUserStoreData(context : Context) {
     private val mDataStore : DataStore<Preferences> = context.dataStore
 
     private val USER_NAME_KEY = stringPreferencesKey("USER_NAME")
+    private val TAG_LINE_KEY = stringPreferencesKey("TAG_LINE")
 
-    suspend fun insertUserName(userName : String) {
+    suspend fun insertUserInfo(userName : String, tagName : String) {
         mDataStore.edit { setting ->
             setting[USER_NAME_KEY] = userName
+            setting[TAG_LINE_KEY] = tagName
         }
     }
 
     val getUserName : Flow<String> = mDataStore.data.map {
         val userName = it[USER_NAME_KEY] ?: ""
         userName
+    }
+
+    val getTagName : Flow<String> = mDataStore.data.map {
+        val tagLine = it[TAG_LINE_KEY] ?: ""
+        tagLine
     }
 }
