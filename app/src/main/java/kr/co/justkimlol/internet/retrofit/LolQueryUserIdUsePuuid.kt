@@ -1,4 +1,4 @@
-package kr.co.justkimlol.mainfragment.home.internet.retrofit
+package kr.co.justkimlol.internet.retrofit
 
 import kr.co.justkimlol.dataclass.UserData
 import kr.co.justkimlol.dataclass.UserIdUsePuuidData
@@ -11,6 +11,6 @@ interface LolQueryUserIdUsePuuid {
     @GET("/lol/summoner/v4/summoners/by-puuid/{encryptedPUUID}")
     suspend fun getUserInfo(
         @Path("encryptedPUUID") puuid: String,
-        @Query("api_key") apiKey : String
+        @Query("api_key") apiKey: String
     ): Response<UserIdUsePuuidData>
 }

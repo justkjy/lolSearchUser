@@ -5,8 +5,8 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import kotlinx.coroutines.delay
 import kr.co.justkimlol.dataclass.UserMatchId
-import kr.co.justkimlol.mainfragment.home.internet.TAG
-import kr.co.justkimlol.mainfragment.home.internet.retrofit.LolQueryMatchId
+import kr.co.justkimlol.internet.TAG
+import kr.co.justkimlol.internet.retrofit.LolQueryMatchId
 
 private const val STARTING_KEY = 1
 

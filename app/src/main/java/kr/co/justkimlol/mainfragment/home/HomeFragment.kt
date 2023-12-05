@@ -37,15 +37,10 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kr.co.justkimlol.R
 import kr.co.justkimlol.viewModel.SharedViewModel
-import kr.co.justkimlol.mainfragment.home.internet.getConnectUrl
-import kr.co.justkimlol.mainfragment.home.internet.getJsonFailed
-import kr.co.justkimlol.mainfragment.home.internet.getJsonFileFromHttps
-import kr.co.justkimlol.mainfragment.home.internet.getJsonLoad
-import kr.co.justkimlol.mainfragment.home.internet.getJsonSuccess
 import kr.co.justkimlol.dataclass.ChampionRotationData
-import kr.co.justkimlol.mainfragment.home.internet.TAG
-import kr.co.justkimlol.mainfragment.home.internet.retrofit.GetJsonFromRetrofit
-import kr.co.justkimlol.mainfragment.home.internet.retrofit.LolQueryGameName
+import kr.co.justkimlol.internet.TAG
+import kr.co.justkimlol.internet.retrofit.GetJsonFromRetrofit
+import kr.co.justkimlol.internet.retrofit.LolQueryGameName
 import kr.co.justkimlol.room.data.RoomHelper
 import kr.co.justkimlol.room.data.roomHelperValue
 import kr.co.justkimlol.viewModel.home.ChampionInitViewModel
@@ -57,6 +52,11 @@ import kr.co.justkimlol.ui.navigation.navFailState
 import kr.co.justkimlol.ui.navigation.navSuccessState
 import kr.co.justkimlol.ui.navigation.navWaitState
 import kr.co.justkimlol.ui.theme.LolWhiteTheme
+import kr.co.justkimlol.internet.getConnectUrl
+import kr.co.justkimlol.internet.getJsonFailed
+import kr.co.justkimlol.internet.getJsonFileFromHttps
+import kr.co.justkimlol.internet.getJsonLoad
+import kr.co.justkimlol.internet.getJsonSuccess
 
 class HomeFragment : Fragment() {
 
@@ -188,6 +188,7 @@ class HomeFragment : Fragment() {
         }
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
     private fun rotationChamp(apiKey: String)  {
         GlobalScope.launch(Dispatchers.IO) {
             val rotationChamp = getJsonFileFromHttps(

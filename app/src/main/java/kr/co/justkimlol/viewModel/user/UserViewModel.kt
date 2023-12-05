@@ -11,11 +11,11 @@ import kr.co.justkimlol.dataclass.ChampionMasteryTop
 import kr.co.justkimlol.dataclass.UserData
 import kr.co.justkimlol.dataclass.UserIdWithTagData
 import kr.co.justkimlol.dataclass.UserRankInfo
-import kr.co.justkimlol.mainfragment.home.internet.UserInfoStep
-import kr.co.justkimlol.mainfragment.home.internet.userInfoFail
-import kr.co.justkimlol.mainfragment.home.internet.userInfoGetLoading
-import kr.co.justkimlol.mainfragment.home.internet.userInfoSuccess
-import kr.co.justkimlol.mainfragment.home.internet.userStepMsg
+import kr.co.justkimlol.internet.UserInfoStep
+import kr.co.justkimlol.internet.userInfoFail
+import kr.co.justkimlol.internet.userInfoGetLoading
+import kr.co.justkimlol.internet.userInfoSuccess
+import kr.co.justkimlol.internet.userStepMsg
 
 class UserViewModel : ViewModel() {
 

@@ -1,4 +1,4 @@
-package kr.co.justkimlol.mainfragment.home.internet.retrofit
+package kr.co.justkimlol.internet.retrofit
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -19,7 +19,7 @@ class GetJsonFromRetrofit {
                     .addConverterFactory(GsonConverterFactory.create())
                     .build()
             }
-            return  INSTANCE_KR!!
+            return INSTANCE_KR!!
         }
 
         fun getInstanceAsia(): Retrofit {
@@ -29,7 +29,7 @@ class GetJsonFromRetrofit {
                     .addConverterFactory(GsonConverterFactory.create())
                     .build()
             }
-            return  INSTANCE_ASIA!!
+            return INSTANCE_ASIA!!
         }
     }
 }

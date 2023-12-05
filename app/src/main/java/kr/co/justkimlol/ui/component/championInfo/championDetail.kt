@@ -46,9 +46,9 @@ import androidx.compose.ui.unit.dp
 import com.google.accompanist.pager.rememberPagerState
 import kr.co.justkimlol.R
 import kr.co.justkimlol.dataclass.SpellsData
-import kr.co.justkimlol.mainfragment.home.internet.champPassiveUrl
-import kr.co.justkimlol.mainfragment.home.internet.champSkinUrl
-import kr.co.justkimlol.mainfragment.home.internet.champSpellsUrl
+import kr.co.justkimlol.internet.champPassiveUrl
+import kr.co.justkimlol.internet.champSkinUrl
+import kr.co.justkimlol.internet.champSpellsUrl
 import kr.co.justkimlol.ui.theme.LolInfoViewerTheme
 import kr.co.justkimlol.ui.theme.Paddings
 

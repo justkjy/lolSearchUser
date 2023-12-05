@@ -1,11 +1,10 @@
-package kr.co.justkimlol.mainfragment.home.internet
+package kr.co.justkimlol.internet
 
-import kr.co.justkimlol.mainfragment.home.internet.ImageUrl.Companion.fullUrl
+import kr.co.justkimlol.internet.ImageUrl.Companion.fullUrl
 
 
-
-sealed class ImageUrl   {
-    class ProfileImage(val userProfile: Int, val version: String): ImageUrl()
+sealed class ImageUrl {
+    class ProfileImage(val userProfile: Int, val version: String) : ImageUrl()
     class ChampionImage(val championImage: String, val version: String) : ImageUrl()
     class ChampionLoadingImage(val championImage: String) : ImageUrl()
     class ChampionTilesImg(val championImage: String) : ImageUrl()
@@ -16,7 +15,7 @@ sealed class ImageUrl   {
     class MatchSpell(val spell: String, val version: String) : ImageUrl()
     class BlankItem(val version: String) : ImageUrl()
     companion object {
-        fun fullUrl(imageUrl: ImageUrl) : String = when(imageUrl) {
+        fun fullUrl(imageUrl: ImageUrl): String = when (imageUrl) {
             is ProfileImage -> {
                 "https://ddragon.leagueoflegends.com/cdn/#version/img/profileicon/#profile.png".replace(
                     "#profile", "${imageUrl.userProfile}", true
@@ -75,6 +74,7 @@ sealed class ImageUrl   {
                     "#version", imageUrl.version, true
                 ).replace("#spellImage", imageUrl.spell)
             }
+
             is BlankItem -> {
                 "https://ddragon.leagueoflegends.com/cdn/#version/img/tft-item/TFT_Item_UnusableSlot.png".replace(
                     "#version", imageUrl.version, true
@@ -121,28 +121,28 @@ fun champSkinUrl(championImage: String, skinNumber: Int): String {
     return fullUrl(result)
 }
 
-fun champPassiveUrl(passive: String) : String {
-    val result  = fullChampPassiveUrl(passive, lolVersion)
+fun champPassiveUrl(passive: String): String {
+    val result = fullChampPassiveUrl(passive, lolVersion)
     return fullUrl(result)
 }
 
-fun champSpellsUrl(spells: String) : String {
-    val result  = fullChampSpellsUrl(spells, lolVersion)
+fun champSpellsUrl(spells: String): String {
+    val result = fullChampSpellsUrl(spells, lolVersion)
     return fullUrl(result)
 }
 
-fun matchItem(item: String) : String {
-    val result  = fullMatchItemUrl(item, lolVersion)
+fun matchItem(item: String): String {
+    val result = fullMatchItemUrl(item, lolVersion)
     return fullUrl(result)
 }
 
-fun matchSpell(spell: String) : String {
-    val result  = fullMatchSpell(spell, lolVersion)
+fun matchSpell(spell: String): String {
+    val result = fullMatchSpell(spell, lolVersion)
     return fullUrl(result)
 }
 
-fun noneItem() : String {
-    val result  = fullNoneItem(lolVersion)
+fun noneItem(): String {
+    val result = fullNoneItem(lolVersion)
     return fullUrl(result)
 }
 

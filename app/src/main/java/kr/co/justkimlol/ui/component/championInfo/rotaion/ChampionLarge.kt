@@ -30,7 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import coil.compose.AsyncImage
 import kr.co.justkimlol.R
-import kr.co.justkimlol.mainfragment.home.internet.champTilesUrl
+import kr.co.justkimlol.internet.champTilesUrl
 import kr.co.justkimlol.ui.component.championInfoHeight
 import kr.co.justkimlol.ui.component.championInfoWith
 import kr.co.justkimlol.ui.theme.LolInfoViewerTheme

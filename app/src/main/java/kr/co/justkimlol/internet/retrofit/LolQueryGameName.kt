@@ -1,4 +1,4 @@
-package kr.co.justkimlol.mainfragment.home.internet.retrofit
+package kr.co.justkimlol.internet.retrofit
 
 import kr.co.justkimlol.dataclass.UserData
 import kr.co.justkimlol.dataclass.UserIdWithTagData
@@ -12,6 +12,6 @@ interface LolQueryGameName {
     suspend fun getGameUserInfo(
         @Path("gameName") gameName: String,
         @Path("tagLine") tagLine: String,
-        @Query("api_key") apiKey : String
+        @Query("api_key") apiKey: String
     ): Response<UserIdWithTagData>
 }

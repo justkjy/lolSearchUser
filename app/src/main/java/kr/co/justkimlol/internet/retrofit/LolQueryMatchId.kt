@@ -1,4 +1,4 @@
-package kr.co.justkimlol.mainfragment.home.internet.retrofit
+package kr.co.justkimlol.internet.retrofit
 
 import kr.co.justkimlol.dataclass.UserMatchId
 import retrofit2.Response

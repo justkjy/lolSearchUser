@@ -1,4 +1,4 @@
-package kr.co.justkimlol.mainfragment.home.internet.retrofit
+package kr.co.justkimlol.internet.retrofit
 
 import kr.co.justkimlol.dataclass.UserData
 import retrofit2.Response
@@ -11,6 +11,6 @@ interface LolQueryItem {
     @GET("summoner/v4/summoners/by-name/{userName}")
     suspend fun getUserInfo(
         @Path("userName") userName: String,
-        @Query("api_key") apiKey : String
+        @Query("api_key") apiKey: String
     ): Response<UserData>
 }

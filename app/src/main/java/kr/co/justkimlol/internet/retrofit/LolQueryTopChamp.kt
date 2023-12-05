@@ -1,4 +1,4 @@
-package kr.co.justkimlol.mainfragment.home.internet.retrofit
+package kr.co.justkimlol.internet.retrofit
 
 import kr.co.justkimlol.dataclass.ChampionMasteryTop
 import retrofit2.Response
@@ -12,7 +12,7 @@ interface LolQueryTopChamp {
     @GET("/lol/champion-mastery/v4/champion-masteries/by-puuid/{encryptedPUUID}/top")
     suspend fun getTopChampInfo(
         @Path("encryptedPUUID") encryptedPUUID: String,
-        @Query("count") count : Int,
-        @Query("api_key") apiKey : String
+        @Query("count") count: Int,
+        @Query("api_key") apiKey: String
     ): Response<ChampionMasteryTop>
 }

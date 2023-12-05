@@ -7,8 +7,8 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import kr.co.justkimlol.mainfragment.home.internet.GetJsonFromUrl
-import kr.co.justkimlol.mainfragment.home.internet.getJsonLoad
+import kr.co.justkimlol.internet.GetJsonFromUrl
+import kr.co.justkimlol.internet.getJsonLoad
 import kr.co.justkimlol.ui.navigation.NavViewState
 import kr.co.justkimlol.ui.navigation.navWaitState
 import kr.co.justkimlol.ui.navigation.navCheckState

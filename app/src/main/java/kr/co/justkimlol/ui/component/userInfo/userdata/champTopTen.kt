@@ -16,7 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import kr.co.justkimlol.R
-import kr.co.justkimlol.mainfragment.home.internet.champUrl
+import kr.co.justkimlol.internet.champUrl
 import kr.co.justkimlol.ui.component.startPadding
 import kr.co.justkimlol.ui.theme.LolInfoViewerTheme
 import kr.co.justkimlol.ui.theme.Paddings
