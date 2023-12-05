@@ -1,13 +1,11 @@
-package kr.co.justkimlol
+package kr.co.justkimlol.viewModel
 
-import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kr.co.justkimlol.internet.TAG
 
 class SharedViewModel : ViewModel() {
     ////////////////////////////////////////////////////////////////////////////////////////////////

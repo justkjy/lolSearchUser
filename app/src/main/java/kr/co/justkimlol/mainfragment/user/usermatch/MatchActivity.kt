@@ -39,8 +39,8 @@ import co.yml.charts.ui.linechart.LineChart
 import kotlinx.coroutines.flow.Flow
 import kr.co.justkimlol.dataclass.UserMatchId
 import kr.co.justkimlol.internet.TAG
-import kr.co.justkimlol.mainfragment.user.usermatch.viewmodel.MatchChampViewModel
-import kr.co.justkimlol.mainfragment.user.usermatch.viewmodel.MatchViewModel
+import kr.co.justkimlol.viewModel.user.match.MatchChampViewModel
+import kr.co.justkimlol.viewModel.user.match.MatchViewModel
 import kr.co.justkimlol.ui.component.GameType
 import kr.co.justkimlol.ui.component.championInfo.TierProfile
 import kr.co.justkimlol.ui.component.circleprocess.CustomCircularProccess

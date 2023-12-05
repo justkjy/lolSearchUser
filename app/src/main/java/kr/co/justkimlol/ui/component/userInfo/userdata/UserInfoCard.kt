@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -17,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.Dimension
-import kr.co.justkimlol.SharedViewModel
+import kr.co.justkimlol.viewModel.SharedViewModel
 import kr.co.justkimlol.ui.component.GameType
 import kr.co.justkimlol.ui.component.startPadding
 import kr.co.justkimlol.ui.component.userInfoLevelBottomHeight
@@ -30,7 +29,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import kr.co.justkimlol.mainfragment.user.appActivityViewModel
 
 @Composable
-fun UserLolCard(viewModel:SharedViewModel = viewModel()) {
+fun UserLolCard(viewModel: SharedViewModel = viewModel()) {
     val userColumnHeight = userInfoLevelTopHeight +
                             userInfoLevelCenter2Height +
                             userInfoLevelBottomHeight

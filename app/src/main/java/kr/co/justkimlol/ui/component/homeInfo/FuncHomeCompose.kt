@@ -43,8 +43,8 @@ import androidx.compose.ui.unit.dp
 import kr.co.justkimlol.R
 import kr.co.justkimlol.ui.component.button.LeadingIconData
 import kr.co.justkimlol.ui.component.button.PrimaryButton
-import kr.co.justkimlol.mainfragment.home.viewModel.ChampionInitViewModel
-import kr.co.justkimlol.mainfragment.home.viewModel.PatchState
+import kr.co.justkimlol.viewModel.home.ChampionInitViewModel
+import kr.co.justkimlol.viewModel.home.PatchState
 import kr.co.justkimlol.ui.theme.LolWhiteTheme
 import kr.co.justkimlol.ui.theme.Paddings
 

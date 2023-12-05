@@ -13,6 +13,7 @@ import kr.co.justkimlol.mainfragment.champion.ChampionFragment
 import kr.co.justkimlol.mainfragment.home.HomeFragment
 import kr.co.justkimlol.mainfragment.user.UserFragment
 import kr.co.justkimlol.databinding.ActivityNavigationMainBinding
+import kr.co.justkimlol.viewModel.SharedViewModel
 
 
 class StartActivity : AppCompatActivity() {

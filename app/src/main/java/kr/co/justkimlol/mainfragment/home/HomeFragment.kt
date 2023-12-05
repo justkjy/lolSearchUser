@@ -36,7 +36,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kr.co.justkimlol.R
-import kr.co.justkimlol.SharedViewModel
+import kr.co.justkimlol.viewModel.SharedViewModel
 import kr.co.justkimlol.internet.getConnectUrl
 import kr.co.justkimlol.internet.getJsonFailed
 import kr.co.justkimlol.internet.getJsonFileFromHttps
@@ -48,11 +48,10 @@ import kr.co.justkimlol.internet.retrofit.GetJsonFromRetrofit
 import kr.co.justkimlol.internet.retrofit.LolQueryGameName
 import kr.co.justkimlol.room.data.RoomHelper
 import kr.co.justkimlol.room.data.roomHelperValue
-import kr.co.justkimlol.mainfragment.home.viewModel.ChampionInitViewModel
-import kr.co.justkimlol.mainfragment.home.viewModel.DataStoreViewModel
-import kr.co.justkimlol.mainfragment.home.viewModel.PatchState
+import kr.co.justkimlol.viewModel.home.ChampionInitViewModel
+import kr.co.justkimlol.viewModel.user.DataStoreViewModel
+import kr.co.justkimlol.viewModel.home.PatchState
 import kr.co.justkimlol.ui.component.homeInfo.LevelTop
-import kr.co.justkimlol.ui.component.userInfo.SearchIdWithTagLine
 import kr.co.justkimlol.ui.navigation.navCheckState
 import kr.co.justkimlol.ui.navigation.navFailState
 import kr.co.justkimlol.ui.navigation.navSuccessState

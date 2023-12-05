@@ -8,8 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import kr.co.justkimlol.SharedViewModel
-import kr.co.justkimlol.databinding.FragmentChampionBinding
+import kr.co.justkimlol.viewModel.SharedViewModel
 import kr.co.justkimlol.dataclass.ChampAllListData
 import kr.co.justkimlol.room.data.RoomHelper
 import kr.co.justkimlol.room.data.roomHelperValue

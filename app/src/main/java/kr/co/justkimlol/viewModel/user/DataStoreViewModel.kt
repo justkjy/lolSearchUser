@@ -1,4 +1,4 @@
-package kr.co.justkimlol.mainfragment.home.viewModel
+package kr.co.justkimlol.viewModel.user
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel

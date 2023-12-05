@@ -1,4 +1,4 @@
-package kr.co.justkimlol.mainfragment.user.usermatch.viewmodel
+package kr.co.justkimlol.viewModel.user.match
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
