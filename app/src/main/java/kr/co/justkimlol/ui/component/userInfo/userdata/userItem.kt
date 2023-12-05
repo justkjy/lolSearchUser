@@ -43,7 +43,7 @@ import androidx.constraintlayout.compose.layoutId
 import androidx.core.content.ContextCompat.startActivity
 import coil.compose.AsyncImage
 import kr.co.justkimlol.R
-import kr.co.justkimlol.internet.profileUrl
+import kr.co.justkimlol.mainfragment.home.internet.profileUrl
 import kr.co.justkimlol.ui.component.GameType
 import kr.co.justkimlol.ui.component.button.LeadingIconData
 import kr.co.justkimlol.ui.component.button.PrimaryButton

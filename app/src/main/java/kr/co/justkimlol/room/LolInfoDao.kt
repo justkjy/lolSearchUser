@@ -11,7 +11,6 @@ import kr.co.justkimlol.room.data.LolVersionEntity
 
 @Dao
 interface LolInfoDao {
-
     // version Info
     @Query("SELECT * FROM LolVersionEntity ORDER BY version DESC ")
     fun getVersionAll() : List<LolVersionEntity>
@@ -25,7 +24,6 @@ interface LolInfoDao {
     @Update
     fun patchVersionState(updateRecord: LolVersionEntity)
 
-
     ///LolChampInfo////////////////////////////////////////////////////////////////////////////
     @Query("SELECT ChampKey, ChampEngName, ChampKorName, ChampTitle, ChampTags FROM LolChampInfoEntity")
     fun getChampAll() : List<LolChampSimpleInfoEntity>
@@ -33,15 +31,8 @@ interface LolInfoDao {
     @Query("SELECT * FROM LolChampInfoEntity WHERE ChampEngName = :champEngName")
     fun getChampInfo(champEngName: String) : List<LolChampInfoEntity>
 
-
     @Query("SELECT * FROM LolChampInfoEntity WHERE ChampKey = :champKey")
     fun getChampItem(champKey: Int) : List<LolChampInfoEntity>
-
-//    @Query("UPDATE LolChampInfoEntity SET Rotation = 1 WHERE ChampKey = :champKey")
-//    fun setRotation(champKey: String)
-//
-//    @Query("UPDATE LolChampInfoEntity SET Rotation = 0")
-//    fun setInitRotation()
 
     @Insert
     fun insertChampInfo(lolChampInfo: LolChampInfoEntity)

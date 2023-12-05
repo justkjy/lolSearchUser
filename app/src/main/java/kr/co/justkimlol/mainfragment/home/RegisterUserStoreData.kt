@@ -9,8 +9,9 @@ import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
+private val Context.dataStore : DataStore<Preferences> by preferencesDataStore("user_pref")
+
 class RegisterUserStoreData(context : Context) {
-    private val Context.dataStore : DataStore<Preferences> by preferencesDataStore("user_pref")
     private val mDataStore : DataStore<Preferences> = context.dataStore
 
     private val USER_NAME_KEY = stringPreferencesKey("USER_NAME")

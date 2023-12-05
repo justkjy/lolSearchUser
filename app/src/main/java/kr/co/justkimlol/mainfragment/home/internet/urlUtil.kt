@@ -1,6 +1,6 @@
-package kr.co.justkimlol.internet
+package kr.co.justkimlol.mainfragment.home.internet
 
-import kr.co.justkimlol.internet.ImageUrl.Companion.fullUrl
+import kr.co.justkimlol.mainfragment.home.internet.ImageUrl.Companion.fullUrl
 
 
 
@@ -17,7 +17,7 @@ sealed class ImageUrl   {
     class BlankItem(val version: String) : ImageUrl()
     companion object {
         fun fullUrl(imageUrl: ImageUrl) : String = when(imageUrl) {
-            is ImageUrl.ProfileImage -> {
+            is ProfileImage -> {
                 "https://ddragon.leagueoflegends.com/cdn/#version/img/profileicon/#profile.png".replace(
                     "#profile", "${imageUrl.userProfile}", true
                 ).replace(
@@ -25,7 +25,7 @@ sealed class ImageUrl   {
                 )
             }
 
-            is ImageUrl.ChampionImage -> {
+            is ChampionImage -> {
                 "https://ddragon.leagueoflegends.com/cdn/#version/img/champion/#championImage.png".replace(
                     "#championImage", imageUrl.championImage, true
                 ).replace(
@@ -34,48 +34,48 @@ sealed class ImageUrl   {
             }
 
 
-            is ImageUrl.ChampionLoadingImage -> {
+            is ChampionLoadingImage -> {
                 "https://ddragon.leagueoflegends.com/cdn/img/champion/loading/##_0.jpg".replace(
                     "##", imageUrl.championImage, true
                 )
             }
 
-            is ImageUrl.ChampionTilesImg-> {
+            is ChampionTilesImg -> {
                 "https://ddragon.leagueoflegends.com/cdn/img/champion/tiles/##_0.jpg".replace(
                     "##", imageUrl.championImage
                 )
             }
 
-            is ImageUrl.ChampionLargeImage -> {
+            is ChampionLargeImage -> {
                 "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/#1_#2.jpg".replace(
                     "#1", imageUrl.championImage, true
                 ).replace("#2", "${imageUrl.championSkinNum}")
             }
 
-            is ImageUrl.ChampionPassiveImage -> {
+            is ChampionPassiveImage -> {
                 "https://ddragon.leagueoflegends.com/cdn/#version/img/passive/#championPassiveImage".replace(
                     "#version", imageUrl.version, true
                 ).replace("#championPassiveImage", imageUrl.passiveImage)
             }
 
-            is ImageUrl.ChampionSpellsImage -> {
+            is ChampionSpellsImage -> {
                 "https://ddragon.leagueoflegends.com/cdn/#version/img/spell/#championPassiveImage".replace(
                     "#version", imageUrl.version, true
                 ).replace("#championPassiveImage", imageUrl.spells)
             }
 
-            is ImageUrl.MatchItem -> {
+            is MatchItem -> {
                 "https://ddragon.leagueoflegends.com/cdn/#version/img/item/#itemImage".replace(
                     "#version", imageUrl.version, true
                 ).replace("#itemImage", imageUrl.item)
             }
 
-            is ImageUrl.MatchSpell -> {
+            is MatchSpell -> {
                 "https://ddragon.leagueoflegends.com/cdn/#version/img/spell/#spellImage".replace(
                     "#version", imageUrl.version, true
                 ).replace("#spellImage", imageUrl.spell)
             }
-            is ImageUrl.BlankItem -> {
+            is BlankItem -> {
                 "https://ddragon.leagueoflegends.com/cdn/#version/img/tft-item/TFT_Item_UnusableSlot.png".replace(
                     "#version", imageUrl.version, true
                 )

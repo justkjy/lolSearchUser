@@ -57,7 +57,7 @@ import co.yml.charts.ui.linechart.model.SelectionHighlightPopUp
 import co.yml.charts.ui.linechart.model.ShadowUnderLine
 import coil.compose.AsyncImage
 import kr.co.justkimlol.R
-import kr.co.justkimlol.internet.champTilesUrl
+import kr.co.justkimlol.mainfragment.home.internet.champTilesUrl
 import kr.co.justkimlol.ui.component.championInfo.TierProfile
 import kr.co.justkimlol.ui.theme.LolInfoViewerTheme
 import kr.co.justkimlol.ui.theme.Paddings

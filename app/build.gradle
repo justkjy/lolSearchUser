@@ -2,8 +2,6 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'androidx.navigation.safeargs.kotlin'
-
-
     id("kotlin-kapt")
 }
 
@@ -73,7 +71,6 @@ dependencies {
     def activity_compose_version ="1.8.0"
     def core_ktx_version = "1.9.0"
     def lifecycle_version = "2.5.1"
-    def preference_version = "1.2.1"
     def datastore_version = "1.0.0"
     def json_version = "1.5.1"
     def googlejson_version = "2.10.1"
@@ -118,7 +115,6 @@ dependencies {
     implementation 'com.google.android.material:material:1.4.0'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.6.2'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2'
-
 
     // Kotlin Navigation
     implementation "androidx.navigation:navigation-fragment-ktx:$navigation_version"

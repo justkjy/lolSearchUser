@@ -9,42 +9,40 @@ import kotlinx.coroutines.launch
 
 class MatchChampViewModel : ViewModel() {
 
-    private var userId : String = ""
-
-    private val _totalCountGame  = MutableLiveData<Int>(0)
+    private val _totalCountGame  = MutableLiveData(0)
     val totalCountGame  : LiveData<Int> = _totalCountGame
 
     private val _totalWin = MutableLiveData<Int>(0)
     val totalWin : LiveData<Int> = _totalWin
 
-    private val _totalLose = MutableLiveData<Int>(0)
+    private val _totalLose = MutableLiveData(0)
     val totalLose = _totalLose
 
     private var champion1 : String = ""
 
-    private val _champ1WinCount = MutableLiveData<Int>(0)
+    private val _champ1WinCount = MutableLiveData(0)
     val champ1WinCount : LiveData<Int> = _champ1WinCount
 
-    private val _champ1LoseCount = MutableLiveData<Int>(0)
+    private val _champ1LoseCount = MutableLiveData(0)
     val champ1LoseCount : LiveData<Int> = _champ1LoseCount
 
     private var champion2 : String = ""
 
-    private val _champ2WinCount = MutableLiveData<Int>(0)
+    private val _champ2WinCount = MutableLiveData(0)
     val champ2WinCount : LiveData<Int> = _champ2WinCount
 
-    private val _champ2LoseCount = MutableLiveData<Int>(0)
+    private val _champ2LoseCount = MutableLiveData(0)
     val champ2LoseCount : LiveData<Int> = _champ2LoseCount
 
     private var champion3 : String = ""
 
-    private val _champ3WinCount = MutableLiveData<Int>(0)
+    private val _champ3WinCount = MutableLiveData(0)
     val champ3WinCount : LiveData<Int> = _champ3WinCount
 
-    private val _champ3LoseCount = MutableLiveData<Int>(0)
+    private val _champ3LoseCount = MutableLiveData(0)
     val champ3LoseCount : LiveData<Int> = _champ3LoseCount
 
-    private val _rawKillInfoChart = mutableListOf<Point>(Point(0f, 0f))
+    private val _rawKillInfoChart = mutableListOf(Point(0f, 0f))
     private val _killInfoChart = MutableLiveData<List<Point>>(_rawKillInfoChart)
     val killInfoChart: LiveData<List<Point>> = _killInfoChart
 

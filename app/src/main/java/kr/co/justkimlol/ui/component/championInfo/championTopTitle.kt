@@ -39,8 +39,8 @@ import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
 import coil.compose.AsyncImage
 import kr.co.justkimlol.R
-import kr.co.justkimlol.internet.champSkinUrl
-import kr.co.justkimlol.internet.profileUrl
+import kr.co.justkimlol.mainfragment.home.internet.champSkinUrl
+import kr.co.justkimlol.mainfragment.home.internet.profileUrl
 import kr.co.justkimlol.ui.theme.LolInfoViewerTheme
 import kr.co.justkimlol.ui.theme.Paddings
 

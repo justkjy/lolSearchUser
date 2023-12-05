@@ -37,10 +37,10 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import kr.co.justkimlol.R
 import kr.co.justkimlol.dataclass.UserMatchId
-import kr.co.justkimlol.internet.champSkinUrl
-import kr.co.justkimlol.internet.matchItem
-import kr.co.justkimlol.internet.matchSpell
-import kr.co.justkimlol.internet.noneItem
+import kr.co.justkimlol.mainfragment.home.internet.champSkinUrl
+import kr.co.justkimlol.mainfragment.home.internet.matchItem
+import kr.co.justkimlol.mainfragment.home.internet.matchSpell
+import kr.co.justkimlol.mainfragment.home.internet.noneItem
 import kr.co.justkimlol.room.data.roomHelperValue
 import kr.co.justkimlol.ui.component.userMatchItemHeight
 import kr.co.justkimlol.ui.theme.LolInfoViewerTheme

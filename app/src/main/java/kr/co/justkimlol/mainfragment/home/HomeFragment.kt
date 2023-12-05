@@ -37,15 +37,15 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kr.co.justkimlol.R
 import kr.co.justkimlol.viewModel.SharedViewModel
-import kr.co.justkimlol.internet.getConnectUrl
-import kr.co.justkimlol.internet.getJsonFailed
-import kr.co.justkimlol.internet.getJsonFileFromHttps
-import kr.co.justkimlol.internet.getJsonLoad
-import kr.co.justkimlol.internet.getJsonSuccess
+import kr.co.justkimlol.mainfragment.home.internet.getConnectUrl
+import kr.co.justkimlol.mainfragment.home.internet.getJsonFailed
+import kr.co.justkimlol.mainfragment.home.internet.getJsonFileFromHttps
+import kr.co.justkimlol.mainfragment.home.internet.getJsonLoad
+import kr.co.justkimlol.mainfragment.home.internet.getJsonSuccess
 import kr.co.justkimlol.dataclass.ChampionRotationData
-import kr.co.justkimlol.internet.TAG
-import kr.co.justkimlol.internet.retrofit.GetJsonFromRetrofit
-import kr.co.justkimlol.internet.retrofit.LolQueryGameName
+import kr.co.justkimlol.mainfragment.home.internet.TAG
+import kr.co.justkimlol.mainfragment.home.internet.retrofit.GetJsonFromRetrofit
+import kr.co.justkimlol.mainfragment.home.internet.retrofit.LolQueryGameName
 import kr.co.justkimlol.room.data.RoomHelper
 import kr.co.justkimlol.room.data.roomHelperValue
 import kr.co.justkimlol.viewModel.home.ChampionInitViewModel
@@ -82,11 +82,11 @@ class HomeFragment : Fragment() {
 
         var searchUserName = ""
         var searchTagLine = ""
+
         storeViewModel.readUserName.observe(this, Observer{
             searchUserName = it.toString()
             viewHomeModel.inputUserid(searchUserName)
         })
-
         storeViewModel.readTagLine.observe(this, Observer{
             searchTagLine = it.toString()
             viewHomeModel.inputTagLine(searchTagLine)

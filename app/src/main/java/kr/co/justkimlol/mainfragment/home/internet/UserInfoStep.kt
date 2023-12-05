@@ -1,4 +1,4 @@
-package kr.co.justkimlol.internet
+package kr.co.justkimlol.mainfragment.home.internet
 
 sealed class UserInfoStep {
     data object Loading : UserInfoStep()

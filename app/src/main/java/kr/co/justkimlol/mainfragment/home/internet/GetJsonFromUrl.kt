@@ -1,21 +1,17 @@
-package kr.co.justkimlol.internet
+package kr.co.justkimlol.mainfragment.home.internet
 
 import android.util.Log
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import kr.co.justkimlol.dataclass.ChampionUnitData
 import kr.co.justkimlol.room.data.InfoVersion
 import kr.co.justkimlol.room.data.LolChampInfoEntity
 import kr.co.justkimlol.room.data.LolVersionEntity
 import kr.co.justkimlol.room.data.RoomHelper
-import java.io.BufferedReader
-import java.io.InputStreamReader
-import java.net.HttpURLConnection
+import java.io.FileNotFoundException
 import java.net.URL
-import javax.net.ssl.HttpsURLConnection
 
 const val TAG = "GETURL"
 var lolVersion = "13.18.1"
@@ -39,97 +35,107 @@ fun getConnectUrl(db: RoomHelper,
     val champAllInfoUrl = "https://ddragon.leagueoflegends.com/cdn/#version#/data/ko_KR/champion.json"
     val champDetailUrl = "https://ddragon.leagueoflegends.com/cdn/#version#/data/ko_KR/champion/#champname#.json"
 
-    try {
-        var urlValue = versionUrl
-        val getVersionJson = getJsonFileFromHttps(urlValue)
+    val runPatchCheck: Boolean
+    val newVersionNo: Int
+    var getJsonChampData = ""
 
-        if(getVersionJson.isEmpty()) {
+    // 버전 정보
+    try {
+        val getVersionJson = getJsonFileFromHttps(versionUrl)
+
+        if (getVersionJson.isEmpty()) {
             state(getJsonFailed("버전 정보 획득 실패"))
             return@launch
+        } else {
+            patchDetailState("버전 정보 체크")
+            val newVersion = dbProcess(db, getVersionJson)
+            lolVersion = newVersion.version
+            newVersionNo = newVersion.no
+            runPatchCheck = newVersion.runPatch
+            patchDetailState("현재 버전 : ${newVersion.version}")
         }
+    } catch (e : FileNotFoundException) {
+        Log.i(TAG, "version connect Error = ${e.printStackTrace()}")
+        patchDetailState("버전 정보 확인 실패 : 서버에 접속 실패" )
+        state(getJsonFailed("패치 실패"))
+        return@launch
+    }
 
-        patchDetailState("버전 정보 체크")
-        val newVersion = dbProcess(db, getVersionJson)
-        lolVersion = newVersion.version
-        patchDetailState("현재 버전 : ${newVersion.version}")
-        if(newVersion.runPatch) {
-            patchDetailState("패치 진행 : $newVersion")
+    // 챔피언 목록 패치
+    if(runPatchCheck){
+        try{
+            patchDetailState("패치 진행 : $lolVersion")
             val lolInfoDb = db.roomMemoDao()
             lolInfoDb.deleteChampInfo()
             // 최신 버전의 챔프 목록 가져 오기
-            urlValue = champAllInfoUrl.replace("#version#", newVersion.version)
+            val urlValue = champAllInfoUrl.replace("#version#", lolVersion)
 
             patchDetailState("챔피언 목록 확인")
-            val getJson = getJsonFileFromHttps(urlValue)
+            getJsonChampData = getJsonFileFromHttps(urlValue)
 
-            if(getJson.isEmpty()) {
-                state(getJsonFailed("챔피언 풀 데이터 획득 실패"))
+            if(getJsonChampData.isEmpty()) {
+                state(getJsonFailed("챔피언 데이터 획득 실패"))
                 return@launch
             }
-            // 챔피언 목록 가져오기
-            val list = jsonRead(getJson)
-            // 개별 챔피언 정보 획득
-            // key = 챔프 이름 , value = json파일
-            val champItemList:MutableMap<String, String> = mutableMapOf()
-            for(item in list) {
-                val urlChampItem = champDetailUrl.replace("#version#", newVersion.version)
-                    .replace("#champname#", item)
-                val jsonData = getJsonFileFromHttps(urlChampItem)
-
-                if(jsonData.isEmpty()) {
-                    state(getJsonFailed("개별 챔프 획득 실패"))
-                    return@launch
-                }
-                patchDetailState("챔피언 : $item")
-                champItemList[item] = jsonData
-            }
-            // 챔프 등록
-            if(championUnitInfo(db, champItemList)) {
-                completeLolPath(db, InfoVersion(newVersion.no, newVersion.version, true))
-            }
-            patchDetailState("패치 완료")
+        } catch (e: FileNotFoundException) {
+            Log.i(TAG, "챔피언 리스트 획득 실패 = ${e.printStackTrace()}")
+            patchDetailState("챔피언 정보 획득 실패 : 서버 연결 실패" )
+            state(getJsonFailed("패치 실패"))
+            return@launch
         }
+    } else {
+        state(getJsonSuccess("패치 완료 : 패치 내용 없음"))
+        return@launch
+    }
+
+    // 챔피언 개별 디테일 정보 획득
+    try {
+        // 챔피언 목록 가져오기
+        val list = jsonRead(getJsonChampData)
+        // 개별 챔피언 정보 획득
+        // key = 챔프 이름 , value = json파일
+        val champItemList:MutableMap<String, String> = mutableMapOf()
+        for(item in list) {
+            val urlChampItem = champDetailUrl.replace("#version#", lolVersion)
+                .replace("#champname#", item)
+            val jsonData = getJsonFileFromHttps(urlChampItem)
+
+            if(jsonData.isEmpty()) {
+                state(getJsonFailed("개별 챔프 획득 실패"))
+                return@launch
+            }
+            patchDetailState("챔피언 : $item")
+            champItemList[item] = jsonData
+        }
+        // 챔프 DB 등록
+        if(championUnitInfo(db, champItemList)) {
+            completeLolPath(db, InfoVersion(newVersionNo, lolVersion, true))
+        }
+        patchDetailState("패치 완료")
         state(getJsonSuccess("패치 완료"))
-    } catch (e: Exception) {
-        Log.i(TAG, "err4 = ${e.printStackTrace()}")
-        patchDetailState("패치 실패" )
+    } catch (e : NumberFormatException) {
+        Log.i(TAG, "JsonSyntaxExceptione = ${e.printStackTrace()}")
+        patchDetailState("개별 챔피언 정보 확인 실패 : 내부적 데이터 구성이 잘못 되었거나 서버의 데이터가 변경되었습니다.")
         state(getJsonFailed("패치 실패"))
+
+    } catch (e: FileNotFoundException) {
+        Log.i(TAG, " 챔피언 정보 확인 = ${e.printStackTrace()}")
+        patchDetailState("개별 챔피언 정보 확인 실패 : 서버 연결 실패" )
+        state(getJsonFailed("패치 실패"))
+    } catch (e: Exception) {
+        Log.i(TAG, "champion detail Info Error = ${e.printStackTrace()}")
+        state(getJsonFailed("개별 챔프 획득 실패"))
     }
 }
 
 // Http 연결 후 json 파일 획득
-suspend fun getJsonFileFromHttps(urlValue: String) : String {
-    val url = URL(urlValue)
-    val urlConnection = withContext(Dispatchers.IO) {
-        url.openConnection()
-    } as HttpsURLConnection
-    urlConnection.requestMethod = "GET"
-
-    return if (urlConnection.responseCode == HttpURLConnection.HTTP_OK) {
-        val streamReader = InputStreamReader(urlConnection.inputStream)
-        val buffered = BufferedReader(streamReader)
-        val content = StringBuffer()
-        while (true) {
-            val line = buffered.readLine() ?: break
-            content.append(line)
-        }
-        urlConnection.disconnect()
-        buffered.close()
-        content.toString()
-    } else {
-        Log.i(TAG, "connect fail")
-        ""
-    }
+fun getJsonFileFromHttps(urlValue: String) : String {
+    return URL(urlValue).readText()
 }
-
-// 버전 처리 /////////////////////////////////////////////////////////////////////////////////////////////////////
-data class VersionData(
-    val element: String
-)
 
 // return true 롤 패치 진행해야함 new version != old version
 //        false 롤 패치 안함     new version == old version
-suspend fun dbProcess(db:RoomHelper, getVersionJson : String) : InfoVersion {
+fun dbProcess(db:RoomHelper, getVersionJson : String) : InfoVersion {
 
     val lolInfoDb = db.roomMemoDao()
 
@@ -141,7 +147,7 @@ suspend fun dbProcess(db:RoomHelper, getVersionJson : String) : InfoVersion {
     val getVersion = list.get(0)
 
 
-    var versionList = ArrayList(lolInfoDb.getVersionAll())
+    val versionList = ArrayList(lolInfoDb.getVersionAll())
 
     if(versionList.isEmpty()) {
         return InfoVersion(no = -1, version = getVersion, runPatch = true)
@@ -155,13 +161,11 @@ suspend fun dbProcess(db:RoomHelper, getVersionJson : String) : InfoVersion {
         }
         else -> true
     }
-
-    return InfoVersion(no = topVersion.no?.let{it} ?: -1, version = getVersion, runPatch = runPatch)
+    return InfoVersion(no = topVersion.no ?: -1, version = getVersion, runPatch = runPatch)
 }
 
 // 챔피언 목록 처리
-suspend fun jsonRead(jsonBody: String) : List<String>{
-    var jsonBody = jsonBody
+fun jsonRead(jsonBody: String) : List<String>{
     val championList = mutableListOf<String>()
     var endPoint = 0
     val findKey = "\"id\":\""
@@ -171,8 +175,6 @@ suspend fun jsonRead(jsonBody: String) : List<String>{
         if(start == -1)
             break
         val end = jsonBody.indexOf("\",", start, true)
-
-        //val name ="\"" +jsonBody.substring(start+findKey.length, end) +"\":"
         val name =jsonBody.substring(start+findKey.length, end)
         if(end == -1)
             break
@@ -189,8 +191,7 @@ fun championUnitInfo(db: RoomHelper, champInfo: MutableMap<String, String>) : Bo
 
     val champInfoData : MutableList<LolChampInfoEntity> = mutableListOf()
 
-    champInfo.forEach() {championName, championJsonString ->
-        // val targetChampName = championName 실제 코드 적용시
+    champInfo.forEach() { (championName, championJsonString) ->
         var jsonSubBody = championJsonString
 
         jsonSubBody = jsonSubBody.replace(

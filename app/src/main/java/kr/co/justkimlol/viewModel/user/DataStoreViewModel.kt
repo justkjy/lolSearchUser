@@ -15,5 +15,4 @@ class DataStoreViewModel(application: Application) : AndroidViewModel(applicatio
     }
     val readUserName = myDataStore.getUserName.asLiveData()
     val readTagLine = myDataStore.getTagName.asLiveData()
-
 }

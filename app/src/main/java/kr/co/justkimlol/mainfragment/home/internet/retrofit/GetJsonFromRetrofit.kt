@@ -1,4 +1,4 @@
-package kr.co.justkimlol.internet.retrofit
+package kr.co.justkimlol.mainfragment.home.internet.retrofit
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

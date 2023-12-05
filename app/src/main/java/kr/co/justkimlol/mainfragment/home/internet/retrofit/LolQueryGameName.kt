@@ -1,4 +1,4 @@
-package kr.co.justkimlol.internet.retrofit
+package kr.co.justkimlol.mainfragment.home.internet.retrofit
 
 import kr.co.justkimlol.dataclass.UserData
 import kr.co.justkimlol.dataclass.UserIdWithTagData

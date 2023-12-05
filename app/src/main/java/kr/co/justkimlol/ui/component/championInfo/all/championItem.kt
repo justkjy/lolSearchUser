@@ -26,7 +26,7 @@ import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
 import coil.compose.AsyncImage
 import kr.co.justkimlol.R
-import kr.co.justkimlol.internet.champUrl
+import kr.co.justkimlol.mainfragment.home.internet.champUrl
 import kr.co.justkimlol.ui.component.championAllItemHeight
 import kr.co.justkimlol.ui.component.championInfo.champTagResource
 import kr.co.justkimlol.ui.theme.LolInfoViewerTheme

@@ -38,7 +38,7 @@ import co.yml.charts.common.model.Point
 import co.yml.charts.ui.linechart.LineChart
 import kotlinx.coroutines.flow.Flow
 import kr.co.justkimlol.dataclass.UserMatchId
-import kr.co.justkimlol.internet.TAG
+import kr.co.justkimlol.mainfragment.home.internet.TAG
 import kr.co.justkimlol.viewModel.user.match.MatchChampViewModel
 import kr.co.justkimlol.viewModel.user.match.MatchViewModel
 import kr.co.justkimlol.ui.component.GameType
