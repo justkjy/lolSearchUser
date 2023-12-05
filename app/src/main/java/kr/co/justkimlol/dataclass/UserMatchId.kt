@@ -1,8 +1,6 @@
 package kr.co.justkimlol.dataclass
 
 
-
-
 data class UserMatchId(
     val info: Info,
     val metadata: Metadata
