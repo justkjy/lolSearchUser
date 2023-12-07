@@ -54,7 +54,6 @@ fun LevelTop(
 ) {
     var userId by rememberSaveable { mutableStateOf("")   }
     var tagLine by rememberSaveable { mutableStateOf("")   }
-
     var apiKey by rememberSaveable { mutableStateOf("")   }
 
     userId  =  viewModel?.userId?.observeAsState("")?.value ?:""

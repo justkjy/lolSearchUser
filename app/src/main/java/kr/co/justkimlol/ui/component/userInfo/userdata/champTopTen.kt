@@ -23,24 +23,24 @@ import kr.co.justkimlol.ui.theme.Paddings
 
 
 @Composable
-fun ChampTopList(champList:MutableList<String>) {
-        LazyRow(
-            modifier = Modifier.padding(start = startPadding, end = startPadding)
-                .fillMaxWidth()
-        ){
-            items(champList) { item ->
-                AsyncImage(
-                    model = champUrl(item),
-                    contentScale = ContentScale.Crop,
-                    placeholder = painterResource(R.drawable.warrior_helmet),
-                    contentDescription = item,
-                    modifier = Modifier
-                        .clip(CircleShape)
-                        .size(40.dp)
-                )
-                Spacer(modifier = Modifier.padding(Paddings.medium))
-            }
+fun ChampTopList(champList : List<String>) {
+    LazyRow(
+        modifier = Modifier.padding(start = startPadding, end = startPadding)
+            .fillMaxWidth()
+    ){
+        items(champList) { item ->
+            AsyncImage(
+                model = champUrl(item),
+                contentScale = ContentScale.Crop,
+                placeholder = painterResource(R.drawable.warrior_helmet),
+                contentDescription = item,
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .size(40.dp)
+            )
+            Spacer(modifier = Modifier.padding(Paddings.medium))
         }
+    }
 }
 
 @Composable

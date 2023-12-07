@@ -2,6 +2,7 @@ package kr.co.justkimlol.internet
 
 import android.util.Log
 import com.google.gson.Gson
+import com.google.gson.JsonSyntaxException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -121,7 +122,7 @@ fun getConnectUrl(
         patchDetailState("개별 챔피언 정보 확인 실패 : 내부적 데이터 구성이 잘못 되었거나 서버의 데이터가 변경되었습니다.")
         state(getJsonFailed("패치 실패"))
 
-    } catch (e: FileNotFoundException) {
+    } catch (e: JsonSyntaxException) {
         Log.i(TAG, " 챔피언 정보 확인 = ${e.printStackTrace()}")
         patchDetailState("개별 챔피언 정보 확인 실패 : 서버 연결 실패")
         state(getJsonFailed("패치 실패"))
@@ -147,11 +148,9 @@ fun dbProcess(db: RoomHelper, getVersionJson: String): InfoVersion {
         .replace("[", "")
         .replace("]", "")
     val list = dataVersion.split(",")
-    val getVersion = list.get(0)
-
+    val (getVersion) = list
 
     val versionList = ArrayList(lolInfoDb.getVersionAll())
-
     if (versionList.isEmpty()) {
         return InfoVersion(no = -1, version = getVersion, runPatch = true)
     }
@@ -195,7 +194,7 @@ fun championUnitInfo(db: RoomHelper, champInfo: MutableMap<String, String>): Boo
 
     val champInfoData: MutableList<LolChampInfoEntity> = mutableListOf()
 
-    champInfo.forEach() { (championName, championJsonString) ->
+    champInfo.forEach { (championName, championJsonString) ->
         var jsonSubBody = championJsonString
 
         jsonSubBody = jsonSubBody.replace(
@@ -253,15 +252,9 @@ fun championUnitInfo(db: RoomHelper, champInfo: MutableMap<String, String>): Boo
             championSkinList[item.num] = item.name
         }
 
-        val skinData = String.let {
-            var skinInfo = ""
-            for (item in championSkinList) {
-                skinInfo += String.format("[${item.key},${item.value}]")
-                skinInfo += "\n"
-            }
-            skinInfo = skinInfo.removeRange(skinInfo.length - 1, skinInfo.length)
-            skinInfo
-        }
+        val skinInfo = championSkinList
+            .map {(key, value) -> "[${key},${value}]" }
+            .joinToString { "\n" }
 
         val championDetail = LolChampInfoEntity(
             champKeyId = championKeyName.toInt(),
@@ -270,7 +263,7 @@ fun championUnitInfo(db: RoomHelper, champInfo: MutableMap<String, String>): Boo
             title = championTitle,
             story = championStory,
             tagList = strTags,
-            skinList = skinData,
+            skinList = skinInfo,
 
             passiveName = passiveName,
             passiveDescription = passiveDescription,
@@ -300,7 +293,6 @@ fun championUnitInfo(db: RoomHelper, champInfo: MutableMap<String, String>): Boo
             spellsRImage = spellsRImage,
             spellsRtooltip = spellsRToolTip
         )
-
         champInfoData.add(championDetail)
     }
     db.roomMemoDao().insertChampAll(champInfoData)

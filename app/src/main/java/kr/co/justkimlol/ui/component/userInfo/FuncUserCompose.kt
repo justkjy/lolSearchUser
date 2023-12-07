@@ -33,8 +33,6 @@ import kr.co.justkimlol.viewModel.user.UserViewModel
 
 @Composable
 fun UserTop(view : UserViewModel = viewModel()){
-
-
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
     var text = ""
@@ -59,13 +57,9 @@ fun UserTop(view : UserViewModel = viewModel()){
                 .background(MaterialTheme.colorScheme.background)
             ) {
                 SearchIdWithTagLine("")
-
                 LazyColumn {
                     item {
                         UserLolInfo()
-                    }
-                    item {
-                        UserTftInfo()
                     }
                 }
                 scope.launch {
@@ -75,13 +69,11 @@ fun UserTop(view : UserViewModel = viewModel()){
                             actionLabel = "close",
                             duration = SnackbarDuration.Long
                         )
-                        //viewModel?.let{it.setChangeCode(0)}
                         // 스낵바 결과
                         when (result) {
                             SnackbarResult.Dismissed -> {
                                 // 스낵바 닫기
                             }
-
                             SnackbarResult.ActionPerformed -> {
                                 // 동작 수행
                             }
@@ -90,8 +82,6 @@ fun UserTop(view : UserViewModel = viewModel()){
                     }
                 }
             }
-
-
         }
     )
 }

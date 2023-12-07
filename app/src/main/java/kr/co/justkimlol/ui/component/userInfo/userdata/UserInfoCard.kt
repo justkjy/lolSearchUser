@@ -9,7 +9,14 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -26,13 +33,16 @@ import kr.co.justkimlol.ui.component.userInfoLevelTopHeight
 import kr.co.justkimlol.ui.theme.LolInfoViewerTheme
 import kr.co.justkimlol.ui.theme.Paddings
 import androidx.lifecycle.viewmodel.compose.viewModel
-import kr.co.justkimlol.mainfragment.user.appActivityViewModel
+import kr.co.justkimlol.viewModel.user.UserViewModel
 
 @Composable
-fun UserLolCard(viewModel: SharedViewModel = viewModel()) {
+fun UserLolCard(
+    viewModel : UserViewModel = viewModel()
+) {
     val userColumnHeight = userInfoLevelTopHeight +
                             userInfoLevelCenter2Height +
                             userInfoLevelBottomHeight
+
 
     Card (
         shape = MaterialTheme.shapes.large,
@@ -41,26 +51,16 @@ fun UserLolCard(viewModel: SharedViewModel = viewModel()) {
             .fillMaxWidth()
             .height(userColumnHeight)
     ){
-        appActivityViewModel?.let {
+        viewModel.let {
             val userName = it.userId.observeAsState("").value
-            val puuId = it.puuid.observeAsState("").value
+            val puuid = it.puuid.observeAsState("").value
             val tier = it.loltear.observeAsState("").value
             val summonerLevel = it.summonerLevel.observeAsState(0).value
-            val profileId = it.profileId.observeAsState(0).value
+            val profileId = it.profileIconId.observeAsState(0).value
             val rank = it.lolrank.observeAsState("").value
-            val _championName = it.champEngList.observeAsState(emptyList()).value
-            val championName = mutableListOf<String>()
-            val _matchList = it.matchList.observeAsState(emptyList()).value
-            val matchList = mutableListOf<String>()
             val apiKey = it.apiKey.value!!
-
-            for(champ in _championName) {
-                championName.add(champ)
-            }
-
-            for(matchItem in _matchList) {
-                matchList.add(matchItem)
-            }
+            val championName = it.champEngList.observeAsState(emptyList()).value
+            val matchList = it.matchList.observeAsState(emptyList()).value
 
             val rankInfo  = RankInfo(
                 tier,
@@ -70,10 +70,10 @@ fun UserLolCard(viewModel: SharedViewModel = viewModel()) {
                 championName
             )
 
-            Log.i("TEST", "$matchList")
+            //Log.i("TEST", "user = $matchList")
             UserItem(
                 userId = userName,
-                puuId = puuId,
+                puuId = puuid,
                 apiKey = apiKey,
                 gameType = GameType.LOL,
                 constraintSet = funcConstraintLOLSet(),
@@ -82,17 +82,7 @@ fun UserLolCard(viewModel: SharedViewModel = viewModel()) {
                 rankInfo = rankInfo,
                 matchList = matchList
             )
-        }
 
-        if(appActivityViewModel == null){
-            UserItem(
-                userId = "justkim",
-                puuId = "AH3tjkvRgXPgrUEaKIeZgVJcJeRKYJFiX27RXVs4yvZuF5GqueBBY7oL4SHci2RM9LdTPW5FsL3XhQ",
-                gameType = GameType.LOL,
-                constraintSet = funcConstraintLOLSet(),
-                level1Title = "일반",
-                level3Title = "최고의 챔피언"
-            )
         }
     }
 }

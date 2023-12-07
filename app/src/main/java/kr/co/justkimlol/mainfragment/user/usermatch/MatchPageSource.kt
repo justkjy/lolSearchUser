@@ -24,7 +24,7 @@ class MatchPageSource(
         val endIndex = startIndex + count
 
         if(startIndex >= matchIdlist.size ) {
-            return emptyList<String>()
+            return emptyList()
         }
 
         if(matchIdlist.getOrNull(endIndex).isNullOrBlank()) {
@@ -55,7 +55,7 @@ class MatchPageSource(
                         }
                     }
                 } else {
-                    // 마지막 페이지 카드뷰로 처리
+                    Log.i("TEST", "errorcode = $response.code()")
                 }
             }
 

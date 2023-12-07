@@ -61,7 +61,7 @@ class ChampionInitViewModel : ViewModel() {
     // 키가 만료 되었거나 잘 못 되었을때 직접 넣는걸로 하자
     private val _needApiKey = MutableLiveData(false)
     val needApiKey : LiveData<Boolean> = _needApiKey
-    fun inputApiKey(state: Boolean) {
+    fun inputNeedApiKey(state: Boolean) {
         this._needApiKey.value = state
     }
 

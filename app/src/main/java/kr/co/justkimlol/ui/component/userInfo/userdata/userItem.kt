@@ -62,7 +62,7 @@ fun UserItem(
     level2Title: String = "",
     level3Title: String = "",
     rankInfo: RankInfo = RankInfo("GOLD", "IV", 394, 5986, mutableListOf<String>()),
-    matchList: List<String> = listOf<String>(
+    matchList: List<String> = listOf(
         "KR_6812175923",
         "KR_6810800561",
         "KR_6810787381",
@@ -215,7 +215,6 @@ fun UserItem(
                 )
             }
         }
-
         if(gameType == GameType.TFT) UserLevel2(level2Title,rankInfo)
 
         //// level3 최고 챔피언 리스트, TFT 상위 특성 ////////////////////////////////////////////////////////////
@@ -319,7 +318,7 @@ fun UserLevel3(
             )
             Spacer(modifier = Modifier.padding(Paddings.small))
             if(gameType == GameType.LOL)
-                ChampTopList(rankInfo.championName)
+                ChampTopList(rankInfo.championEngName)
             else {
                 TftDackTopList(rankInfo.tftResource())
             }
@@ -367,9 +366,9 @@ fun UserLevel4(gameType: GameType,
         intent.putExtra("skillNum", rankInfo.summonerLevel )
         intent.putExtra("matchList", ArrayList<String>(matchList))
 
-        intent.putExtra("Top1", rankInfo.championName[0]?.let{ it } ?: "")
-        intent.putExtra("Top2", rankInfo.championName[1]?.let{ it } ?: "")
-        intent.putExtra("Top3", rankInfo.championName[2]?.let{ it } ?: "")
+        intent.putExtra("Top1", rankInfo.championEngName[0] ?: "")
+        intent.putExtra("Top2", rankInfo.championEngName[1] ?: "")
+        intent.putExtra("Top3", rankInfo.championEngName[2] ?: "")
         startActivity(context, intent, null)
         clicked = false
     }

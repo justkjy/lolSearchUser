@@ -67,13 +67,13 @@ class MatchActivity : ComponentActivity() {
 
         val profileId = intent.getIntExtra("profileId", 0)
         val skillNum = intent.getIntExtra("skillNum", 0)
-
         val topChamp1 = intent.getStringExtra("Top1")
         val topChamp2 = intent.getStringExtra("Top2")
         val topChamp3 = intent.getStringExtra("Top3")
-
-        viewMatchModel = ViewModelProvider(this).get(MatchViewModel::class.java)
-        viewMatchModel.setPageItem(matchList!!, apiKey?.let { it }?: "")
+        Log.i("TEST", "match = $matchList")
+        viewMatchModel = ViewModelProvider(this)[MatchViewModel::class.java]
+        Log.i("TEST", "apikey = $apiKey")
+        viewMatchModel.setPageItem(matchList!!, apiKey ?: "")
 
         viewChampionConditionModel = ViewModelProvider(this)[MatchChampViewModel::class.java]
         viewChampionConditionModel.insertMost3Champ(topChamp1!!, topChamp2!!, topChamp3!!)
@@ -91,9 +91,9 @@ class MatchActivity : ComponentActivity() {
                         skillNum,
                         tier!!,
                         profileId,
-                        topChamp1!!,
-                        topChamp2!!,
-                        topChamp3!!,
+                        topChamp1?: "",
+                        topChamp2?: "",
+                        topChamp3?: "",
                         viewChampionConditionModel.insertChampUpdate,
                     )
                 }
@@ -157,8 +157,7 @@ fun PreviewCustomCircular(
     val champ3Lose = matchChampViewModel.champ3LoseCount.observeAsState(0).value
 
     val killInfoList : List<Point>
-    = matchChampViewModel.killInfoChart.observeAsState(mutableListOf<Point>(Point(0f, 0f))).value
-
+    = matchChampViewModel.killInfoChart.observeAsState(mutableListOf(Point(0f, 0f))).value
 
         Column(
             modifier = Modifier
@@ -240,7 +239,6 @@ fun PreviewCustomCircular(
                         }
                     }
                 }
-
             }
 
             Card(
@@ -309,7 +307,6 @@ fun PreviewCustomCircular(
                     }
                 )
             }
-
         }
 }
 
@@ -322,8 +319,8 @@ fun MatchPreview() {
             GameType.LOL,
             "저스트킴",
             "AH3tjkvRgXPgrUEaKIeZgVJcJeRKYJFiX27RXVs4yvZuF5GqueBBY7oL4SHci2RM9LdTPW5FsL3XhQ",
-            "RGAPI-9f86464b-1464-4e80-8279-bd7591b18637",
-            RankInfo("GOLD", "IV", 394, 5986, mutableListOf<String>(
+            "RGAPI-a2161692-7fdf-4e6c-9d99-e3594f07fa24",
+            RankInfo("GOLD", "IV", 394, 5986, listOf(
                 "Maokai", "Ornn", "Galio", "Volibear")
             ),
             listOf(

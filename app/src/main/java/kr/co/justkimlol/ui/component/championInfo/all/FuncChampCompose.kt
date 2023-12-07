@@ -137,7 +137,7 @@ fun ChampLolInfo(
                     index = index,
                     champEngName = item.nameEng,
                     champTitle = item.title,
-                    positionList = ArrayList<String>(item.tagList),
+                    positionList = ArrayList(item.tagList),
                     onClick = onClicked,
                 )
                 Spacer(modifier = Modifier.padding(Paddings.small))

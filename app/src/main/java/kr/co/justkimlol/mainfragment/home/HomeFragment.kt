@@ -21,6 +21,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -58,12 +59,11 @@ import kr.co.justkimlol.internet.getJsonFileFromHttps
 import kr.co.justkimlol.internet.getJsonLoad
 import kr.co.justkimlol.internet.getJsonSuccess
 
+
 class HomeFragment : Fragment() {
 
     // 로그인 viewModel
     private val viewHomeModel: ChampionInitViewModel by viewModels()
-    // 공유 라이브 뷰
-    private lateinit var sharedViewModel: SharedViewModel
     private lateinit var storeViewModel : DataStoreViewModel
 
     private var helper: RoomHelper? = null
@@ -73,9 +73,7 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        sharedViewModel = ViewModelProvider(requireActivity())[SharedViewModel::class.java]
-       
-        // loadUserId
+       // loadUserId
         storeViewModel = ViewModelProvider(this)[DataStoreViewModel::class.java]
 
         observeUiEffects()
@@ -125,7 +123,7 @@ class HomeFragment : Fragment() {
                             viewHomeModel.setChampionInfo(PatchState.ERROR)
                         }
                         is getJsonLoad -> {
-                            Toast.makeText(context, "로딩", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, "사용 준비중입니다. ", Toast.LENGTH_SHORT).show()
                             viewHomeModel.setChampionInfo(PatchState.PROGRESS)
                         }
                         is getJsonSuccess -> {
@@ -144,8 +142,7 @@ class HomeFragment : Fragment() {
 
                         }
                         is navCheckState -> {
-                            var apikey = viewHomeModel.apiKey.value!!
-
+                            var apiKey = viewHomeModel.apiKey.value!!
                             var userid = viewHomeModel.userId.value!!
                             var tagLine = viewHomeModel.tagLine.value!!
 
@@ -157,46 +154,42 @@ class HomeFragment : Fragment() {
                                 tagLine = "KR1"
                             }
 
-                            if (apikey.isEmpty()) {
-                                apikey = "RGAPI-a2161692-7fdf-4e6c-9d99-e3594f07fa24"
+                            if (apiKey.isEmpty()) {
+                                apiKey = "RGAPI-a2161692-7fdf-4e6c-9d99-e3594f07fa24"
                             }
-                            sharedViewModel.inputApiKey(apikey)
 
-                            sharedViewModel.inputUserId(userid)
+                            viewHomeModel.inputUserid(userid)
+                            viewHomeModel.inputTagLine(tagLine)
+                            viewHomeModel.inputApiKey(apiKey)
 
-                            sharedViewModel.inputTagLine(tagLine)
-
-                            searchUser(userid, tagLine, apikey, viewHomeModel)
+                            searchUser(userid, tagLine, apiKey, viewHomeModel)
                         }
                         is navFailState -> {
                             viewHomeModel.setChangeCode(state.errorCode)
                             viewHomeModel.setInputWait()
                         }
                         is navSuccessState -> {
-                            val apikey = sharedViewModel.apiKey.value!!
                             // 검색한 아이디 저장
                             storeViewModel.insert(viewHomeModel.userId.value!!, viewHomeModel.tagLine.value!!)
 
-                            rotationChamp(apikey)
                             val puuid = viewHomeModel.puuid.value!!
-                            sharedViewModel.inputpuuid(puuid)
-                            view?.findNavController()?.navigate(R.id.action_navigation_home_to_navigation_user)
+                            val userId = viewHomeModel.userId.value!!
+                            val tagLine = viewHomeModel.tagLine.value!!
+                            val apiKey = viewHomeModel.apiKey.value!!
+                            val bundle = bundleOf(
+                                "userId" to userId,
+                                "puuid" to puuid,
+                                "tagLine" to tagLine,
+                                "apiKey" to apiKey
+                            )
+
+                            view?.findNavController()?.navigate(
+                                R.id.action_navigation_home_to_navigation_user,
+                                bundle)
                         }
                     }
                 }
             }
-        }
-    }
-
-    @OptIn(DelicateCoroutinesApi::class)
-    private fun rotationChamp(apiKey: String)  {
-        GlobalScope.launch(Dispatchers.IO) {
-            val rotationChamp = getJsonFileFromHttps(
-                "https://kr.api.riotgames.com/lol/platform/v3/champion-rotations?api_key=${apiKey}"
-            )
-            // error 대응
-            val champ = Gson().fromJson(rotationChamp, ChampionRotationData::class.java)
-            sharedViewModel.champRotations(champ.freeChampionIds)
         }
     }
 }
@@ -212,7 +205,7 @@ suspend fun searchUser(userId : String, tagLine: String, useApiKey: String, view
             viewModel.setNavState(navFailState(retrofitService.code()))
 
             if(retrofitService.code() == 403) {
-                viewModel.inputApiKey(true)
+                viewModel.inputNeedApiKey(true)
             }
             return
         }

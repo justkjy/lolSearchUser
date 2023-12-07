@@ -10,11 +10,10 @@
         android:name="kr.co.justkimlol.mainfragment.home.HomeFragment"
         android:label="@string/lolmenu_label_userIput"
         tools:layout="@layout/fragment_home" >
-
         <action
             android:id="@+id/action_navigation_home_to_navigation_user"
             app:destination="@id/navigation_user"
-            />
+        />
     </fragment>
 
     <fragment

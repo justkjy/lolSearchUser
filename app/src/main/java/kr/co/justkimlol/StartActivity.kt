@@ -3,6 +3,7 @@ package kr.co.justkimlol
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -18,15 +19,12 @@ import kr.co.justkimlol.viewModel.SharedViewModel
 
 class StartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityNavigationMainBinding
-    private lateinit var sharedViewModel: SharedViewModel
 
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityNavigationMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        sharedViewModel = ViewModelProvider(this).get(SharedViewModel::class.java)
 
         val navView: BottomNavigationView = binding.navView
 

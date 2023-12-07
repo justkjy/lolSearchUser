@@ -1,5 +1,6 @@
 package kr.co.justkimlol.viewModel.user
 
+import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -7,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kr.co.justkimlol.dataclass.ChampAllListData
 import kr.co.justkimlol.dataclass.ChampionMasteryTop
 import kr.co.justkimlol.dataclass.UserData
 import kr.co.justkimlol.dataclass.UserIdWithTagData
@@ -16,6 +18,7 @@ import kr.co.justkimlol.internet.userInfoFail
 import kr.co.justkimlol.internet.userInfoGetLoading
 import kr.co.justkimlol.internet.userInfoSuccess
 import kr.co.justkimlol.internet.userStepMsg
+import kr.co.justkimlol.room.data.roomHelperValue
 
 class UserViewModel : ViewModel() {
 
@@ -27,10 +30,12 @@ class UserViewModel : ViewModel() {
     fun setStepUserFind(id : String, tagLine: String){
         _stepUserState.value = userStepMsg(id, tagLine)
     }
+
     fun setUserFail(errorCode : Int) {
         _stepUserState.value = userInfoFail(errorCode)
         _userFailCode.postValue(errorCode)
     }
+
     fun setUserSuccess(userId : String, tagLine: String) {
         _stepUserState.value = userInfoSuccess(userId, tagLine)
     }
@@ -66,18 +71,15 @@ class UserViewModel : ViewModel() {
     val accountId: String
         get() = _accountId
 
-    private var _profileIconId = 0
-    val profileIconId : Int
-        get() = _profileIconId
+    private var _profileIconId = MutableLiveData(0)
+    val profileIconId : LiveData<Int> = _profileIconId
 
-    private var _summonerLevel = 0
-    val summonerLevel: Int
-        get() = _summonerLevel
+    private var _summonerLevel = MutableLiveData(0)
+    val summonerLevel: LiveData<Int> = _summonerLevel
 
     // encryptedPUUID 나중 숙련도 챔프에 쓰자.
-    private var _puuid = ""
-    val puuid: String
-        get() = _puuid
+    private var _puuid = MutableLiveData("")
+    val puuid: LiveData<String> = _puuid
 
     // 랭크 정보
     private var _leagueId = ""
@@ -90,14 +92,12 @@ class UserViewModel : ViewModel() {
         get() = _queueType
 
     // 티어
-    private var _loltear = ""
-    val loltear : String
-        get() = _loltear
+    private var _loltier = MutableLiveData("")
+    val loltear : LiveData<String> = _loltier
 
     // 랭크
-    private var _lolrank = ""
-    val lolrank : String
-        get() = _lolrank
+    private var _lolrank = MutableLiveData("")
+    val lolrank : LiveData<String> = _lolrank
 
     // 포인트
     private var _lolPoint = 0
@@ -119,26 +119,41 @@ class UserViewModel : ViewModel() {
     private var _rawChampTopList = mutableListOf<Int>()
     val champTopList : MutableList<Int>
         get() = _rawChampTopList
+    // ChampEngName
+    private val _rawChampEngList = mutableStateListOf<String>()
+    private val _champEngList = MutableLiveData<List<String>>(_rawChampEngList)
+    val champEngList: LiveData<List<String>> = _champEngList // 사용
 
-    private var _rawMatchList = mutableListOf<String>()
-    val matchList : MutableList<String>
-        get() = _rawMatchList
+    private val _rawMatchList = mutableStateListOf<String>()
+    private val _matchList = MutableLiveData<List<String>>(_rawMatchList)
+    val matchList: LiveData<List<String>> = _matchList
+
+
+    fun InsertApi(useApiKey: String) {
+        _apiKey.postValue(useApiKey)
+    }
+
+    fun LoginUserInfo(puuid : String, userId : String, tagLine : String) {
+        _userId.postValue(userId)
+        _tagLine.postValue(tagLine)
+        _puuid.postValue(puuid)
+    }
 
     // 1차 사용자 정보 등록
     fun userLevelInfo(puuid: String, userId: String, tagLine: String,  profileIconId: Int, summonerLevel: Int) {
         _userId.postValue(userId)
         _tagLine.postValue(tagLine)
-        _puuid = puuid
-        _profileIconId = profileIconId
-        _summonerLevel = summonerLevel
+        _puuid.postValue(puuid)
+        _profileIconId.postValue(profileIconId)
+        _summonerLevel.postValue(summonerLevel)
     }
 
     // 2차 사용자 랭크 등록
     fun setRankInfo(rankData: UserRankInfo.UserRankInfoItem) {
         _leagueId = rankData.leagueId
         _queueType = rankData.queueType
-        _loltear = rankData.tier
-        _lolrank = rankData.rank
+        _loltier.postValue(rankData.tier)
+        _lolrank.postValue(rankData.rank)
         _lolPoint = rankData.leaguePoints
         _lolWin = rankData.wins
         _lolLosses = rankData.losses
@@ -149,6 +164,13 @@ class UserViewModel : ViewModel() {
         _rawChampTopList.clear()
         for(item in topChamp) {
             _rawChampTopList.add(item.championId)
+        }
+    }
+
+    fun setTopChampList(topChamp : List<String>) {
+        _rawChampEngList.clear()
+        for(item in topChamp) {
+            _rawChampEngList.add(item)
         }
     }
 

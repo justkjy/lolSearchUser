@@ -1,6 +1,7 @@
 package kr.co.justkimlol.mainfragment.user.usermatch
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -85,7 +86,10 @@ fun FuncshowMatech(
             }
             userIndex++
         }
+
+        Log.i("TEST1", "error Index = $userIndex puuid = ${puuId}")
         val userPart = match.info.participants[userIndex]
+
         if(userPart.win) gameWin = "승리"
         else gameWin = "패배"
         champEngName = userPart.championName
@@ -112,7 +116,7 @@ fun FuncshowMatech(
         gold = userPart.goldEarned
 
         insertChampUpdate(index, champEngName, userPart.win, userKill, userDeath)
-
+        Log.i("TEST", "error Index1 = $userIndex")
     }
 
     Column(

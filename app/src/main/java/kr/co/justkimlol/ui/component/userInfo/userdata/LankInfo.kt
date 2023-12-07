@@ -14,17 +14,17 @@ data class RankInfo(var _tier: String,
                     val rank: String,
                     val summonerLevel:Int,
                     val profileId: Int,
-                    val championName:MutableList<String>,
-                    val tftUsedeck:MutableList<String>
+                    val championEngName: List<String>,
+                    val tftUsedeck:List<String>
 ) {
     constructor(
         _tier: String,
         lank: String,
         summonerLevel:Int,
         profileId: Int,
-        championName: MutableList<String>
-    ) : this(_tier, lank, summonerLevel, profileId, championName, tftUsedeck = mutableListOf<String>().let {
-        val tftdack = mutableListOf<String>("brawleremblem", "rogueemblem", "bastionemblem", "ixtalemblem", "voidemblem",
+        championEngName: List<String>
+    ) : this(_tier, lank, summonerLevel, profileId, championEngName, tftUsedeck = listOf<String>().let {
+        val tftdack = listOf("brawleremblem", "rogueemblem", "bastionemblem", "ixtalemblem", "voidemblem",
             "rogueemblem")
         tftdack
     }) { }

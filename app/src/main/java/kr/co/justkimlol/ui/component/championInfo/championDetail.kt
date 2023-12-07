@@ -1,6 +1,5 @@
 package kr.co.justkimlol.ui.component.championInfo
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -157,7 +156,6 @@ fun ChampionDetail(
 //                modifier = Modifier
 //                    .fillMaxHeight(0.1f)
             ) {
-
                 TabRow(selectedTabIndex = selectedTabIndex.value) {
                     tabItems.forEachIndexed { index, item ->
                         Tab(selected = index == selectedTabIndex.value,

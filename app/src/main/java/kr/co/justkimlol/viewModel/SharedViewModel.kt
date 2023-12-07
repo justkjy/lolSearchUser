@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kr.co.justkimlol.ui.component.button.ChampionList
 
 class SharedViewModel : ViewModel() {
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -25,13 +26,6 @@ class SharedViewModel : ViewModel() {
         _userId.value = it
     }
 
-    // tagLine
-    private val _tagLine = MutableLiveData("")
-    val tagLine: LiveData<String> = _tagLine
-    val inputTagLine: (tagLine:String) -> (Unit) = {it ->
-        _tagLine.value = it
-    }
-
     // puuid
     private val _puuid = MutableLiveData("")
     val puuid: LiveData<String> = _puuid
@@ -42,63 +36,22 @@ class SharedViewModel : ViewModel() {
     // 사용 프로필 아이콘 아이디
     private val _profileIconId = MutableLiveData(0)
     val profileId: LiveData<Int> = _profileIconId
+    val inputProfileId: (profileId: Int) -> (Unit) = { it ->
+        _profileIconId.value = it
+    }
 
     // 사용 프로필 숙련도
     private val _summonerLevel = MutableLiveData(0)
     val summonerLevel: LiveData<Int> = _summonerLevel
+    val inputSummonerLevel: (summonerLevel: Int) -> (Unit) = {
+        _summonerLevel.value = it
+    }
 
     // 티어
-    private val _loltear = MutableLiveData("")
-    val loltear: LiveData<String> = _loltear
-
-    // 랭크
-    private val _lolrank = MutableLiveData("")
-    val lolrank : LiveData<String> = _lolrank
-
-    // wins
-    private val _lolWin = MutableLiveData<Int>(0)
-    val lolWin: LiveData<Int> = _lolWin
-
-    // losses
-    private val _lolLosses = MutableLiveData<Int>(0)
-    val lolLosses: LiveData<Int> = _lolLosses
-
-    // 챔프 숙련도 체크
-    private val _champTopTenList = MutableStateFlow<MutableList<Int>>(mutableListOf())
-    val champTopTenList: StateFlow<MutableList<Int>> = _champTopTenList
-
-    private val _rawChampEngList = mutableStateListOf<String>()
-    private val _champEngList = MutableLiveData<List<String>>(_rawChampEngList)
-    val champEngList: LiveData<List<String>> = _champEngList // 사용
-
-    private val _rawMatchList = mutableStateListOf<String>()
-    private val _matchList = MutableLiveData<List<String>>(_rawMatchList)
-    val matchList: LiveData<List<String>> = _matchList
-
-    fun sharedInputUserInfo(userId: String, puuId : String, profileId : Int, summonerLevel : Int, tear: String,
-                            rank: String, win: Int, losses: Int, topChampion: List<Int>,
-                            topEngChamp: List<String>, matchList: List<String>) {
-        this._userId.value = userId
-        this._puuid.value = puuId
-        this._profileIconId.value = profileId
-        this._summonerLevel.value = summonerLevel
-        this._loltear.value = tear
-        this._lolrank.value = rank
-        this._lolWin.value = win
-        this._lolLosses.value = losses
-        this._champTopTenList.value.addAll(topChampion)
-
-        _rawChampEngList.clear()
-        _rawChampEngList.addAll(topEngChamp)
-        _champEngList.value = mutableListOf<String>().also {
-            it.addAll(_rawChampEngList)
-        }
-
-        _rawMatchList.clear()
-        _rawMatchList.addAll(matchList)
-        _matchList.value = mutableListOf<String>().also {
-            it.addAll(_rawMatchList)
-        }
+    private val _loltier = MutableLiveData("")
+    val loltiar: LiveData<String> = _loltier
+    val inputLoltier : (loltier: String) -> Unit = {
+        _loltier.value = it
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -111,11 +64,19 @@ class SharedViewModel : ViewModel() {
 
     // 로테이션 정보
     fun champRotations(list: List<Int>) {
-        //TODO("All이 되지 않음 ")
         for(item in list) {
             _rawChampRotations.add(item)
         }
     }
 
+    private val _rawChampNameRotations = mutableStateListOf<ChampionList>()
+    private val _champNameRotations = MutableLiveData<MutableList<ChampionList>>(_rawChampNameRotations)
+    val champNameRotations : LiveData<MutableList<ChampionList>> = _champNameRotations
 
+    fun setChampNameRotations(champNameList : List<ChampionList>) {
+        _rawChampNameRotations.clear()
+        for(item in champNameList) {
+            _rawChampNameRotations.add(item)
+        }
+    }
 }
