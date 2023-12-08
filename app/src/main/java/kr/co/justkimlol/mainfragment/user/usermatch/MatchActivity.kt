@@ -45,6 +45,7 @@ import kr.co.justkimlol.ui.component.GameType
 import kr.co.justkimlol.ui.component.championInfo.TierProfile
 import kr.co.justkimlol.ui.component.circleprocess.CustomCircularProccess
 import kr.co.justkimlol.ui.component.circleprocess.PreviewLineChart
+import kr.co.justkimlol.ui.component.userInfo.match.FuncshowMatech
 import kr.co.justkimlol.ui.component.userInfo.userdata.RankInfo
 import kr.co.justkimlol.ui.component.userInfo.userdata.UserLevel4
 import kr.co.justkimlol.ui.theme.LolInfoViewerTheme

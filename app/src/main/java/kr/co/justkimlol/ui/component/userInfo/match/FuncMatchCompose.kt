@@ -1,4 +1,4 @@
-package kr.co.justkimlol.mainfragment.user.usermatch
+package kr.co.justkimlol.ui.component.userInfo.match
 
 import android.content.Context
 import android.util.Log

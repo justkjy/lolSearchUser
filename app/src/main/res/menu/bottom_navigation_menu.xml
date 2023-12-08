@@ -4,7 +4,8 @@
         android:id="@+id/navigation_home"
         android:enabled="true"
         android:icon="@drawable/user"
-        android:title="@string/lolmenu_label_userIput"/>
+        android:title="@string/lolmenu_label_userIput"
+        android:visible="false"/>
     <item
         android:id="@+id/navigation_user"
         android:enabled="true"
