@@ -1,6 +1,6 @@
 # lolSearchUser
 1. 롤 API키가 필요함
-   1) 여러번 API 사용시 갱신해야함 -> 라이엇한테 API KEY 획득함 2주 걸림
+   1) 여러번 API 사용시 갱신해야함 -> 라이엇한테 API KEY 획득함 2주 걸림 -> 획득
    2) 갱신 필요시 스넥바로 404 표시  -> 추가 함
 2. API 사이트
    1) https://developer.riotgames.com/apis
